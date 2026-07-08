@@ -1,7 +1,7 @@
 # Especificação Funcional — Portal de Gestão da Inovação Rennova
 
-> Fonte funcional para orientar construção, aceite e evolução do Rennova Spark Hub.  
-> Esta versão reduz redundâncias entre requisitos, regras, fluxos e telas sem remover comportamento, restrições ou critérios necessários para implementação e validação.
+> Fonte funcional para orientar construção, aceite e evolução do **Rennova Spark Hub**.  
+> Versão consolidada com a funcionalidade de **Brainstorm Estratégico com IA baseado em SCAMPER**, incluindo matriz Impacto × Esforço 1–10 e envio do brainstorm para task inicial no Asana.
 
 ---
 
@@ -10,47 +10,16 @@
 
 - [1. Identificação do projeto](#ef-1-identificacao-do-projeto)
 - [2. Visão geral](#ef-2-visao-geral)
-  - [2.1 Contexto](#ef-2-1-contexto)
-  - [2.2 Objetivo](#ef-2-2-objetivo)
-  - [2.3 Público-alvo / usuários](#ef-2-3-publico-alvo-usuarios)
 - [3. Escopo](#ef-3-escopo)
-  - [3.1 Escopo incluído](#ef-3-1-escopo-incluido)
-  - [3.2 Fora de escopo](#ef-3-2-fora-de-escopo)
-  - [3.3 Premissas](#ef-3-3-premissas)
-  - [3.4 Restrições](#ef-3-4-restricoes)
 - [4. Requisitos funcionais](#ef-4-requisitos-funcionais)
-  - [RF001 - Autenticação no portal interno](#ef-rf001-autenticacao-no-portal-interno)
-  - [RF002 - Controle de acesso por perfil](#ef-rf002-controle-de-acesso-por-perfil)
-  - [RF003 - Submissão de ideia pelo Canvas público](#ef-rf003-submissao-de-ideia-pelo-canvas-publico)
-  - [RF004 - Sugestão de IA por bloco do Canvas](#ef-rf004-sugestao-de-ia-por-bloco-do-canvas)
-  - [RF005 - Resumo de IA e aprovação pelo autor](#ef-rf005-resumo-de-ia-e-aprovacao-pelo-autor)
-  - [RF006 - Dashboard executivo](#ef-rf006-dashboard-executivo)
-  - [RF007 - Matriz Impacto × Esforço](#ef-rf007-matriz-impacto-x-esforco)
-  - [RF008 - Triagem mensal de ideias](#ef-rf008-triagem-mensal-de-ideias)
-  - [RF009 - Conversão de ideia em projeto](#ef-rf009-conversao-de-ideia-em-projeto)
-  - [RF010 - Detalhe e governança do projeto](#ef-rf010-detalhe-e-governanca-do-projeto)
-  - [RF011 - Gestão de fases e checklist executivo](#ef-rf011-gestao-de-fases-e-checklist-executivo)
-  - [RF012 - Métricas, resultados e insight de IA](#ef-rf012-metricas-resultados-e-insight-de-ia)
-  - [RF013 - Bloco Asana no projeto](#ef-rf013-bloco-asana-no-projeto)
-  - [RF014 - Comentários de governança](#ef-rf014-comentarios-de-governanca)
-  - [RF015 - Administração de departamentos e usuários](#ef-rf015-administracao-de-departamentos-e-usuarios)
-  - [RF016 - Sincronização Asana → Portal](#ef-rf016-sincronizacao-asana-portal)
-  - [RF017 - Auditoria de ações relevantes](#ef-rf017-auditoria-de-acoes-relevantes)
 - [5. Regras de negócio](#ef-5-regras-de-negocio)
 - [6. Fluxos de usuário](#ef-6-fluxos-de-usuario)
 - [7. Mapa de navegação](#ef-7-mapa-de-navegacao)
 - [8. Telas e comportamento visual](#ef-8-telas-e-comportamento-visual)
-  - [Tela 1 - Canvas público](#ef-tela-1-canvas-publico)
-  - [Tela 2 - Login](#ef-tela-2-login)
-  - [Tela 3 - Dashboard](#ef-tela-3-dashboard)
-  - [Tela 4 - Matriz Impacto × Esforço](#ef-tela-4-matriz-impacto-x-esforco)
-  - [Tela 5 - Triagem](#ef-tela-5-triagem)
-  - [Tela 6 - Detalhe do projeto](#ef-tela-6-detalhe-do-projeto)
-  - [Tela 7 - Admin](#ef-tela-7-admin)
 - [9. Requisitos não funcionais](#ef-9-requisitos-nao-funcionais)
 - [10. Mensagens do sistema](#ef-10-mensagens-do-sistema)
-- [11. Pendências e dúvidas funcionais](#ef-11-pendencias-e-duvidas-funcionais)
-- [12. Controle de mudanças de escopo](#ef-12-controle-de-mudancas-de-escopo)
+- [11. Critérios de aceite consolidados](#ef-11-criterios-de-aceite-consolidados)
+- [12. Pendências e decisões funcionais](#ef-12-pendencias-e-decisoes-funcionais)
 - [13. Aprovação funcional](#ef-13-aprovacao-funcional)
 
 ---
@@ -64,42 +33,47 @@
 | Responsável pelo documento | Phablo Tavares |
 | Área/Time | Inovação / Desenvolvimento de Agentes e Soluções de IA |
 | Data | 2026-07-08 |
-| Versão | 0.3 |
+| Versão | 0.4 |
+| Alteração desta versão | Inclusão do Brainstorm Estratégico com IA, SCAMPER, notas 1–10 de impacto/esforço e task inicial no Asana |
 
 ---
 
 <a id="ef-2-visao-geral"></a>
 ## 2. Visão geral
 
-<a id="ef-2-1-contexto"></a>
 ### 2.1 Contexto
 
-A área de Inovação da Rennova recebe ideias de diferentes áreas, avalia potencial, prioriza iniciativas e acompanha projetos aprovados. Parte desse processo hoje fica dispersa entre conversas, documentos, planilhas e ferramentas operacionais. O portal deve centralizar entrada de ideias, triagem, priorização, conversão em projetos e acompanhamento executivo.
+A área de Inovação da Rennova recebe ideias de diferentes áreas, avalia potencial, prioriza iniciativas e acompanha projetos aprovados. Parte desse processo hoje fica dispersa entre conversas, documentos, planilhas e ferramentas operacionais.
 
-Já existe um protótipo visual no Lovable/GitHub, com Dashboard, Projetos, Detalhe de Projeto e Ideias usando dados mockados. A entrega alvo deve transformar o protótipo em produto funcional com Supabase, autenticação, banco real, IA e integração com Asana.
+O portal deve centralizar entrada de ideias, apoio por IA, triagem, priorização, conversão em projetos, governança e acompanhamento executivo.
 
-<a id="ef-2-2-objetivo"></a>
+Já existe um protótipo visual no Lovable/GitHub com Dashboard, Projetos, Detalhe de Projeto e Ideias usando dados mockados. A entrega alvo deve transformar o protótipo em produto funcional com Supabase, autenticação, banco real, IA e integração com Asana.
+
 ### 2.2 Objetivo
 
-Construir um portal interno para centralizar a gestão da inovação na Rennova, permitindo que colaboradores submetam ideias, a Inovação qualifique e priorize iniciativas, a diretoria acompanhe o portfólio e projetos aprovados sejam integrados ao Asana para execução operacional.
+Construir um portal interno para centralizar a gestão da inovação na Rennova, permitindo que:
 
-<a id="ef-2-3-publico-alvo-usuarios"></a>
+- colaboradores submetam ideias;
+- a IA apoie a estruturação e análise inicial das ideias;
+- a área de Inovação qualifique, priorize e converta ideias em projetos;
+- a Diretoria acompanhe o portfólio em visão executiva;
+- projetos aprovados sejam integrados ao Asana para execução operacional.
+
 ### 2.3 Público-alvo / usuários
 
 | Ator / Perfil | Responsabilidade | Principais ações |
 |---|---|---|
 | Colaborador / Autor da ideia | Submeter ideia pelo Canvas público | Preencher Canvas, solicitar sugestões de IA, revisar resumo e aprovar submissão |
-| Inovação | Gerir funil e governança da inovação | Triar ideias, ajustar impacto/esforço, converter ideias, gerir projetos, fases, métricas, comentários e cadastros |
-| Diretoria | Acompanhar portfólio em visão executiva | Consultar dashboard, matriz e detalhes dos projetos sem editar dados |
+| Inovação | Gerir funil e governança da inovação | Triar ideias, revisar impacto/esforço, consultar brainstorm, converter ideias, gerir projetos e cadastros |
+| Diretoria | Acompanhar portfólio em visão executiva | Consultar dashboard, matriz, detalhes de ideias/projetos e evolução do portfólio |
 | Administrador funcional | Gerir cadastros básicos | Gerenciar departamentos e perfis de usuários |
-| Sistema / Integrações | Executar automações | Gerar sugestões/resumos/insights, criar projetos no Asana, sincronizar dados e registrar logs |
+| Sistema / Integrações | Executar automações | Gerar IA, criar projetos no Asana, criar task inicial, sincronizar dados e registrar logs |
 
 ---
 
 <a id="ef-3-escopo"></a>
 ## 3. Escopo
 
-<a id="ef-3-1-escopo-incluido"></a>
 ### 3.1 Escopo incluído
 
 - [x] Base visual inicial com tema escuro, dashboard, projetos, detalhes e ideias usando `mockData`.
@@ -107,23 +81,27 @@ Construir um portal interno para centralizar a gestão da inovação na Rennova,
 - [ ] Sugestões de IA por bloco do Canvas.
 - [ ] Resumo consolidado da ideia por IA.
 - [ ] Aprovação ou ajuste do resumo pelo autor.
+- [ ] Brainstorm Estratégico com IA baseado em SCAMPER ao cadastrar ideia.
+- [ ] Geração de 3 soluções estratégicas por ideia.
+- [ ] Recomendação de uma solução pela IA, com justificativa.
+- [ ] Métricas claras de impacto e esforço em escala 1–10.
+- [ ] Matriz Impacto × Esforço para ideias elegíveis.
 - [ ] Login com Supabase Auth por e-mail e senha.
 - [ ] Controle de acesso por perfis `diretoria` e `inovacao`.
 - [ ] Dashboard executivo com indicadores do portfólio e dados cacheados do Asana.
-- [ ] Matriz Impacto × Esforço para ideias elegíveis.
 - [ ] Triagem mensal de ideias pela Inovação.
 - [ ] Conversão de ideia em projeto no portal e no Asana.
+- [ ] Criação de task inicial no Asana com o Brainstorm Estratégico IA.
 - [ ] Detalhe do projeto com fases, checklist executivo, métricas, resultados, insights de IA e comentários de governança.
 - [ ] Bloco Asana somente leitura no detalhe do projeto.
-- [ ] Sincronização Asana → portal por webhook e cron de reconciliação.
+- [ ] Sincronização Asana → Portal por webhook e cron de reconciliação.
 - [ ] Administração de departamentos e usuários.
 - [ ] Logs de auditoria para ações relevantes.
 
-<a id="ef-3-2-fora-de-escopo"></a>
 ### 3.2 Fora de escopo
 
 - Substituir o Asana como ferramenta operacional de tarefas.
-- Editar tarefas Asana dentro do portal.
+- Editar tarefas do Asana dentro do portal.
 - SSO corporativo na primeira versão.
 - Aplicativo mobile nativo.
 - Gestão financeira detalhada de orçamento, custos ou CAPEX/OPEX.
@@ -132,8 +110,10 @@ Construir um portal interno para centralizar a gestão da inovação na Rennova,
 - Migração automática de dados históricos não estruturados.
 - Integrações com ERP, CRM, e-mail ou sistemas internos além do Asana.
 - Acompanhamento da evolução da ideia pelo autor após aprovação, salvo definição em nova fase.
+- Edição colaborativa avançada ou versionamento completo de múltiplos brainstorms.
+- Treinamento de modelo próprio de IA.
+- Cálculo financeiro detalhado de ROI por IA.
 
-<a id="ef-3-3-premissas"></a>
 ### 3.3 Premissas
 
 - Lovable continuará sendo a principal ferramenta de evolução do front-end.
@@ -141,485 +121,577 @@ Construir um portal interno para centralizar a gestão da inovação na Rennova,
 - Asana será a fonte operacional de tarefas e sprints.
 - Supabase será a fonte de verdade para ideias, triagem, governança, métricas, usuários e visão executiva.
 - Tokens de Asana e IA ficarão somente em secrets nas Edge Functions.
-- Workspace, template, portfólio e owner padrão do Asana já foram identificados.
 - Respostas de IA serão estruturadas em JSON e validadas antes de gravação.
+- O Brainstorm Estratégico deve usar SCAMPER como base de ideação.
+- A task inicial do Asana será o local operacional para registrar o brainstorm completo do projeto convertido.
 - A primeira versão priorizará desktop e responsividade básica para web.
 
-<a id="ef-3-4-restricoes"></a>
 ### 3.4 Restrições
 
 - Não expor chaves, tokens ou `service_role` no front-end.
 - Não chamar Asana nem provedores de IA diretamente pelo browser.
 - Evitar edição manual ampla do front-end fora do Lovable.
 - Proteger o formulário público contra spam.
-- Não exibir impacto/esforço ao autor da ideia.
+- Não exibir impacto/esforço ao autor da ideia no Canvas público.
 - Aplicar permissões no front-end e reforçar por RLS/Edge Functions.
 - Não depender de chamada ao Asana em tempo real no dashboard.
+- Não gravar resposta de IA sem validação mínima de estrutura.
 
 ---
 
 <a id="ef-4-requisitos-funcionais"></a>
 ## 4. Requisitos funcionais
 
-> Cada RF abaixo consolida comportamento, exceções e aceite. As regras detalhadas estão na seção [5. Regras de negócio](#ef-5-regras-de-negocio).
+> Cada RF consolida comportamento, exceções e aceite. As regras detalhadas estão na seção [5. Regras de negócio](#ef-5-regras-de-negocio).
 
-<a id="ef-rf001-autenticacao-no-portal-interno"></a>
 ### RF001 - Autenticação no portal interno
 
 | Item | Especificação |
 |---|---|
 | Descrição | Permitir login no portal interno por e-mail e senha via Supabase Auth. |
 | Ator | Diretoria e Inovação. |
-| Pré-condições | Usuário cadastrado no Supabase Auth; perfil correspondente em `profiles`; usuário ativo. |
-| Fluxo principal | 1. Acessar `/login`.<br>2. Informar e-mail e senha.<br>3. Autenticar no Supabase.<br>4. Consultar perfil/permissões.<br>5. Redirecionar para Dashboard. |
-| Exceções | `FA001` credenciais inválidas: mensagem genérica.<br>`FA002` usuário inativo: bloquear acesso e orientar contato com Inovação.<br>`FA003` perfil inexistente: bloquear e registrar erro técnico.<br>`FA004` sessão expirada: redirecionar para `/login`. |
 | Critérios de aceite | Usuário ativo com credenciais válidas acessa Dashboard; usuário inativo é bloqueado; usuário não autenticado em rota interna é enviado para `/login`. |
 | Regras | RN001, RN002, RN003. |
-| Observação | SSO não faz parte da primeira versão. |
 
-<a id="ef-rf002-controle-de-acesso-por-perfil"></a>
 ### RF002 - Controle de acesso por perfil
 
 | Item | Especificação |
 |---|---|
 | Descrição | Restringir funcionalidades conforme perfil `diretoria` ou `inovacao`. |
 | Ator | Sistema. |
-| Pré-condições | Usuário autenticado; `profiles.role` definido. |
-| Fluxo principal | 1. Usuário acessa rota interna.<br>2. Sistema carrega perfil.<br>3. UI exibe apenas menus/ações permitidos.<br>4. RLS/Edge Functions reforçam a permissão. |
-| Exceções | Diretoria em `/triagem` ou `/admin`: acesso negado.<br>Diretoria tentando alteração por chamada direta: bloqueio por RLS/Edge Function.<br>Perfil ausente/desconhecido: bloqueio por segurança. |
-| Critérios de aceite | Diretoria consulta dashboard/matriz/detalhe em leitura; não edita dados; Inovação acessa triagem/admin e ações de gestão. |
+| Critérios de aceite | Diretoria consulta dados em leitura; Inovação acessa triagem, admin e ações de gestão; permissões são reforçadas por RLS/Edge Functions. |
 | Regras | RN001, RN002, RN003, RN027. |
-| Observação | Ocultar botão no front-end não substitui validação server-side. |
 
-<a id="ef-rf003-submissao-de-ideia-pelo-canvas-publico"></a>
 ### RF003 - Submissão de ideia pelo Canvas público
 
 | Item | Especificação |
 |---|---|
 | Descrição | Permitir que colaborador envie ideia pela rota pública `/canvas`, sem login. |
 | Ator | Colaborador. |
-| Pré-condições | Rota pública disponível; departamentos ativos disponíveis; Edge Function `submit-idea` configurada. |
-| Fluxo principal | 1. Acessar `/canvas`.<br>2. Preencher dados do solicitante, departamentos e 7 blocos do Canvas.<br>3. Enviar ideia.<br>4. Sistema valida dados e anti-spam.<br>5. Sistema grava `ideas.status = enviada`.<br>6. Sistema inicia/chama geração de resumo por IA. |
-| Exceções | Campos obrigatórios vazios: bloquear e destacar campos.<br>E-mail inválido: bloquear.<br>Rate limit/honeypot: bloquear com mensagem genérica.<br>Falha de gravação: exibir erro e permitir nova tentativa.<br>Departamentos indisponíveis: exibir alternativa ou indisponibilidade temporária. |
-| Critérios de aceite | Colaborador sem login acessa `/canvas`; Canvas incompleto é bloqueado; submissão válida cria registro em `ideas` com status `enviada`. |
-| Regras | RN004, RN005, RN006, RN007, RN028, RN030. |
-| Observação | Escrita pública no banco deve ocorrer somente via Edge Function com `service_role`. |
+| Fluxo principal | 1. Acessar `/canvas`.<br>2. Preencher dados do solicitante, departamentos e blocos do Canvas.<br>3. Enviar ideia.<br>4. Sistema valida dados e anti-spam.<br>5. Sistema grava a ideia.<br>6. Sistema inicia a geração de resumo e brainstorm por IA. |
+| Exceções | Campos obrigatórios vazios; e-mail inválido; rate limit; falha de gravação. |
+| Critérios de aceite | Ideia válida é gravada; autor recebe confirmação; ideia fica disponível para Inovação. |
+| Regras | RN004, RN005, RN006, RN018. |
 
-<a id="ef-rf004-sugestao-de-ia-por-bloco-do-canvas"></a>
 ### RF004 - Sugestão de IA por bloco do Canvas
 
 | Item | Especificação |
 |---|---|
-| Descrição | Permitir que o autor solicite sugestão de IA para cada bloco do Canvas. |
-| Ator | Colaborador. |
-| Pré-condições | `/canvas` aberto; `ai-assist-block` configurada; provider de IA configurado por secret. |
-| Fluxo principal | 1. Clicar em “Sugestão IA” em um bloco.<br>2. Enviar bloco e contexto para Edge Function.<br>3. IA retorna sugestão objetiva.<br>4. Sistema exibe sugestão para aceitar, editar ou ignorar. |
-| Exceções | IA indisponível: manter edição manual.<br>Resposta inválida: ignorar resposta, registrar erro e exibir mensagem genérica.<br>Conteúdo insuficiente: IA pode retornar pergunta orientadora ou sugestão genérica. |
-| Critérios de aceite | Sugestão retorna texto editável; falha de IA não impede preenchimento manual. |
-| Regras | RN008, RN009, RN028, RN030. |
-| Observação | Enviar ao provider somente o contexto necessário. |
+| Descrição | Permitir que o colaborador solicite ajuda da IA para melhorar o preenchimento de blocos do Canvas. |
+| Ator | Colaborador / Sistema IA. |
+| Critérios de aceite | IA retorna sugestão útil sem substituir automaticamente o texto do usuário; usuário decide aceitar, ajustar ou descartar. |
+| Regras | RN007, RN008. |
 
-<a id="ef-rf005-resumo-de-ia-e-aprovacao-pelo-autor"></a>
 ### RF005 - Resumo de IA e aprovação pelo autor
 
 | Item | Especificação |
 |---|---|
-| Descrição | Gerar resumo consolidado da ideia e permitir aprovação/complemento pelo autor antes da triagem. |
-| Ator | Autor da ideia. |
-| Pré-condições | Ideia com status `enviada`; `ai-summarize-idea` configurada. |
-| Fluxo principal | 1. Enviar blocos da ideia para Edge Function.<br>2. IA retorna JSON com resumo, impacto sugerido e esforço sugerido.<br>3. Gravar `resumo_ia`, `impacto_ia`, `esforco_ia` e `status = resumo_gerado`.<br>4. Exibir resumo ao autor, sem notas.<br>5. Autor aprova ou complementa.<br>6. Gravar aprovação/comentário e `status = aprovada_autor`. |
-| Exceções | IA falha: permitir submissão com resumo pendente para Inovação.<br>JSON inválido: não gravar pontuações e registrar erro.<br>Autor edita/comenta: gravar ajuste e seguir para aprovação.<br>Autor abandona tela: manter `resumo_gerado` ou aplicar fluxo de expiração definido. |
-| Critérios de aceite | Resumo válido é exibido antes da triagem; aprovação muda status para `aprovada_autor`; impacto/esforço nunca aparecem ao autor. |
-| Regras | RN005, RN008, RN009, RN010, RN011, RN028, RN030. |
-| Observação | Retomada após abandono ainda depende de definição funcional. |
+| Descrição | Gerar resumo consolidado da ideia por IA e permitir que o autor revise antes da submissão final. |
+| Ator | Colaborador / Sistema IA. |
+| Critérios de aceite | Resumo é apresentado ao autor; autor pode aprovar ou ajustar; ideia final mantém texto aprovado. |
+| Regras | RN007, RN008, RN009. |
 
-<a id="ef-rf006-dashboard-executivo"></a>
 ### RF006 - Dashboard executivo
 
 | Item | Especificação |
 |---|---|
 | Descrição | Exibir visão executiva do portfólio de inovação. |
 | Ator | Diretoria e Inovação. |
-| Pré-condições | Usuário autenticado; dados de `projects`, `ideas` e `asana_sync` disponíveis. |
-| Fluxo principal | 1. Acessar `/`.<br>2. Exibir KPIs: projetos ativos, progresso médio, tarefas abertas e ideias em triagem.<br>3. Exibir lista de projetos com área, status, progresso e última atualização.<br>4. Permitir filtro por área/status e acesso ao detalhe. |
-| Exceções | Sem projetos: estado vazio.<br>Sem dados Asana: indicar indisponível/pendente conforme regra.<br>Erro de carregamento: exibir erro e opção de tentar novamente. |
-| Critérios de aceite | KPIs calculados com dados do Supabase; filtros funcionam; indisponibilidade do Asana não quebra a tela nem gera chamada Asana ao vivo. |
-| Regras | RN001, RN012, RN013, RN030. |
-| Observação | Tela já existe em protótipo com dados mockados; substituir por consultas reais. |
+| Critérios de aceite | Dashboard exibe indicadores de ideias, projetos, status, fases, riscos e dados cacheados do Asana. |
+| Regras | RN010, RN011. |
 
-<a id="ef-rf007-matriz-impacto-x-esforco"></a>
 ### RF007 - Matriz Impacto × Esforço
 
 | Item | Especificação |
 |---|---|
-| Descrição | Exibir ideias elegíveis em matriz de priorização impacto×esforço. |
+| Descrição | Exibir e classificar ideias e soluções usando notas de impacto e esforço em escala 1–10. |
 | Ator | Diretoria e Inovação. |
-| Pré-condições | Usuário autenticado; ideias elegíveis com pontuações. |
-| Fluxo principal | 1. Acessar `/matriz`.<br>2. Buscar ideias `aprovada_autor`, `em_triagem` e `backlog`.<br>3. Plotar esforço no eixo X e impacto no eixo Y.<br>4. Diferenciar pontuação IA e pontuação final de triagem.<br>5. Permitir clique para detalhe. |
-| Exceções | Ideia sem pontuação: não plotar ou listar como pendente de triagem.<br>Sem elegíveis: estado vazio.<br>Diretoria: leitura sem ações de decisão. |
-| Critérios de aceite | Ideias elegíveis aparecem nos quadrantes corretos; ideias convertidas/arquivadas não aparecem; diretoria não altera decisão. |
-| Regras | RN010, RN014, RN015. |
-| Observação | Protótipo atual usa escala 0–10; versão final deve usar 1–5. |
+| Fluxo principal | 1. Sistema obtém impacto/esforço da solução recomendada pela IA.<br>2. Sistema classifica a ideia em quadrante.<br>3. Inovação pode revisar notas durante triagem.<br>4. Matriz exibe posição atualizada. |
+| Critérios de aceite | Ideias elegíveis aparecem na matriz; quadrante segue regra documentada; notas podem ser revisadas pela Inovação. |
+| Regras | RN012, RN013, RN014, RN015, RN025, RN026. |
 
-<a id="ef-rf008-triagem-mensal-de-ideias"></a>
 ### RF008 - Triagem mensal de ideias
 
 | Item | Especificação |
 |---|---|
-| Descrição | Permitir que Inovação realize triagem mensal, ajuste notas e registre decisão. |
+| Descrição | Permitir que a área de Inovação analise, priorize, aprove, rejeite ou mantenha ideias em análise. |
 | Ator | Inovação. |
-| Pré-condições | Usuário `inovacao`; ideias em `aprovada_autor` ou `em_triagem`. |
-| Fluxo principal | 1. Acessar `/triagem`.<br>2. Listar ideias elegíveis do mês.<br>3. Revisar resumo e Canvas.<br>4. Ajustar `impacto_final` e `esforco_final`.<br>5. Decidir: Vira Projeto, Backlog ou Arquivar.<br>6. Atualizar status, registrar sessão em `triage_sessions` e log em `activity_log`. |
-| Exceções | Notas fora de 1–5: bloquear.<br>“Vira Projeto” sem notas finais: bloquear.<br>Falha ao converter no Asana: manter ideia em estado seguro e exibir erro.<br>Usuário sem permissão: bloquear. |
-| Critérios de aceite | Notas válidas são salvas; Backlog permanece na matriz; Arquivar sai da matriz; Vira Projeto converte com sucesso quando elegível. |
-| Regras | RN001, RN010, RN015, RN016, RN017, RN029, RN030. |
-| Observação | Triagem pode ser simples na primeira versão, sem aprovação multinível. |
+| Critérios de aceite | Inovação visualiza ideia, resumo, brainstorm, matriz e dados de origem antes de decidir. |
+| Regras | RN016, RN017, RN026. |
 
-<a id="ef-rf009-conversao-de-ideia-em-projeto"></a>
 ### RF009 - Conversão de ideia em projeto
 
 | Item | Especificação |
 |---|---|
-| Descrição | Converter uma ideia aprovada em projeto no portal e instanciar projeto correspondente no Asana. |
-| Ator | Inovação. |
-| Pré-condições | Ideia com decisão “Vira Projeto”; notas finais válidas; secrets Asana configurados; template e portfólio disponíveis. |
-| Fluxo principal | 1. Confirmar “Vira Projeto”.<br>2. Chamar `asana-create-project`.<br>3. Verificar idempotência.<br>4. Criar/preparar projeto no Supabase.<br>5. Instanciar template no Asana e aguardar job.<br>6. Adicionar ao portfólio.<br>7. Atualizar descrição e owner no Asana.<br>8. Gravar `asana_project_gid`, `asana_permalink` e vínculo da ideia.<br>9. Registrar log e marcar ideia como `virou_projeto`. |
-| Exceções | Ideia já convertida: retornar conflito.<br>Job Asana falha: registrar e não confirmar conversão.<br>Falha ao adicionar ao portfólio: registrar pendência de sync.<br>Falha parcial após criar Asana: registrar estado de recuperação manual.<br>Token inválido: erro controlado e log técnico. |
-| Critérios de aceite | Ideia não convertida gera projeto no portal e no Asana; tentativa duplicada é impedida; falha Asana não gera sucesso falso. |
-| Regras | RN016, RN017, RN018, RN019, RN028, RN029, RN030. |
-| Observação | Idempotência e falhas parciais são obrigatórias. |
+| Descrição | Converter uma ideia aprovada em projeto interno e projeto operacional no Asana. |
+| Ator | Inovação / Sistema. |
+| Fluxo principal | 1. Inovação aciona conversão.<br>2. Sistema valida dados mínimos.<br>3. Sistema cria projeto interno.<br>4. Sistema copia brainstorm estratégico para o projeto.<br>5. Sistema cria projeto no Asana.<br>6. Sistema cria task inicial `Brainstorm Estratégico IA` no Asana. |
+| Exceções | Falha ao criar projeto interno; falha no Asana; brainstorm ausente; permissão insuficiente. |
+| Critérios de aceite | Projeto interno é criado; ideia muda para convertida; Asana recebe projeto e task inicial; vínculo com ideia original é preservado. |
+| Regras | RN021, RN022, RN027, RN028. |
 
-<a id="ef-rf010-detalhe-e-governanca-do-projeto"></a>
 ### RF010 - Detalhe e governança do projeto
 
 | Item | Especificação |
 |---|---|
-| Descrição | Exibir e permitir gestão das informações executivas do projeto aprovado. |
-| Ator | Inovação; Diretoria em leitura. |
-| Pré-condições | Usuário autenticado; projeto existente. |
-| Fluxo principal | 1. Acessar `/projetos/:id`.<br>2. Exibir título, status, progresso, área, owner e datas.<br>3. Exibir resumo IA, objetivo, problema e descrição.<br>4. Exibir fases, checklist, métricas, Asana e comentários.<br>5. Permitir edição apenas para `inovacao`. |
-| Exceções | Projeto inexistente: “Projeto não encontrado”.<br>Usuário sem permissão: ocultar/bloquear ações editáveis.<br>Dados Asana ausentes: bloco vazio/indisponível. |
-| Critérios de aceite | Detalhe exibe seções executivas; diretoria não edita; Inovação gere fases, checklist, métricas e comentários. |
-| Regras | RN001, RN012, RN020, RN021, RN022, RN025. |
-| Observação | Tela já existe em protótipo com dados mockados e deve ser preservada visualmente quando possível. |
+| Descrição | Exibir dados completos do projeto, incluindo objetivo, problema, descrição, fase, checklist, histórico, métricas, comentários e brainstorm herdado da ideia. |
+| Ator | Diretoria e Inovação. |
+| Critérios de aceite | Detalhe do projeto mostra informações de governança e mantém rastreabilidade com a ideia original. |
+| Regras | RN023, RN024, RN027. |
 
-<a id="ef-rf011-gestao-de-fases-e-checklist-executivo"></a>
 ### RF011 - Gestão de fases e checklist executivo
 
 | Item | Especificação |
 |---|---|
-| Descrição | Permitir que Inovação acompanhe cinco fases fixas e checklist executivo por fase. |
+| Descrição | Gerenciar fases do projeto e checklist executivo. |
 | Ator | Inovação. |
-| Pré-condições | Usuário `inovacao`; projeto existente; fases semeadas em `project_phases`. |
-| Fluxo principal | 1. Acessar detalhe do projeto.<br>2. Exibir stepper de cinco fases.<br>3. Marcar checklist da fase atual.<br>4. Marcar fase como concluída.<br>5. Atualizar status da fase.<br>6. Trigger recalcula `progress_pct`. |
-| Exceções | Fase anterior pendente: impedir avanço, salvo regra futura.<br>Projeto encerrado: bloquear alteração de fases/checklist.<br>Falha ao salvar: exibir erro e manter estado anterior. |
-| Critérios de aceite | Fase concluída recalcula progresso; cinco fases concluídas resultam em 100%; projeto encerrado bloqueia alteração. |
-| Regras | RN020, RN021, RN022. |
-| Observação | Checklist do portal é executivo e não substitui tarefas do Asana. |
+| Critérios de aceite | Fases seguem fluxo definido; checklist pode ser atualizado por Inovação; Diretoria visualiza em leitura. |
+| Regras | RN023, RN027. |
 
-<a id="ef-rf012-metricas-resultados-e-insight-de-ia"></a>
 ### RF012 - Métricas, resultados e insight de IA
 
 | Item | Especificação |
 |---|---|
-| Descrição | Permitir registrar métricas, resultados e gerar insight de IA comparando meta e realizado. |
-| Ator | Inovação. |
-| Pré-condições | Projeto existente; métricas cadastradas ou derivadas da ideia; `ai-generate-insight` configurada. |
-| Fluxo principal | 1. Acessar métricas no detalhe.<br>2. Exibir indicador, meta, unidade e resultado.<br>3. Preencher resultado.<br>4. Acionar “Gerar insight”.<br>5. Chamar Edge Function.<br>6. Gravar `insight_ia`. |
-| Exceções | Resultado vazio: bloquear insight.<br>IA indisponível: manter resultado salvo e informar falha.<br>Resposta inválida: não gravar insight e registrar erro. |
-| Critérios de aceite | Métrica com resultado gera insight salvo; falha da IA não perde resultado. |
-| Regras | RN008, RN009, RN023, RN028, RN030. |
-| Observação | Insight apoia governança; não decide automaticamente. |
+| Descrição | Registrar métricas e resultados do projeto e permitir geração de insight executivo por IA. |
+| Ator | Inovação / Sistema IA. |
+| Critérios de aceite | Métricas são salvas; insight IA é gerado por Edge Function; respostas inválidas não são persistidas. |
+| Regras | RN007, RN008, RN024. |
 
-<a id="ef-rf013-bloco-asana-no-projeto"></a>
 ### RF013 - Bloco Asana no projeto
 
 | Item | Especificação |
 |---|---|
-| Descrição | Exibir dados operacionais do Asana no detalhe do projeto em modo somente leitura. |
+| Descrição | Exibir no portal dados sincronizados do projeto Asana em modo somente leitura. |
 | Ator | Diretoria e Inovação. |
-| Pré-condições | Projeto com `asana_project_gid`; dados em `asana_sync` ou estado vazio. |
-| Fluxo principal | 1. Acessar detalhe.<br>2. Consultar `asana_sync`.<br>3. Exibir total de tarefas, abertas, concluídas, distribuição de status e última atualização.<br>4. Exibir “Abrir no Asana”. |
-| Exceções | Projeto sem Asana: indicar não integrado.<br>Cache vazio: “Aguardando sincronização”.<br>Permalink ausente: ocultar botão ou marcar indisponível. |
-| Critérios de aceite | Dados vêm de `asana_sync`; botão abre projeto no Asana; nenhuma edição de tarefa Asana é possível no portal. |
-| Regras | RN012, RN013, RN018, RN024. |
-| Observação | Portal não deve consultar Asana ao vivo durante renderização. |
+| Critérios de aceite | Bloco Asana mostra status operacional cacheado; portal não edita tasks do Asana. |
+| Regras | RN010, RN011, RN029. |
 
-<a id="ef-rf014-comentarios-de-governanca"></a>
 ### RF014 - Comentários de governança
 
 | Item | Especificação |
 |---|---|
-| Descrição | Permitir registrar comentários de governança no projeto. |
+| Descrição | Permitir comentários internos de governança no projeto. |
 | Ator | Inovação. |
-| Pré-condições | Usuário `inovacao`; projeto existente. |
-| Fluxo principal | 1. Acessar detalhe.<br>2. Exibir comentários existentes.<br>3. Adicionar comentário.<br>4. Salvar com autor e data.<br>5. Registrar log quando aplicável. |
-| Exceções | Comentário vazio: bloquear.<br>Diretoria: leitura sem criação.<br>Falha ao salvar: exibir erro e manter texto digitado. |
-| Critérios de aceite | Comentário válido aparece no histórico; diretoria não adiciona comentários. |
-| Regras | RN001, RN025, RN029, RN030. |
-| Observação | Comentários operacionais de tarefas permanecem no Asana. |
+| Critérios de aceite | Comentários são salvos com autor e data; Diretoria pode consultar. |
+| Regras | RN030. |
 
-<a id="ef-rf015-administracao-de-departamentos-e-usuarios"></a>
 ### RF015 - Administração de departamentos e usuários
 
 | Item | Especificação |
 |---|---|
-| Descrição | Permitir que Inovação gerencie departamentos e perfis de usuários. |
-| Ator | Inovação. |
-| Pré-condições | Usuário `inovacao` autenticado. |
-| Fluxo principal | 1. Acessar `/admin`.<br>2. Exibir departamentos e usuários.<br>3. Criar, editar ou inativar departamento.<br>4. Alterar nome, papel ou status de usuário.<br>5. Salvar e registrar log. |
-| Exceções | Departamento duplicado: bloquear.<br>Departamento em uso: preferir inativação.<br>Tentativa de autoelevação de papel: bloquear.<br>Usuário sem permissão: bloquear. |
-| Critérios de aceite | Departamento único é criado; departamento em uso pode ser inativado sem quebrar histórico; diretoria recebe acesso negado em `/admin`. |
-| Regras | RN001, RN026, RN027, RN029, RN030. |
-| Observação | Revisar policy de `profiles` para impedir autoelevação de perfil. |
+| Descrição | Permitir manutenção de departamentos e perfis de usuários. |
+| Ator | Administrador funcional / Inovação. |
+| Critérios de aceite | Cadastro respeita permissões; departamentos inativos não aparecem no Canvas público. |
+| Regras | RN001, RN002, RN031. |
 
-<a id="ef-rf016-sincronizacao-asana-portal"></a>
 ### RF016 - Sincronização Asana → Portal
 
 | Item | Especificação |
 |---|---|
-| Descrição | Manter dados operacionais do Asana sincronizados em `asana_sync` por webhook e cron. |
+| Descrição | Sincronizar dados operacionais do Asana para cache no portal por webhook e cron de reconciliação. |
 | Ator | Sistema. |
-| Pré-condições | Projeto com `asana_project_gid`; `asana-webhook` e `asana-sync` configuradas; token Asana válido. |
-| Fluxo principal | 1. Criar webhook na conversão do projeto.<br>2. Receber handshake do Asana e responder protocolo.<br>3. Receber eventos e atualizar/sinalizar `asana_sync`.<br>4. Executar cron diário de reconciliação.<br>5. Dashboard/detalhe leem apenas `asana_sync`. |
-| Exceções | Webhook perdido: cron corrige depois.<br>Handshake inválido: não criar webhook e registrar erro.<br>Token inválido: registrar erro.<br>Rate limit: aplicar retry/backoff quando necessário. |
-| Critérios de aceite | Alterações Asana atualizam cache por webhook ou cron; falhas são reconciliadas; front-end não chama API Asana. |
-| Regras | RN012, RN013, RN018, RN024, RN028, RN030. |
-| Observação | Validação de assinatura/segredo pertence ao design técnico, mas é obrigatória para aceite funcional da integração. |
+| Critérios de aceite | Eventos do Asana atualizam cache; cron corrige divergências; falhas são registradas. |
+| Regras | RN010, RN011, RN029. |
 
-<a id="ef-rf017-auditoria-de-acoes-relevantes"></a>
 ### RF017 - Auditoria de ações relevantes
 
 | Item | Especificação |
 |---|---|
-| Descrição | Registrar ações relevantes em `activity_log`. |
+| Descrição | Registrar ações críticas em log funcional. |
 | Ator | Sistema. |
-| Pré-condições | Tabela `activity_log` disponível. |
-| Fluxo principal | 1. Usuário ou sistema executa ação relevante.<br>2. Sistema identifica entidade, ação, ator e detalhes não sensíveis.<br>3. Sistema grava log.<br>4. Inovação consulta logs quando necessário. |
-| Exceções | Falha ao gravar log não crítico: não bloquear fluxo principal, mas registrar erro técnico quando possível.<br>Dados sensíveis no detalhe: remover/mascarar antes de gravar. |
-| Critérios de aceite | Conversão registra `action = convert`; alteração de status relevante gera log; logs não contêm tokens, senhas ou chaves. |
-| Regras | RN029, RN030. |
-| Observação | Log funcional não substitui monitoramento técnico das Edge Functions. |
+| Critérios de aceite | Submissão, IA, triagem, conversão, Asana, alteração de fase e erros relevantes geram log. |
+| Regras | RN032. |
+
+### RF018 - Gerar Brainstorm Estratégico com IA
+
+| Item | Especificação |
+|---|---|
+| Descrição | Gerar automaticamente um Brainstorm Estratégico com IA ao cadastrar uma nova ideia no backlog. |
+| Ator | Sistema / IA. |
+| Pré-condições | Ideia cadastrada com dados mínimos suficientes para análise. |
+| Fluxo principal | 1. Sistema salva a ideia.<br>2. Sistema aciona Edge Function de IA.<br>3. IA usa SCAMPER como base de ideação.<br>4. IA gera 3 soluções estratégicas.<br>5. Sistema valida resposta estruturada.<br>6. Sistema salva o brainstorm vinculado à ideia. |
+| Exceções | Falha da IA; resposta inválida; timeout; dados insuficientes. |
+| Critérios de aceite | Brainstorm contém exatamente 3 soluções, cada solução possui campos obrigatórios, uma solução é recomendada e há notas/justificativas de impacto e esforço. |
+| Regras | RN018, RN019, RN020, RN021, RN022, RN023, RN024. |
+
+### RF019 - Exibir brainstorm no detalhe da ideia
+
+| Item | Especificação |
+|---|---|
+| Descrição | Exibir o Brainstorm Estratégico no detalhe da ideia. |
+| Ator | Inovação. |
+| Pré-condições | Ideia existente no backlog. |
+| Fluxo principal | 1. Usuário abre detalhe da ideia.<br>2. Sistema exibe status do brainstorm.<br>3. Se gerado, exibe as 3 soluções e destaca a recomendada.<br>4. Usuário pode usar as informações para triagem ou conversão. |
+| Exceções | Brainstorm pendente ou com erro; possibilidade de nova tentativa conforme regra definida. |
+| Critérios de aceite | Usuário visualiza soluções, notas, riscos, mitigações e recomendação antes de converter a ideia em projeto. |
+| Regras | RN018, RN019, RN026. |
+
+### RF020 - Copiar brainstorm para projeto convertido
+
+| Item | Especificação |
+|---|---|
+| Descrição | Ao converter uma ideia em projeto, copiar o Brainstorm Estratégico para o registro do projeto. |
+| Ator | Inovação / Sistema. |
+| Pré-condições | Ideia aprovada para conversão. |
+| Fluxo principal | 1. Usuário aciona conversão em projeto.<br>2. Sistema cria projeto interno.<br>3. Sistema copia o brainstorm da ideia para o projeto.<br>4. Sistema mantém rastreabilidade com a ideia original. |
+| Exceções | Brainstorm ausente; erro na criação do projeto. |
+| Critérios de aceite | Projeto criado contém referência à ideia original e ao brainstorm estratégico usado na decisão. |
+| Regras | RN027. |
+
+### RF021 - Criar task inicial no Asana com brainstorm
+
+| Item | Especificação |
+|---|---|
+| Descrição | Criar uma task inicial no projeto do Asana contendo o Brainstorm Estratégico completo. |
+| Ator | Sistema / Asana API. |
+| Pré-condições | Projeto interno criado; projeto Asana criado ou identificado. |
+| Fluxo principal | 1. Sistema cria/identifica projeto no Asana.<br>2. Sistema cria task inicial chamada `Brainstorm Estratégico IA`.<br>3. Sistema preenche a descrição da task com o brainstorm completo. |
+| Exceções | Falha na API do Asana; projeto Asana não criado; brainstorm ausente. |
+| Critérios de aceite | O projeto no Asana contém uma task inicial com as 3 soluções, recomendação da IA, notas de impacto/esforço, riscos e mitigações. |
+| Regras | RN028, RN029. |
 
 ---
 
 <a id="ef-5-regras-de-negocio"></a>
 ## 5. Regras de negócio
 
-| ID | Regra | Aplicável em | Critério / observação |
-|---|---|---|---|
-| RN001 | O portal terá perfis `diretoria` e `inovacao`. | RF001, RF002, RF006–RF017 | Diretoria tem leitura; Inovação executa gestão. Novos perfis exigem mudança de escopo. |
-| RN002 | Permissões devem ser reforçadas por RLS e/ou Edge Functions. | RF002, RF008, RF010, RF015 | Ocultar ação na UI não basta; chamadas diretas indevidas devem ser bloqueadas. |
-| RN003 | Usuário com `profiles.ativo = false` não acessa áreas internas. | RF001, RF002 | Bloqueio pode ocorrer após autenticação, ao carregar perfil. |
-| RN004 | Campos obrigatórios do Canvas: nome, e-mail, departamentos, Problema, Indicadores, Como resolver sem IA, Como resolver com IA e Para quem/personas. Dados/fontes e Ferramentas são opcionais. | RF003 | Envio deve ser bloqueado se qualquer obrigatório estiver ausente. |
-| RN005 | Ideias devem seguir status controlados: `rascunho`, `enviada`, `resumo_gerado`, `aprovada_autor`, `em_triagem`, `virou_projeto`, `backlog`, `arquivada`. | RF003, RF005, RF007, RF008, RF009 | Transições inválidas devem ser bloqueadas na aplicação. |
-| RN006 | O front público não deve inserir diretamente em `ideas`; toda submissão passa por `submit-idea`. | RF003 | Insert anônimo direto deve ser bloqueado por RLS. |
-| RN007 | Submissões públicas devem ter proteção anti-spam. | RF003 | Usar honeypot, rate limit e/ou captcha leve; mensagens ao usuário devem ser genéricas. |
-| RN008 | IA é apoio, não autoridade final. | RF004, RF005, RF012 | Sugestões, resumo, notas e insights podem ser revisados pela Inovação. |
-| RN009 | Edge Functions de IA devem solicitar e validar JSON estruturado antes de gravar campos controlados. | RF004, RF005, RF012 | Resposta não JSON não deve gravar campos críticos indevidamente. |
-| RN010 | Impacto e esforço usam escala inteira de 1 a 5. | RF005, RF007, RF008, RF009 | Valores fora da escala devem ser bloqueados; matriz mockada 0–10 deve ser ajustada. |
-| RN011 | Impacto e esforço não devem aparecer no fluxo público do autor. | RF005 | As notas são internas ao processo da Inovação. |
-| RN012 | Asana é fonte operacional de tarefas, sprints, responsáveis e status; portal exibe espelho de leitura. | RF006, RF013, RF016 | Tarefas não são editadas no portal; comentários operacionais permanecem no Asana. |
-| RN013 | Dashboard e detalhe leem dados Asana apenas de `asana_sync`. | RF006, RF013, RF016 | Reduz latência, rate limit e exposição de token. |
-| RN014 | Matriz exibe apenas ideias `aprovada_autor`, `em_triagem` ou `backlog`. | RF007 | Ideias `virou_projeto` e `arquivada` não aparecem. |
-| RN015 | `impacto_final` e `esforco_final`, quando existirem, prevalecem sobre notas IA. | RF007, RF008, RF009 | UI deve diferenciar nota sugerida de nota confirmada. |
-| RN016 | Somente ideias com decisão explícita “Vira Projeto” podem ser convertidas. | RF008, RF009 | Conversão sem triagem é bloqueada, salvo nova regra formal. |
-| RN017 | Conversão deve ser idempotente: uma ideia não pode gerar mais de um projeto no portal ou no Asana. | RF009 | Duplo clique/retry deve retornar projeto existente ou bloquear duplicidade. |
-| RN018 | Impacto, esforço, área de origem e área impactada ficam no Supabase; não criar custom fields de projeto no Asana. | RF009, RF013, RF016 | Custom fields de tarefas do template Asana podem ser mantidos. |
-| RN019 | Projeto criado no Asana deve receber descrição inicial com resumo IA e blocos principais do Canvas em `html_notes` permitido pela API. | RF009 | HTML deve ser sanitizado antes do envio. |
-| RN020 | Todo projeto terá cinco fases fixas: Ideação, Validação, MVP, Implantação e Produção. | RF010, RF011 | Adicionar/remover fase é mudança de escopo. |
-| RN021 | `progress_pct` é calculado por fases concluídas sobre o total de cinco fases. | RF010, RF011 | Exemplo: 2 fases concluídas = 40%. Cálculo por trigger no banco. |
-| RN022 | Projeto pode ser encerrado em qualquer fase, registrando `encerrado_em` e `encerrado_na_fase`. | RF010, RF011 | Projeto encerrado não deve permitir alterações operacionais no portal. |
-| RN023 | Insight de IA sobre métrica exige resultado preenchido. | RF012 | Meta qualitativa pode ser usada junto com resultado textual. |
-| RN024 | Sincronização Asana deve ser resiliente: webhook para atualização rápida e cron diário para reconciliação. | RF013, RF016 | Não depender exclusivamente de webhook. |
-| RN025 | Comentários do portal são de governança; comentários de tarefas permanecem no Asana. | RF014 | Evita duplicidade entre gestão executiva e operação. |
-| RN026 | Departamentos em uso devem ser inativados, não excluídos. | RF015 | Inativos não aparecem em novos formulários e preservam histórico. |
-| RN027 | Usuário não pode alterar o próprio `role` para ganhar permissões. | RF015 | Requer policy segura ou função controlada. |
-| RN028 | Tokens Asana, chaves de IA e `service_role` devem existir somente em backend/Edge Functions. | RF003, RF004, RF005, RF009, RF012, RF016 | Também não registrar secrets em logs. |
-| RN029 | Logs devem conter ação, entidade, ator e detalhes úteis, sem senhas, tokens, chaves ou dados pessoais desnecessários. | RF017 | Dados sensíveis devem ser minimizados/mascarados. |
-| RN030 | Mensagens ao usuário devem ser claras e não expor stack trace, payload interno ou detalhe de credenciais. | Todos os RFs | Detalhes técnicos ficam nos logs. |
+| Código | Regra |
+|---|---|
+| RN001 | Todo acesso ao portal interno exige autenticação. |
+| RN002 | Perfis de acesso aceitos na primeira versão: `diretoria` e `inovacao`. |
+| RN003 | Permissões devem ser aplicadas no front-end e reforçadas por RLS/Edge Functions. |
+| RN004 | O Canvas público não exige login. |
+| RN005 | Ideias submetidas pelo Canvas devem ter autor, e-mail, área de origem, área impactada e campos mínimos do Canvas. |
+| RN006 | Submissão pública deve ter validação anti-spam e rate limit. |
+| RN007 | Chamadas de IA devem ocorrer somente via Edge Functions. |
+| RN008 | Respostas de IA devem ser estruturadas e validadas antes de gravação. |
+| RN009 | O autor pode aprovar ou ajustar o resumo da ideia antes da submissão final. |
+| RN010 | O Supabase é a fonte de verdade de governança. |
+| RN011 | O Asana é ferramenta operacional; o portal consome cache sincronizado para visão executiva. |
+| RN012 | Impacto deve usar escala 1–10. |
+| RN013 | Esforço deve usar escala 1–10, onde nota maior significa maior esforço. |
+| RN014 | A matriz Impacto × Esforço deve usar regras objetivas de quadrante. |
+| RN015 | A Inovação pode revisar manualmente impacto, esforço e quadrante durante triagem. |
+| RN016 | Ideias podem assumir estados como enviada, em análise, aprovada, rejeitada e convertida. |
+| RN017 | Apenas Inovação pode aprovar, rejeitar ou converter ideias. |
+| RN018 | O Brainstorm Estratégico deve ser gerado após o cadastro da ideia. |
+| RN019 | A ideia deve ser salva mesmo se a geração do brainstorm falhar. |
+| RN020 | Uma resposta válida da IA deve conter exatamente 3 soluções. |
+| RN021 | Cada solução deve indicar uma abordagem SCAMPER aplicada. |
+| RN022 | Cada solução deve conter nota de impacto e esforço de 1 a 10. |
+| RN023 | A solução recomendada deve ser uma das 3 soluções geradas. |
+| RN024 | A justificativa da recomendação deve considerar impacto, esforço, viabilidade e riscos. |
+| RN025 | As notas da solução recomendada devem alimentar a classificação inicial da matriz Impacto × Esforço da ideia. |
+| RN026 | A área de Inovação pode revisar manualmente impacto, esforço e quadrante na triagem. |
+| RN027 | Ao converter a ideia em projeto, o brainstorm deve ser copiado para o projeto interno. |
+| RN028 | Ao criar o projeto no Asana, o sistema deve criar uma task inicial com o conteúdo completo do brainstorm. |
+| RN029 | Falhas de integração com Asana não devem causar perda do projeto interno. |
+| RN030 | Comentários de governança devem guardar autor, data e vínculo com o projeto. |
+| RN031 | Departamentos inativos não devem aparecer no Canvas público. |
+| RN032 | Ações relevantes devem gerar log funcional sem dados sensíveis. |
+
+### 5.1 Framework SCAMPER
+
+O Brainstorm Estratégico deve usar o SCAMPER como framework principal.
+
+| Letra | Abordagem | Uso no portal |
+|---|---|---|
+| S | Substituir | Trocar processo, ferramenta, etapa, tecnologia ou abordagem atual por outra mais eficiente. |
+| C | Combinar | Unir processos, sistemas, áreas, dados ou soluções existentes. |
+| A | Adaptar | Adaptar prática, tecnologia ou solução de outro contexto para a demanda apresentada. |
+| M | Modificar | Melhorar, ampliar, simplificar ou redesenhar algo existente. |
+| P | Propor outro uso | Reaproveitar ativos, dados, sistemas ou processos para nova finalidade. |
+| E | Eliminar | Remover etapas, retrabalhos, controles manuais ou complexidades desnecessárias. |
+| R | Reorganizar | Reordenar fluxos, responsabilidades, etapas, integrações ou jornadas. |
+
+Regra: cada uma das 3 soluções deve indicar a abordagem SCAMPER aplicada. Sempre que possível, as soluções devem usar abordagens diferentes.
+
+### 5.2 Estrutura obrigatória de cada solução
+
+Cada solução deve conter:
+
+- abordagem SCAMPER aplicada;
+- descrição da solução;
+- racional estratégico;
+- como resolve a demanda;
+- impacto estimado e justificativa;
+- esforço estimado e justificativa;
+- análise de viabilidade;
+- riscos principais;
+- mitigações sugeridas.
+
+### 5.3 Métrica de Impacto
+
+| Nota | Interpretação |
+|---|---|
+| 1 a 3 | Baixo impacto |
+| 4 a 6 | Impacto moderado |
+| 7 a 8 | Alto impacto |
+| 9 a 10 | Impacto estratégico/crítico |
+
+Critérios e pesos:
+
+| Critério | Peso |
+|---|---:|
+| Alinhamento estratégico com objetivos da Rennova | 20% |
+| Gravidade ou relevância da demanda | 15% |
+| Ganho esperado de eficiência, receita, economia, qualidade ou compliance | 25% |
+| Quantidade de áreas, usuários ou processos beneficiados | 15% |
+| Potencial de escala/reutilização em outras áreas | 15% |
+| Urgência ou redução de risco relevante | 10% |
+
+### 5.4 Métrica de Esforço
+
+| Nota | Interpretação |
+|---|---|
+| 1 a 3 | Baixo esforço |
+| 4 a 6 | Esforço moderado |
+| 7 a 8 | Alto esforço |
+| 9 a 10 | Esforço muito alto/crítico |
+
+Critérios e pesos:
+
+| Critério | Peso |
+|---|---:|
+| Complexidade técnica | 25% |
+| Necessidade de integrações ou dados externos | 20% |
+| Tempo estimado de implementação | 20% |
+| Mudança operacional/processual necessária | 15% |
+| Dependência de outras áreas, fornecedores ou aprovações | 10% |
+| Custo estimado de implantação/manutenção | 10% |
+
+### 5.5 Regra da matriz Impacto × Esforço
+
+| Quadrante | Critério | Interpretação |
+|---|---|---|
+| Oportunidade Imediata | Impacto >= 7 e Esforço <= 4 | Alta prioridade. Deve ser considerada para execução rápida. |
+| Grande Projeto | Impacto >= 7 e Esforço >= 5 | Alta relevância, mas exige planejamento, sponsor e recursos. |
+| Ganho Tático / Astuto | Impacto entre 4 e 6 e Esforço <= 4 | Pode ser executado se houver capacidade disponível ou ganho operacional claro. |
+| Retorno Limitado | Impacto <= 6 e Esforço >= 5 | Baixa prioridade. Só deve avançar com justificativa forte. |
+| Baixa Atratividade | Impacto <= 3 | Normalmente não priorizar, salvo obrigação regulatória, compliance ou decisão estratégica. |
+
+### 5.6 Recomendação da IA
+
+A IA deve recomendar a solução com melhor equilíbrio entre:
+
+- impacto;
+- esforço;
+- viabilidade;
+- riscos controláveis;
+- aderência à demanda original;
+- possibilidade de execução no contexto da Rennova.
 
 ---
 
 <a id="ef-6-fluxos-de-usuario"></a>
 ## 6. Fluxos de usuário
 
-| Fluxo | Ator | Passos essenciais | Resultado | Atenção |
-|---|---|---|---|---|
-| Envio de ideia pelo Canvas | Colaborador | Acessa `/canvas`; preenche dados e blocos obrigatórios; pode usar sugestões IA; envia ideia; revisa/aprova resumo. | Ideia registrada como `aprovada_autor` e pronta para matriz/triagem. | Não exibir notas ao autor; proteger contra spam; permitir preenchimento manual se IA falhar. |
-| Triagem e priorização | Inovação | Acessa `/triagem`; revisa resumo/Canvas; ajusta impacto/esforço finais; decide Vira Projeto, Backlog ou Arquivar. | Ideia classificada e direcionada. | Notas finais prevalecem; Backlog permanece na matriz; conversão é idempotente. |
-| Conversão para projeto Asana | Inovação / Sistema | Confirma Vira Projeto; cria projeto no portal; instancia template no Asana; adiciona ao portfólio; grava vínculo; cria webhook/sync. | Projeto disponível no portal e no Asana. | Tratar falhas parciais; evitar duplicidade; manter tokens fora do front-end. |
-| Acompanhamento executivo | Diretoria / Inovação | Login; Dashboard; filtro por status/área; detalhe do projeto; consulta resumo, progresso, fases, métricas, Asana e comentários. | Visão única e atualizada do portfólio. | Diretoria somente leitura; dashboard lê cache do Asana. |
-| Gestão de governança do projeto | Inovação | Atualiza fases/checklist; preenche métricas/resultados; gera insights; comenta; encerra projeto quando aplicável. | Projeto com governança executiva atualizada. | Checklist do portal não é tarefa Asana; projeto encerrado bloqueia alterações relevantes. |
+### 6.1 Submissão pública de ideia
+
+```text
+Colaborador acessa /canvas
+  -> preenche dados e blocos do Canvas
+  -> solicita sugestões pontuais de IA, se necessário
+  -> revisa resumo gerado por IA
+  -> aprova envio
+  -> sistema salva ideia
+  -> sistema inicia geração do Brainstorm Estratégico IA
+```
+
+### 6.2 Geração do Brainstorm Estratégico IA
+
+```text
+Ideia salva
+  -> Edge Function monta prompt com dados da ideia
+  -> IA usa SCAMPER como base
+  -> IA retorna 3 soluções estruturadas
+  -> sistema valida JSON
+  -> sistema salva brainstorm na ideia
+  -> sistema define impacto, esforço e quadrante inicial pela solução recomendada
+```
+
+### 6.3 Triagem de ideia
+
+```text
+Inovação acessa backlog
+  -> abre detalhe da ideia
+  -> consulta resumo IA, brainstorm, solução recomendada e matriz
+  -> revisa impacto/esforço, se necessário
+  -> aprova, rejeita, mantém em análise ou converte em projeto
+```
+
+### 6.4 Conversão em projeto com Asana
+
+```text
+Inovação aciona Converter em Projeto
+  -> sistema valida permissão e dados mínimos
+  -> sistema cria projeto interno
+  -> sistema copia Brainstorm Estratégico da ideia para o projeto
+  -> sistema cria projeto no Asana
+  -> sistema cria task inicial Brainstorm Estratégico IA
+  -> sistema registra vínculo e logs
+  -> ideia passa para status convertida
+```
+
+### 6.5 Sincronização Asana → Portal
+
+```text
+Asana envia webhook ou cron executa reconciliação
+  -> Edge Function consulta Asana
+  -> atualiza cache em asana_sync
+  -> dashboard e bloco Asana leem dados cacheados
+```
 
 ---
 
 <a id="ef-7-mapa-de-navegacao"></a>
 ## 7. Mapa de navegação
 
-```text
-/canvas                       Canvas público, sem login
-/login                        Login do portal interno
-/                             Dashboard executivo
-├── /projetos                 Lista de projetos
-│   └── /projetos/:id         Detalhe do projeto
-├── /matriz                   Matriz Impacto × Esforço
-├── /triagem                  Triagem mensal, somente Inovação
-├── /ideias                   Backlog/lista de ideias, se mantido como módulo separado
-└── /admin                    Gestão de departamentos e usuários, somente Inovação
-```
+| Rota | Acesso | Objetivo |
+|---|---|---|
+| `/canvas` | Público | Submissão de ideias por colaboradores |
+| `/login` | Público | Login no portal interno |
+| `/` ou `/dashboard` | Diretoria / Inovação | Visão executiva do portfólio |
+| `/ideias` | Diretoria / Inovação | Backlog, matriz e triagem de ideias |
+| `/ideias/:id` | Diretoria / Inovação | Detalhe da ideia, resumo IA e brainstorm |
+| `/projetos` | Diretoria / Inovação | Lista de projetos de inovação |
+| `/projetos/:id` | Diretoria / Inovação | Detalhe, governança, fases, métricas e Asana |
+| `/admin` | Inovação / Admin | Departamentos e usuários |
 
 ---
 
 <a id="ef-8-telas-e-comportamento-visual"></a>
 ## 8. Telas e comportamento visual
 
-> Esta seção complementa os RFs. Regras de negócio, permissões e critérios de aceite prevalecem quando houver dúvida.
-
-<a id="ef-tela-1-canvas-publico"></a>
 ### Tela 1 - Canvas público
 
-| Aspecto | Especificação |
-|---|---|
-| Objetivo | Coletar ideias de colaboradores de forma estruturada. |
-| Campos | Nome, e-mail, área de origem, área impactada, Problema, Indicadores de sucesso, Como resolver sem IA, Como resolver com IA, Para quem/personas, Dados/fontes, Ferramentas. |
-| Obrigatórios | Nome, e-mail, áreas e blocos definidos na RN004. |
-| Ações | Sugestão IA; Enviar ideia; Aprovar resumo; Editar/comentar resumo. |
-| Estados | Inicial com orientações; carregamento com botões desabilitados; erro por campo ou geral; sucesso com confirmação. |
-| Referência visual | Lovable; tema escuro Rennova com acento dourado. |
+- Deve ser simples, sem login e responsivo.
+- Deve conter campos de identificação do autor e blocos da ideia.
+- Pode oferecer sugestões de IA por bloco.
+- Não deve mostrar notas de impacto/esforço ao autor.
+- Após envio, deve exibir confirmação clara.
 
-<a id="ef-tela-2-login"></a>
 ### Tela 2 - Login
 
-| Aspecto | Especificação |
-|---|---|
-| Objetivo | Autenticar usuários internos. |
-| Campos | E-mail e senha, ambos obrigatórios. |
-| Ações | Entrar; Sair em áreas internas. |
-| Estados | Inicial; loading; erro de credencial/usuário inativo; sucesso redirecionando para Dashboard. |
-| Referência visual | A definir no Lovable. |
+- Deve permitir autenticação por e-mail e senha.
+- Deve tratar credenciais inválidas sem expor detalhes técnicos.
 
-<a id="ef-tela-3-dashboard"></a>
 ### Tela 3 - Dashboard
 
-| Aspecto | Especificação |
-|---|---|
-| Objetivo | Fornecer visão executiva do portfólio. |
-| Dados exibidos | Projetos ativos, progresso médio, tarefas abertas, ideias em triagem e lista/cards de projetos. |
-| Ações | Filtrar por área/status; abrir projeto. |
-| Estados | KPIs/lista carregados; loading; vazio sem projetos; erro de consulta; sucesso com dados renderizados. |
-| Referência visual | Protótipo atual Lovable/GitHub com dados mockados. |
+- Deve mostrar indicadores consolidados de ideias, projetos, status, fases, riscos e evolução.
+- Deve consumir dados do Supabase e cache do Asana, não chamadas diretas ao Asana em tempo real.
 
-<a id="ef-tela-4-matriz-impacto-x-esforco"></a>
-### Tela 4 - Matriz Impacto × Esforço
+### Tela 4 - Backlog, detalhe da ideia e matriz Impacto × Esforço
 
-| Aspecto | Especificação |
-|---|---|
-| Objetivo | Priorizar ideias visualmente. |
-| Dados exibidos | Ideia, impacto 1–5, esforço 1–5, status, origem e área impactada. |
-| Ações | Clicar no ponto para detalhe; filtros se implementados. |
-| Estados | Matriz com pontos; loading; vazio sem ideias elegíveis; erro de carregamento. |
-| Referência visual | Tela Ideias atual contém matriz mockada; ajustar escala de 0–10 para 1–5. |
+- Deve listar ideias com status, origem, área impactada, data, impacto, esforço e quadrante.
+- Deve permitir abrir detalhe da ideia.
+- O detalhe da ideia deve exibir:
+  - descrição original;
+  - resumo IA;
+  - classificação IA;
+  - status do brainstorm;
+  - Brainstorm Estratégico com 3 soluções;
+  - solução recomendada destacada;
+  - notas de impacto/esforço;
+  - análise de viabilidade;
+  - riscos e mitigações;
+  - ações de enviar ao comitê, aprovar, rejeitar e converter em projeto.
+- A matriz deve seguir escala 1–10 e regra de quadrante documentada.
 
-<a id="ef-tela-5-triagem"></a>
 ### Tela 5 - Triagem
 
-| Aspecto | Especificação |
-|---|---|
-| Objetivo | Permitir decisão mensal sobre ideias. |
-| Dados exibidos | Ideia, resumo IA, impacto final, esforço final e decisão. |
-| Ações | Salvar notas; Vira Projeto; Backlog; Arquivar. |
-| Estados | Lista do mês; vazio sem ideia elegível; erro ao salvar/converter; sucesso com decisão registrada. |
-| Referência visual | A definir no Lovable. |
+- Deve apoiar decisão da Inovação com resumo, brainstorm, matriz e dados da ideia.
+- Deve permitir revisão de impacto, esforço e quadrante.
+- Deve registrar decisão e responsável.
 
-<a id="ef-tela-6-detalhe-do-projeto"></a>
 ### Tela 6 - Detalhe do projeto
 
-| Aspecto | Especificação |
-|---|---|
-| Objetivo | Concentrar governança executiva do projeto. |
-| Dados exibidos | Nome, status, progresso, área, owner, datas, resumo IA, objetivo, problema, descrição, fases, checklist, métricas, Asana e comentários. |
-| Ações | Marcar checklist; concluir fase; registrar resultado; gerar insight; adicionar comentário; encerrar projeto; abrir Asana. |
-| Estados | Dados do projeto; loading; projeto não encontrado; erro de consulta/salvamento; sucesso após ação. |
-| Referência visual | Protótipo atual Lovable/GitHub com dados mockados. |
+- Deve mostrar objetivo, problema, descrição, fase, checklist, próximos passos, histórico, métricas e comentários.
+- Deve exibir o brainstorm herdado da ideia ou, no mínimo, link/referência ao conteúdo que originou o projeto.
+- Deve conter bloco Asana somente leitura com status operacional sincronizado.
 
-<a id="ef-tela-7-admin"></a>
 ### Tela 7 - Admin
 
-| Aspecto | Especificação |
-|---|---|
-| Objetivo | Gerenciar cadastros básicos e permissões. |
-| Dados exibidos | Departamentos e usuários. |
-| Ações | Criar/editar/inativar departamento; alterar papel de usuário; ativar/inativar usuário. |
-| Estados | Listas carregadas; vazio sem registros; erro ao salvar; sucesso com feedback. |
-| Referência visual | A definir no Lovable. |
+- Deve permitir manutenção de departamentos e usuários conforme permissão.
 
 ---
 
 <a id="ef-9-requisitos-nao-funcionais"></a>
 ## 9. Requisitos não funcionais
 
-| Categoria | Requisitos |
+| Código | Requisito |
 |---|---|
-| Segurança | Autenticação em áreas restritas; controle por perfil; RLS nas tabelas; validação de inputs públicos no backend; proteção anti-spam; tokens/IA/Asana/`service_role` apenas em secrets; dados sensíveis fora do front-end, logs e mensagens. |
-| Performance | Telas internas principais devem carregar em até 3 segundos em condições normais; dashboard lê Supabase/cache, sem Asana ao vivo; listagens devem suportar pelo menos 500 ideias e 100 projetos na primeira versão; IA/Asana devem exibir loading sem travar UI. |
-| Usabilidade | Campos obrigatórios identificados; mensagens claras; feedback visual após ações importantes; conteúdos gerados por IA identificados; badges, progresso e stepper seguindo padrão visual Rennova. |
-| Compatibilidade | Chrome, Edge e Safari atuais; desktop/notebook; responsividade básica para tablet; resolução mínima recomendada 1366×768; mobile não é foco, mas fluxos básicos não devem quebrar. |
-| Logs e auditoria | Erros críticos, ações sensíveis, conversões, alterações de status e falhas de integração devem gerar log; logs não devem conter secrets, senhas ou dados sensíveis desnecessários. |
+| RNF001 | Interface deve manter identidade visual do protótipo Lovable. |
+| RNF002 | Primeira versão deve priorizar desktop e responsividade web básica. |
+| RNF003 | Chaves de IA, Asana e Supabase service role não podem estar no front-end. |
+| RNF004 | Operações sensíveis devem passar por Edge Functions. |
+| RNF005 | RLS deve proteger dados internos. |
+| RNF006 | Respostas de IA devem ser validadas antes de persistência. |
+| RNF007 | Falhas de IA e Asana devem ser tratadas sem perda de dados principais. |
+| RNF008 | Logs não devem armazenar tokens, prompts sensíveis completos ou dados desnecessários. |
+| RNF009 | Dashboard deve usar dados cacheados para evitar dependência de chamadas externas em tempo real. |
+| RNF010 | O sistema deve permitir retentativa controlada em falhas de integração. |
 
 ---
 
 <a id="ef-10-mensagens-do-sistema"></a>
 ## 10. Mensagens do sistema
 
-| Código | Situação | Mensagem sugerida |
+| Situação | Mensagem sugerida |
+|---|---|
+| Ideia enviada | Ideia enviada com sucesso. A área de Inovação fará a análise. |
+| Falha ao enviar ideia | Não foi possível enviar a ideia agora. Tente novamente. |
+| IA indisponível | A ideia foi salva, mas a análise por IA não pôde ser gerada no momento. |
+| Brainstorm gerado | Brainstorm Estratégico gerado com sucesso. |
+| Brainstorm com erro | Não foi possível gerar o brainstorm. Tente novamente ou prossiga mediante validação da Inovação. |
+| Conversão concluída | Projeto criado com sucesso e integrado ao Asana. |
+| Falha parcial no Asana | Projeto criado no portal, mas houve falha ao sincronizar com o Asana. A sincronização poderá ser tentada novamente. |
+| Acesso negado | Você não tem permissão para executar esta ação. |
+
+---
+
+<a id="ef-11-criterios-de-aceite-consolidados"></a>
+## 11. Critérios de aceite consolidados
+
+| Código | Critério |
+|---|---|
+| CA001 | Colaborador consegue submeter ideia válida pelo Canvas público. |
+| CA002 | Sistema gera resumo IA da ideia ou salva a ideia mesmo em caso de falha de IA. |
+| CA003 | Sistema gera Brainstorm Estratégico com exatamente 3 soluções baseadas em SCAMPER. |
+| CA004 | Cada solução apresenta descrição, racional, resolução da demanda, impacto, esforço, viabilidade, riscos e mitigações. |
+| CA005 | Uma solução é recomendada pela IA com justificativa. |
+| CA006 | Impacto e esforço usam escala 1–10 e justificativa objetiva. |
+| CA007 | Matriz classifica a ideia no quadrante correto. |
+| CA008 | Inovação pode revisar impacto/esforço na triagem. |
+| CA009 | Inovação consegue aprovar, rejeitar, manter em análise ou converter ideia. |
+| CA010 | Conversão cria projeto interno e preserva vínculo com a ideia original. |
+| CA011 | Brainstorm é copiado para o projeto convertido. |
+| CA012 | Asana recebe projeto e task inicial `Brainstorm Estratégico IA`. |
+| CA013 | Falha no Asana não causa perda do projeto interno. |
+| CA014 | Diretoria acessa informações em leitura sem ações de edição. |
+| CA015 | Ações relevantes geram log funcional. |
+
+---
+
+<a id="ef-12-pendencias-e-decisoes-funcionais"></a>
+## 12. Pendências e decisões funcionais
+
+| Código | Decisão | Status / Recomendação |
 |---|---|---|
-| MSG001 | Operação realizada com sucesso | Alterações salvas com sucesso. |
-| MSG002 | Campo obrigatório vazio | Preencha os campos obrigatórios antes de continuar. |
-| MSG003 | Login inválido | E-mail ou senha inválidos. |
-| MSG004 | Usuário inativo | Seu acesso está inativo. Procure a área de Inovação. |
-| MSG005 | Sem permissão | Você não tem permissão para executar esta ação. |
-| MSG006 | Ideia enviada | Ideia enviada com sucesso. Revise o resumo gerado para concluir a submissão. |
-| MSG007 | Resumo aprovado | Resumo aprovado. Sua ideia foi enviada para avaliação da Inovação. |
-| MSG008 | IA indisponível | Não foi possível gerar a sugestão agora. Você pode continuar preenchendo manualmente. |
-| MSG009 | Conversão iniciada | A conversão da ideia em projeto foi iniciada. |
-| MSG010 | Conversão concluída | Projeto criado com sucesso no portal e no Asana. |
-| MSG011 | Conversão duplicada | Esta ideia já foi convertida em projeto. |
-| MSG012 | Falha no Asana | Não foi possível concluir a integração com o Asana. Tente novamente ou acione o suporte técnico. |
-| MSG013 | Sincronização pendente | Dados do Asana ainda não sincronizados. |
-| MSG014 | Projeto encerrado | Projeto encerrado com sucesso. |
-| MSG015 | Erro inesperado | Ocorreu um erro inesperado. Tente novamente. |
-
----
-
-<a id="ef-11-pendencias-e-duvidas-funcionais"></a>
-## 11. Pendências e dúvidas funcionais
-
-| ID | Pendência | Responsável | Encaminhamento | Status |
-|---|---|---|---|---|
-| P001 | Definir se o autor poderá retomar aprovação do resumo por link/token após sair da tela. | Inovação / Técnico | Recomendado token temporário ou aprovação na mesma sessão. | Aberta |
-| P002 | Definir se haverá notificação por e-mail ao autor após submissão. | Inovação | Fora do MVP salvo decisão contrária. | Aberta |
-| P003 | Definir lista final de departamentos. | Inovação | Usar seed inicial e ajustar em Admin. | Aberta |
-| P004 | Definir se `/ideias` será mantida separada de `/matriz` e `/triagem`. | Produto / Técnico | Manter se agregar valor de backlog/listagem. | Aberta |
-| P005 | Definir política de edição de projeto após encerramento. | Inovação | Recomendado bloquear alterações, exceto comentários administrativos. | Aberta |
-| P006 | Definir visual final da tela de triagem. | Produto / Lovable | Criar no Lovable com base nesta especificação. | Aberta |
-
----
-
-<a id="ef-12-controle-de-mudancas-de-escopo"></a>
-## 12. Controle de mudanças de escopo
-
-| Data | Solicitação | Impacto | Aprovado por | Status |
-|---|---|---|---|---|
-| 2026-07-07 | Criação da especificação inicial | Define escopo funcional base | A definir | Em revisão |
-| 2026-07-08 | Revisão de objetividade e redução de redundâncias | Mantém escopo e melhora uso pelo desenvolvimento | A definir | Em revisão |
+| PD001 | Permitir conversão sem brainstorm gerado? | Permitir apenas com confirmação explícita da Inovação. |
+| PD002 | Permitir regerar brainstorm? | Sim, mas sem versionamento completo na primeira versão. |
+| PD003 | Usar notas das 3 soluções ou só da recomendada? | Salvar notas das 3 soluções; usar a recomendada para matriz inicial. |
+| PD004 | Onde registrar brainstorm no Asana? | Criar task inicial `Brainstorm Estratégico IA`. |
+| PD005 | A task do Asana pode ser editada manualmente? | Sim, pelo Asana; o portal cria o conteúdo inicial. |
+| PD006 | Fórmula exata de cálculo ponderado será automática ou assistida pela IA? | IA deve justificar as notas com base nos pesos; cálculo determinístico pode ser implementado posteriormente. |
 
 ---
 
 <a id="ef-13-aprovacao-funcional"></a>
 ## 13. Aprovação funcional
 
-| Papel | Nome | Data | Aprovação |
+| Papel | Nome | Status | Data |
 |---|---|---|---|
-| Solicitante / Dono do produto | A definir |  |  |
-| Desenvolvimento | Phablo Tavares | 2026-07-08 | Em revisão |
+| Responsável funcional | A definir | Pendente | - |
+| Responsável técnico | Phablo Tavares | Pendente | - |
+| Gerência solicitante | A definir | Pendente | - |
