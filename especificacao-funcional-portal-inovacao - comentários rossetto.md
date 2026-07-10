@@ -8,47 +8,67 @@
 <a id="sumario"></a>
 ## Sumário
 
-- [1. Identificação do projeto](#ef-1-identificacao-do-projeto)
-- [2. Visão geral](#ef-2-visao-geral)
-  - [2.1 Contexto](#ef-2-1-contexto)
-  - [2.2 Objetivo](#ef-2-2-objetivo)
-  - [2.3 Público-alvo / usuários](#ef-2-3-publico-alvo-usuarios)
-- [3. Escopo](#ef-3-escopo)
-  - [3.1 Escopo incluído](#ef-3-1-escopo-incluido)
-  - [3.2 Fora de escopo](#ef-3-2-fora-de-escopo)
-  - [3.3 Premissas](#ef-3-3-premissas)
-  - [3.4 Restrições](#ef-3-4-restricoes)
-- [4. Requisitos funcionais](#ef-4-requisitos-funcionais)
-  - [RF001 - Autenticação no portal interno](#ef-rf001-autenticacao-no-portal-interno)
-  - [RF002 - Controle de acesso por perfil](#ef-rf002-controle-de-acesso-por-perfil)
-  - [RF003 - Submissão de ideia pelo Canvas público](#ef-rf003-submissao-de-ideia-pelo-canvas-publico)
-  - [RF004 - Sugestão de IA por bloco do Canvas](#ef-rf004-sugestao-de-ia-por-bloco-do-canvas)
-  - [RF005 - Resumo de IA e aprovação pelo autor](#ef-rf005-resumo-de-ia-e-aprovacao-pelo-autor)
-  - [RF006 - Dashboard executivo](#ef-rf006-dashboard-executivo)
-  - [RF007 - Matriz Impacto × Esforço](#ef-rf007-matriz-impacto-x-esforco)
-  - [RF008 - Triagem mensal de ideias](#ef-rf008-triagem-mensal-de-ideias)
-  - [RF009 - Conversão de ideia em projeto](#ef-rf009-conversao-de-ideia-em-projeto)
-  - [RF010 - Detalhe e governança do projeto](#ef-rf010-detalhe-e-governanca-do-projeto)
-  - [RF011 - Gestão de fases e checklist executivo](#ef-rf011-gestao-de-fases-e-checklist-executivo)
-  - [RF012 - Métricas, resultados e insight de IA](#ef-rf012-metricas-resultados-e-insight-de-ia)
-  - [RF013 - Bloco Asana no projeto](#ef-rf013-bloco-asana-no-projeto)
-  - [RF014 - Comentários de governança](#ef-rf014-comentarios-de-governanca)
-  - [RF015 - Administração de departamentos e usuários](#ef-rf015-administracao-de-departamentos-e-usuarios)
-  - [RF016 - Sincronização Asana → Portal](#ef-rf016-sincronizacao-asana-portal)
-  - [RF017 - Auditoria de ações relevantes](#ef-rf017-auditoria-de-acoes-relevantes)
-  - [RF018 - Brainstorm Estratégico com IA](#ef-rf018-brainstorm-estrategico-com-ia)
-  - [RF019 - Exibição do brainstorm no detalhe da ideia](#ef-rf019-exibicao-do-brainstorm-no-detalhe-da-ideia)
-  - [RF020 - Cópia do brainstorm para projeto convertido](#ef-rf020-copia-do-brainstorm-para-projeto-convertido)
-  - [RF021 - Task inicial no Asana com brainstorm](#ef-rf021-task-inicial-no-asana-com-brainstorm)
-- [5. Regras de negócio](#ef-5-regras-de-negocio)
-- [6. Fluxos de usuário](#ef-6-fluxos-de-usuario)
-- [7. Mapa de navegação](#ef-7-mapa-de-navegacao)
-- [8. Telas e comportamento visual](#ef-8-telas-e-comportamento-visual)
-- [9. Requisitos não funcionais](#ef-9-requisitos-nao-funcionais)
-- [10. Mensagens do sistema](#ef-10-mensagens-do-sistema)
-- [11. Critérios de aceite consolidados](#ef-11-criterios-de-aceite-consolidados)
-- [12. Pendências e decisões funcionais](#ef-12-pendencias-e-decisoes-funcionais)
-- [13. Aprovação funcional](#ef-13-aprovacao-funcional)
+- [Especificação Funcional — Portal de Gestão da Inovação Rennova](#especificação-funcional--portal-de-gestão-da-inovação-rennova)
+  - [Sumário](#sumário)
+  - [1. Identificação do projeto](#1-identificação-do-projeto)
+  - [2. Visão geral](#2-visão-geral)
+    - [2.1 Contexto](#21-contexto)
+    - [2.2 Objetivo](#22-objetivo)
+    - [2.3 Público-alvo / usuários](#23-público-alvo--usuários)
+  - [3. Escopo](#3-escopo)
+    - [3.1 Escopo incluído](#31-escopo-incluído)
+    - [3.2 Fora de escopo](#32-fora-de-escopo)
+    - [3.3 Premissas](#33-premissas)
+    - [3.4 Restrições](#34-restrições)
+  - [4. Requisitos funcionais](#4-requisitos-funcionais)
+    - [RF001 - Autenticação no portal interno](#rf001---autenticação-no-portal-interno)
+    - [RF002 - Controle de acesso por perfil](#rf002---controle-de-acesso-por-perfil)
+    - [RF003 - Submissão de ideia pelo Canvas público](#rf003---submissão-de-ideia-pelo-canvas-público)
+    - [RF004 - Sugestão de IA por bloco do Canvas](#rf004---sugestão-de-ia-por-bloco-do-canvas)
+    - [RF005 - Resumo de IA e aprovação pelo autor](#rf005---resumo-de-ia-e-aprovação-pelo-autor)
+    - [RF006 - Dashboard executivo](#rf006---dashboard-executivo)
+    - [RF007 - Matriz Impacto × Esforço](#rf007---matriz-impacto--esforço)
+    - [RF008 - Triagem mensal de ideias](#rf008---triagem-mensal-de-ideias)
+    - [RF009 - Conversão de ideia em projeto](#rf009---conversão-de-ideia-em-projeto)
+    - [RF010 - Detalhe e governança do projeto](#rf010---detalhe-e-governança-do-projeto)
+    - [RF011 - Gestão de fases e checklist executivo](#rf011---gestão-de-fases-e-checklist-executivo)
+    - [RF012 - Métricas, resultados e insight de IA](#rf012---métricas-resultados-e-insight-de-ia)
+    - [RF013 - Bloco Asana no projeto](#rf013---bloco-asana-no-projeto)
+    - [RF014 - Comentários de governança](#rf014---comentários-de-governança)
+    - [RF015 - Administração de departamentos e usuários](#rf015---administração-de-departamentos-e-usuários)
+    - [RF016 - Sincronização Asana → Portal](#rf016---sincronização-asana--portal)
+    - [RF017 - Auditoria de ações relevantes](#rf017---auditoria-de-ações-relevantes)
+    - [RF018 - Brainstorm Estratégico com IA](#rf018---brainstorm-estratégico-com-ia)
+    - [RF019 - Exibição do brainstorm no detalhe da ideia](#rf019---exibição-do-brainstorm-no-detalhe-da-ideia)
+    - [RF020 - Cópia do brainstorm para projeto convertido](#rf020---cópia-do-brainstorm-para-projeto-convertido)
+    - [RF021 - Task inicial no Asana com brainstorm](#rf021---task-inicial-no-asana-com-brainstorm)
+  - [5. Regras de negócio](#5-regras-de-negócio)
+    - [5.1 Framework SCAMPER](#51-framework-scamper)
+    - [5.2 Estrutura obrigatória de cada solução](#52-estrutura-obrigatória-de-cada-solução)
+    - [5.3 Métrica de Impacto](#53-métrica-de-impacto)
+    - [5.4 Métrica de Esforço](#54-métrica-de-esforço)
+    - [5.5 Regra da matriz Impacto × Esforço](#55-regra-da-matriz-impacto--esforço)
+    - [5.6 Recomendação da IA](#56-recomendação-da-ia)
+  - [6. Fluxos de usuário](#6-fluxos-de-usuário)
+    - [6.1 Submissão pública de ideia](#61-submissão-pública-de-ideia)
+    - [6.2 Geração do Brainstorm Estratégico IA](#62-geração-do-brainstorm-estratégico-ia)
+    - [6.3 Triagem de ideia](#63-triagem-de-ideia)
+    - [6.4 Conversão em projeto com Asana](#64-conversão-em-projeto-com-asana)
+    - [6.5 Sincronização Asana → Portal](#65-sincronização-asana--portal)
+  - [7. Mapa de navegação](#7-mapa-de-navegação)
+  - [8. Telas e comportamento visual](#8-telas-e-comportamento-visual)
+    - [Tela 1 - Canvas público](#tela-1---canvas-público)
+    - [Tela 2 - Login](#tela-2---login)
+    - [Tela 3 - Dashboard](#tela-3---dashboard)
+    - [Tela 4 - Backlog, detalhe da ideia e matriz Impacto × Esforço](#tela-4---backlog-detalhe-da-ideia-e-matriz-impacto--esforço)
+    - [Tela 5 - Triagem](#tela-5---triagem)
+    - [Tela 6 - Detalhe do projeto](#tela-6---detalhe-do-projeto)
+    - [Tela 7 - Admin](#tela-7---admin)
+  - [9. Requisitos não funcionais](#9-requisitos-não-funcionais)
+  - [10. Mensagens do sistema](#10-mensagens-do-sistema)
+  - [11. Critérios de aceite consolidados](#11-critérios-de-aceite-consolidados)
+  - [12. Pendências e decisões funcionais](#12-pendências-e-decisões-funcionais)
+  - [13. Aprovação funcional](#13-aprovação-funcional)
 
 ---
 
@@ -150,12 +170,16 @@ Construir um portal interno para centralizar a gestão da inovação na Rennova,
 - Asana será a fonte operacional de tarefas e sprints.
 - Supabase será a fonte de verdade para ideias, triagem, governança, métricas, usuários e visão executiva.
 > Quais métricas que estariam dentro do Supabase? Não seria dentro do Asana? Registrando naquela parte de atualização do projeto?
+> 
+> RESPOSTA: O Supabase será a fonte de verdade para métricas executivas e de impacto/resultado, como indicadores definidos na ideia, metas, resultados alcançados e insights de IA. O Asana continuará sendo a fonte operacional para tarefas, responsáveis, prazos, status das atividades e andamento da execução. O portal apenas sincroniza esses dados operacionais do Asana para exibição em leitura.
 - Tokens de Asana e IA ficarão somente em secrets nas Edge Functions.
 - Workspace, template, portfólio e owner padrão do Asana já foram identificados ou serão parametrizados.
 - Respostas de IA serão estruturadas em JSON e validadas antes de gravação.
 - O Brainstorm Estratégico deve usar SCAMPER como base de ideação.
 - A task inicial do Asana será o local operacional para registrar o brainstorm completo do projeto convertido.
 > Na verdade, não seria melhor a questão de criar um projeto, seguindo o padrão "INV | XXXXX". O brainstorm entra como descrição do Projeto.
+> 
+> RESPOSTA: Preferi colocar como task por 2 motivos: 1 - A partir do brainstorm podem ser derivadas novas tarefas, subtarefas, etc. 2 - O brainstorm não é impositivo, portanto outra solução diferente pode ser sefinida para o projeto. Sendo assim avaliei que colocar como task já finalizada faz mais sentido, mas se necessário pode mudar
 - A primeira versão priorizará desktop e responsividade básica para web.
 
 <a id="ef-3-4-restricoes"></a>
@@ -166,10 +190,14 @@ Construir um portal interno para centralizar a gestão da inovação na Rennova,
 - Evitar edição manual ampla do front-end fora do Lovable.
 - Proteger o formulário público contra spam.
 > Isso é uma restrição ou uma premissa?
+> 
+> RESPOSTA: vou mover para premissa
 - Não exibir impacto/esforço ao autor da ideia no fluxo público.
 - Aplicar permissões no front-end e reforçar por RLS/Edge Functions.
 - Não depender de chamada ao Asana em tempo real no dashboard.
-> Isso significa que as ifnormações do Asana vão pro Supabase? Serão atualizados a cada X horas/dias?
+> Isso significa que as informações do Asana vão pro Supabase? Serão atualizados a cada X horas/dias?
+> 
+> RESPOSTA: Sim. Informações como status das tarefas, responsáveis, datas de início e conclusão do Asana serão sincronizadas para o Supabase. O dashboard não consultará o Asana em tempo real para evitar rate limit e dependência direta da API do Asana para carregamento da tela. A sincronização Asana -> Supabase ocorrerá via webhook quando houver alteração dos dados no asana. 
 - Não gravar resposta de IA sem validação mínima de estrutura.
 
 ---
@@ -194,6 +222,8 @@ Construir um portal interno para centralizar a gestão da inovação na Rennova,
 | Observação | SSO não faz parte da primeira versão. |
 
 > `FA004`Qual seria o critério para a sessão expirar? Dias?
+>
+> RESPOSTA: A expiração da sessão será definida pelo Supabase Auth. O usuário permanece logado enquanto a sessão for renovada automaticamente, desde que continue ativo em profiles. Se for inativado, o acesso é bloqueado imediatamente. A duração exata será definida antes da produção.
 
 <a id="ef-rf002-controle-de-acesso-por-perfil"></a>
 ### RF002 - Controle de acesso por perfil
@@ -209,6 +239,8 @@ Construir um portal interno para centralizar a gestão da inovação na Rennova,
 | Regras | RN001, RN002, RN003. |
 | Observação | Ocultar botão no front-end não substitui validação server-side. |
 > Acredito que não há problema da diretoria acessar a parte de triagem.
+>
+> RESPOSTA: Certo, vou ajustar
 
 <a id="ef-rf003-submissao-de-ideia-pelo-canvas-publico"></a>
 ### RF003 - Submissão de ideia pelo Canvas público
@@ -224,6 +256,8 @@ Construir um portal interno para centralizar a gestão da inovação na Rennova,
 | Regras | RN004, RN005, RN006, RN007, RN008, RN009, RN030, RN032. |
 | Observação | Escrita pública no banco deve ocorrer somente via Edge Function com `service_role`. |
 > Você vai criar uma regra de poder entrar a ideia apenas com o e-mail final @innovapharma? Se sim, deixa uma liberação para @nutriex, também.
+>
+> RESPOSTA: Sim vai ser criado essa regra, vou ajustar o documento. 
 <a id="ef-rf004-sugestao-de-ia-por-bloco-do-canvas"></a>
 ### RF004 - Sugestão de IA por bloco do Canvas
 
@@ -238,6 +272,8 @@ Construir um portal interno para centralizar a gestão da inovação na Rennova,
 | Regras | RN007, RN008, RN009, RN030, RN032. |
 | Observação | Enviar ao provider somente o contexto necessário. |
 > Criar uma IA com contexto que saiba sugerir o bloco de acordo com o objetivo total do Canvas. Não seja apenas uma melhoria de escrita.
+>
+> RESPOSTA: Perfeito, a ideia é justamente essa
 
 <a id="ef-rf005-resumo-de-ia-e-aprovacao-pelo-autor"></a>
 ### RF005 - Resumo de IA e aprovação pelo autor
@@ -253,6 +289,8 @@ Construir um portal interno para centralizar a gestão da inovação na Rennova,
 | Regras | RN005, RN007, RN008, RN009, RN010, RN030, RN032. |
 | Observação | Retomada após abandono ainda depende de definição funcional. |
 > Criar um aviso caso a pessoa abandone a página antes de enviar a ideia. 
+>
+> RESPOSTA: Certo. Vai ter um aviso que as informações serão perdidas e se a pessoa sair perde tudo que foi preenchido. Como não é área logada, seria mais difícil manter o estado então. 
 
 <a id="ef-rf006-dashboard-executivo"></a>
 ### RF006 - Dashboard executivo
@@ -296,8 +334,9 @@ Construir um portal interno para centralizar a gestão da inovação na Rennova,
 | Regras | RN001, RN010, RN015, RN016, RN017, RN018, RN026, RN027, RN028, RN030, RN032. |
 | Observação | Triagem pode ser simples na primeira versão, sem aprovação multinível. |
 
-> O que seria essas notas finais? POr exemplo "Vira projeto" sem notas finais tem um bloqueio?
-> Pensar em uma visualização do que foi "Arquivado". Abrir campo de justificativa do motivo do Arquivamento - Campo em aberto para escrita - Registro da data e envolvidos na decisão.
+> O que seria essas notas finais? POr exemplo "Vira projeto" sem notas finais tem um bloqueio? <br> Pensar em uma visualização do que foi "Arquivado". Abrir campo de justificativa do motivo do Arquivamento - Campo em aberto para escrita - Registro da data e envolvidos na decisão.
+>
+> RESPOSTA: As “notas finais” são as pontuações de impacto e esforço confirmadas pela Inovação após a análise da ideia, elas podem manter ou substituir as notas sugeridas pela IA e são usadas na matriz de priorização.<br>O bloqueio de “Vira Projeto” sem notas finais foi pensado para evitar a conversão de uma ideia sem avaliação mínima registrada. Podemos manter ou remover essa regra. <br> Sobre arquivar ideias, faz sentido. vou ajustar os requisitos.
 
 <a id="ef-rf009-conversao-de-ideia-em-projeto"></a>
 ### RF009 - Conversão de ideia em projeto
@@ -328,6 +367,8 @@ Construir um portal interno para centralizar a gestão da inovação na Rennova,
 | Observação | Tela já existe em protótipo com dados mockados e deve ser preservada visualmente quando possível. |
 
 > O que acha de ter um espaço para link no Projeto que iremos colocar o produto que estamos criando? Assim a Diretoria tem fácil acesso para demonstrar/acessar.
+>
+> RESPOSTA: Acho que faz sentido uma seção "entregas" que pode ter links e arquivos, etc. 
 
 <a id="ef-rf011-gestao-de-fases-e-checklist-executivo"></a>
 ### RF011 - Gestão de fases e checklist executivo
@@ -386,6 +427,8 @@ Construir um portal interno para centralizar a gestão da inovação na Rennova,
 | Observação | Comentários operacionais de tarefas permanecem no Asana. |
 
 > Acho que pode ser válido o usuário Diretor também poder comentar. Por exemplo, ele está apresentando para o Geraldo ou Léo, pegou um feedback lá na hora, ele já escreve nesse campo.
+>
+> RESPOSTA: Ok, vou ajustar os requisitos. 
 
 <a id="ef-rf015-administracao-de-departamentos-e-usuarios"></a>
 ### RF015 - Administração de departamentos e usuários
@@ -487,6 +530,8 @@ Construir um portal interno para centralizar a gestão da inovação na Rennova,
 
 > Acredito que faça mais sentido entrar na Descrição do Projeto do que como uma Task, não acha?
 >> Outro ponto: Importante que o Projeto entre com o nosso mockup de estrutura do Asana - Sprints.
+>
+> RESPOSTA: Sobre a estrutura base do asana que usamos, sim faz sentido vou ajustar os requisitos. 
 
 ---
 
@@ -532,6 +577,8 @@ Construir um portal interno para centralizar a gestão da inovação na Rennova,
 | RN035 | Regeração de brainstorm pode existir no MVP, mas sem versionamento completo obrigatório. | RF018, RF019 | Se implementada, deve preservar rastreabilidade mínima. |
 
 > Não entendi o 034 - Departamentos inativos não aparecem no Canvas Publico. Você pensou em listar no 004? Acho que pode ser um campo aberto mesmo.
+>
+> RESPOSTA: pode ser aberto sim, vou ajustar os requisitos
 ### 5.1 Framework SCAMPER
 
 O Brainstorm Estratégico deve usar o SCAMPER como framework principal.
@@ -703,6 +750,8 @@ Asana envia webhook ou cron executa reconciliação
 | `/admin` | Inovação / Admin | Departamentos e usuários |
 
 > Minha visão é que matriz e triagem devem estar dentro de /ideias. Sendo abas ali dentro.
+>
+> RESPOSTA: concordo, vou ajustar os requisitos
 ---
 
 <a id="ef-8-telas-e-comportamento-visual"></a>
@@ -798,8 +847,12 @@ Asana envia webhook ou cron executa reconciliação
 | Acesso negado | Você não tem permissão para executar esta ação. |
 
 > "Não foi possível enviar a ideia agora. Tente novamente." Deixar claro que é um erro nosso, da plataforma. Além de sugerir que se o erro persistir por mais de  24h, procurar o time de Inovação no Teams. 
+>
+> RESPOSTA: Ok, vou ajustar os requisitos
 
->> O Brainstorme com erro vai ter um botão para forçar uma nova tentativa da IA? 
+> O Brainstorme com erro vai ter um botão para forçar uma nova tentativa da IA? 
+>
+> RESPOSTA: pensei em tentar novamente depois de x segundos, mas vou entender a melhor maneira de fazer isso
 ---
 
 <a id="ef-11-criterios-de-aceite-consolidados"></a>
