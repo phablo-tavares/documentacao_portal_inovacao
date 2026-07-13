@@ -1,7 +1,7 @@
 # Especificação Funcional — Portal de Gestão da Inovação Rennova
 
 > Fonte funcional para orientar construção, aceite e evolução do **Rennova Spark Hub**.  
-> Esta versão consolida os comentários de revisão e as decisões funcionais sobre Canvas público, Brainstorm Estratégico com IA, matriz Impacto × Esforço, triagem, conversão de ideias, integração com o Asana, entregas e governança.
+> Esta versão consolida os comentários de revisão e as decisões funcionais sobre Canvas público, Brainstorm Estratégico com IA, matriz Impacto × Esforço, triagem, conversão de ideias, integração com o Asana, entregas e governança. As métricas de impacto e esforço utilizam critérios ponderados e escalas ancoradas de 1 a 10.
 
 ---
 
@@ -46,7 +46,23 @@
     - [5.1 Framework SCAMPER](#51-framework-scamper)
     - [5.2 Estrutura obrigatória de cada solução](#52-estrutura-obrigatória-de-cada-solução)
     - [5.3 Métrica de Impacto](#53-métrica-de-impacto)
+      - [5.3.1 Critérios, pesos e cálculo](#531-critérios-pesos-e-cálculo)
+      - [5.3.2 Escalas ancoradas dos critérios](#532-escalas-ancoradas-dos-critérios)
+        - [A. Alinhamento estratégico com os objetivos da Rennova — Peso: 20%](#a-alinhamento-estratégico-com-os-objetivos-da-rennova--peso-20)
+        - [B. Gravidade ou relevância da demanda — Peso: 15%](#b-gravidade-ou-relevância-da-demanda--peso-15)
+        - [C. Ganho esperado de eficiência, receita, economia, qualidade ou compliance — Peso: 25%](#c-ganho-esperado-de-eficiência-receita-economia-qualidade-ou-compliance--peso-25)
+        - [D. Quantidade de áreas, usuários ou processos beneficiados — Peso: 15%](#d-quantidade-de-áreas-usuários-ou-processos-beneficiados--peso-15)
+        - [E. Potencial de escala ou reutilização em outras áreas — Peso: 15%](#e-potencial-de-escala-ou-reutilização-em-outras-áreas--peso-15)
+        - [F. Urgência ou redução de risco relevante — Peso: 10%](#f-urgência-ou-redução-de-risco-relevante--peso-10)
     - [5.4 Métrica de Esforço](#54-métrica-de-esforço)
+      - [5.4.1 Critérios, pesos e cálculo](#541-critérios-pesos-e-cálculo)
+      - [5.4.2 Escalas ancoradas dos critérios](#542-escalas-ancoradas-dos-critérios)
+        - [A. Complexidade técnica — Peso: 25%](#a-complexidade-técnica--peso-25)
+        - [B. Necessidade de integrações ou dados externos — Peso: 20%](#b-necessidade-de-integrações-ou-dados-externos--peso-20)
+        - [C. Tempo estimado de implementação — Peso: 20%](#c-tempo-estimado-de-implementação--peso-20)
+        - [D. Mudança operacional ou processual necessária — Peso: 15%](#d-mudança-operacional-ou-processual-necessária--peso-15)
+        - [E. Dependência de outras áreas, fornecedores ou aprovações — Peso: 10%](#e-dependência-de-outras-áreas-fornecedores-ou-aprovações--peso-10)
+        - [F. Custo estimado de implantação e manutenção — Peso: 10%](#f-custo-estimado-de-implantação-e-manutenção--peso-10)
     - [5.5 Regra da matriz Impacto × Esforço](#55-regra-da-matriz-impacto--esforço)
     - [5.6 Recomendação da IA](#56-recomendação-da-ia)
   - [6. Fluxos de usuário](#6-fluxos-de-usuário)
@@ -82,8 +98,8 @@
 | Responsável pelo documento | Phablo Tavares |
 | Área/Time | Inovação / Desenvolvimento de Agentes e Soluções de IA |
 | Data | 2026-07-13 |
-| Versão | 0.6 |
-| Alteração desta versão | Consolidação dos comentários funcionais; CAPTCHA obrigatório; domínios corporativos autorizados; triagem e matriz em `/ideias`; template fixo do Asana; brainstorm na descrição do projeto; entregas no Supabase Storage; regras de retentativa e comentários. |
+| Versão | 0.7 |
+| Alteração desta versão | Inclusão de escalas ancoradas para cada nota dos critérios de impacto e esforço; cálculo ponderado e reproduzível das notas finais; adequação da geração por IA, triagem, matriz e critérios de aceite à nova metodologia. |
 
 ---
 
@@ -133,7 +149,7 @@ Construir um portal interno para centralizar a gestão da inovação na Rennova,
 - [ ] Brainstorm Estratégico com IA baseado em SCAMPER ao cadastrar ideia.
 - [ ] Geração de 3 soluções estratégicas por ideia.
 - [ ] Recomendação de uma solução pela IA, com justificativa.
-- [ ] Métricas de impacto e esforço em escala 1–10.
+- [ ] Métricas de impacto e esforço em escala 1–10, com critérios ponderados, significado exato de cada nota e cálculo reproduzível.
 - [ ] Matriz Impacto × Esforço para ideias elegíveis.
 - [ ] Login com Supabase Auth por e-mail e senha.
 - [ ] Controle de acesso por perfis `diretoria` e `inovacao`.
@@ -308,10 +324,10 @@ Construir um portal interno para centralizar a gestão da inovação na Rennova,
 |---|---|
 | Descrição | Exibir ideias elegíveis em matriz de priorização Impacto × Esforço, usando escala 1–10, dentro da área de ideias. |
 | Ator | Diretoria e Inovação. |
-| Pré-condições | Usuário autenticado; ideias elegíveis com pontuações de impacto/esforço ou brainstorm gerado. |
-| Fluxo principal | 1. Acessar `/ideias?aba=matriz`.<br>2. Buscar ideias elegíveis em `aprovada_autor`, `em_triagem` ou `backlog`.<br>3. Usar pontuação da solução recomendada quando não houver pontuação final.<br>4. Diferenciar pontuação da IA e pontuação final de triagem.<br>5. Plotar esforço no eixo X e impacto no eixo Y.<br>6. Classificar o quadrante pela regra objetiva.<br>7. Permitir acesso ao detalhe da ideia. |
-| Exceções | Ideia sem pontuação: não plotar e listar como pendente.<br>Sem elegíveis: exibir estado vazio.<br>Diretoria: leitura sem ações de decisão.<br>Notas fora de 1–10: bloquear salvamento. |
-| Critérios de aceite | Ideias elegíveis aparecem nos quadrantes corretos; ideias convertidas ou arquivadas não aparecem na matriz ativa; Diretoria não altera decisões; Inovação pode revisar a pontuação final. |
+| Pré-condições | Usuário autenticado; ideias elegíveis com notas dos critérios de impacto e esforço suficientes para calcular os resultados finais ou com brainstorm gerado. |
+| Fluxo principal | 1. Acessar `/ideias?aba=matriz`.<br>2. Buscar ideias elegíveis em `aprovada_autor`, `em_triagem` ou `backlog`.<br>3. Quando não houver avaliação final da triagem, usar as notas ponderadas da solução recomendada pela IA.<br>4. Diferenciar a avaliação inicial da IA e a avaliação final da triagem.<br>5. Calcular impacto e esforço pelas fórmulas das seções 5.3 e 5.4.<br>6. Arredondar os resultados para classificação na matriz.<br>7. Plotar esforço no eixo X e impacto no eixo Y.<br>8. Classificar o quadrante pela regra objetiva.<br>9. Permitir acesso ao detalhe da ideia e às notas de cada critério. |
+| Exceções | Ideia sem avaliação completa: não plotar e listar como pendente.<br>Nota de critério ausente ou fora de 1–10: não calcular a nota final e bloquear o salvamento da avaliação.<br>Sem elegíveis: exibir estado vazio.<br>Diretoria: leitura sem ações de decisão. |
+| Critérios de aceite | Ideias elegíveis aparecem nos quadrantes calculados a partir das notas ponderadas; os critérios, pesos e resultados ficam visíveis; ideias convertidas ou arquivadas não aparecem na matriz ativa; Diretoria não altera avaliações; Inovação pode revisar notas dos critérios e o sistema recalcula os resultados finais. |
 | Regras | RN010, RN013, RN014, RN015, RN016, RN017, RN026, RN027. |
 | Observação | Não haverá rota independente `/matriz`. |
 
@@ -320,12 +336,12 @@ Construir um portal interno para centralizar a gestão da inovação na Rennova,
 
 | Item | Especificação |
 |---|---|
-| Descrição | Permitir que a Inovação realize triagem, ajuste notas e registre decisão; permitir que a Diretoria consulte os dados da triagem. |
+| Descrição | Permitir que a Inovação realize a triagem, revise as notas dos critérios de impacto e esforço e registre a decisão; permitir que a Diretoria consulte os dados da triagem. |
 | Ator | Inovação para gestão; Diretoria em leitura. |
 | Pré-condições | Usuário autenticado; ideias em `aprovada_autor`, `em_triagem` ou estado elegível. |
-| Fluxo principal | 1. Acessar `/ideias?aba=triagem`.<br>2. Listar ideias elegíveis do período.<br>3. Revisar Canvas, descrição, resumo IA, brainstorm e solução recomendada.<br>4. Informar ou ajustar obrigatoriamente `impacto_final` e `esforco_final`.<br>5. Decidir: Vira Projeto, Backlog ou Arquivar/Rejeitar.<br>6. Para arquivar/rejeitar, informar justificativa obrigatória em texto livre.<br>7. Registrar data, usuário responsável e participantes da decisão, quando informados.<br>8. Atualizar status, registrar sessão em `triage_sessions` e log em `activity_log`.<br>9. Disponibilizar ideias arquivadas em `/ideias?aba=arquivadas`. |
-| Exceções | Notas fora de 1–10: bloquear.<br>“Vira Projeto” sem notas finais: bloquear.<br>“Vira Projeto” sem brainstorm gerado: permitir somente com confirmação explícita da Inovação.<br>Arquivamento sem justificativa: bloquear.<br>Falha ao converter no Asana: manter ideia e projeto em estado seguro e exibir erro.<br>Usuário sem permissão de decisão: bloquear alterações. |
-| Critérios de aceite | Notas finais válidas são obrigatórias; Backlog permanece na matriz; arquivamento registra justificativa, autor e data; ideias arquivadas ficam disponíveis no histórico; Vira Projeto somente prossegue quando elegível. |
+| Fluxo principal | 1. Acessar `/ideias?aba=triagem`.<br>2. Listar ideias elegíveis do período.<br>3. Revisar Canvas, descrição, resumo IA, brainstorm e solução recomendada.<br>4. Revisar ou informar obrigatoriamente as notas de 1 a 10 de cada critério de impacto e esforço, usando as escalas ancoradas das seções 5.3 e 5.4.<br>5. Sistema calcula automaticamente `impacto_final` e `esforco_final` pelas fórmulas ponderadas.<br>6. Exibir notas dos critérios, pesos, resultado decimal e resultado arredondado usado na matriz.<br>7. Decidir: Vira Projeto, Backlog ou Arquivar/Rejeitar.<br>8. Para arquivar/rejeitar, informar justificativa obrigatória em texto livre.<br>9. Registrar data, usuário responsável e participantes da decisão, quando informados.<br>10. Atualizar status, registrar sessão em `triage_sessions` e log em `activity_log`.<br>11. Disponibilizar ideias arquivadas em `/ideias?aba=arquivadas`. |
+| Exceções | Nota de critério ausente ou fora de 1–10: bloquear o cálculo e o salvamento da avaliação.<br>“Vira Projeto” sem cálculo final completo: bloquear.<br>“Vira Projeto” sem brainstorm gerado: permitir somente com confirmação explícita da Inovação.<br>Arquivamento sem justificativa: bloquear.<br>Falha ao converter no Asana: manter ideia e projeto em estado seguro e exibir erro.<br>Usuário sem permissão de decisão: bloquear alterações. |
+| Critérios de aceite | Todas as notas dos critérios são válidas e justificadas; resultados finais são calculados automaticamente; Backlog permanece na matriz; arquivamento registra justificativa, autor e data; ideias arquivadas ficam disponíveis no histórico; Vira Projeto somente prossegue quando a avaliação estiver completa. |
 | Regras | RN001, RN010, RN015, RN016, RN017, RN018, RN026, RN027, RN028, RN030, RN032, RN043. |
 | Observação | A triagem será uma aba da área de ideias, sem rota independente. |
 
@@ -463,9 +479,9 @@ Construir um portal interno para centralizar a gestão da inovação na Rennova,
 | Descrição | Gerar automaticamente um Brainstorm Estratégico com IA após o cadastro de uma nova ideia. |
 | Ator | Sistema / IA. |
 | Pré-condições | Ideia cadastrada com dados mínimos; provider de IA configurado; Edge Function de brainstorm disponível. |
-| Fluxo principal | 1. Sistema salva a ideia.<br>2. Sistema aciona a Edge Function de IA.<br>3. IA usa SCAMPER como base.<br>4. IA gera exatamente 3 soluções estratégicas.<br>5. Cada solução recebe impacto, esforço, viabilidade, riscos e mitigações.<br>6. IA recomenda uma solução.<br>7. Sistema valida a resposta estruturada.<br>8. Sistema salva o brainstorm vinculado à ideia. |
-| Exceções | Primeira tentativa falha: realizar uma segunda tentativa automática.<br>Segunda tentativa falha: marcar brainstorm como `erro`, manter a ideia salva e disponibilizar retentativa manual no detalhe da ideia.<br>Resposta inválida: tratar como tentativa com falha e não persistir conteúdo inválido.<br>Timeout: tratar como tentativa com falha.<br>Dados insuficientes: registrar erro controlado ou análise limitada somente se a estrutura obrigatória continuar válida. |
-| Critérios de aceite | São realizadas no máximo duas tentativas automáticas por geração; brainstorm válido contém exatamente 3 soluções; cada solução possui campos obrigatórios; uma solução é recomendada; notas e justificativas são registradas; após duas falhas, a ideia permanece disponível com ação manual de retentativa. |
+| Fluxo principal | 1. Sistema salva a ideia.<br>2. Sistema aciona a Edge Function de IA.<br>3. IA usa SCAMPER como base.<br>4. IA gera exatamente 3 soluções estratégicas.<br>5. Para cada solução, a IA atribui nota de 1 a 10 a cada critério de impacto e esforço, conforme as escalas ancoradas das seções 5.3 e 5.4, e registra a justificativa correspondente.<br>6. Sistema valida as notas e calcula automaticamente o impacto e o esforço finais de cada solução pelas fórmulas ponderadas.<br>7. Cada solução também recebe análise de viabilidade, riscos e mitigações.<br>8. IA recomenda uma solução.<br>9. Sistema valida a resposta estruturada.<br>10. Sistema salva o brainstorm vinculado à ideia. |
+| Exceções | Primeira tentativa falha: realizar uma segunda tentativa automática.<br>Segunda tentativa falha: marcar brainstorm como `erro`, manter a ideia salva e disponibilizar retentativa manual no detalhe da ideia.<br>Resposta inválida, critério ausente ou nota fora de 1–10: tratar como tentativa com falha e não persistir conteúdo inválido.<br>Timeout: tratar como tentativa com falha.<br>Dados insuficientes: registrar erro controlado ou análise limitada somente se a estrutura obrigatória continuar válida. |
+| Critérios de aceite | São realizadas no máximo duas tentativas automáticas por geração; brainstorm válido contém exatamente 3 soluções; cada solução possui todos os critérios de impacto e esforço com notas ancoradas e justificativas; as notas finais são calculadas pelas fórmulas ponderadas; uma solução é recomendada; após duas falhas, a ideia permanece disponível com ação manual de retentativa. |
 | Regras | RN007, RN008, RN009, RN018, RN019, RN020, RN021, RN022, RN023, RN024, RN025, RN035. |
 | Observação | As duas tentativas correspondem à tentativa inicial e a uma retentativa automática. Retentativas manuais posteriores não exigem versionamento completo. |
 
@@ -527,23 +543,23 @@ Construir um portal interno para centralizar a gestão da inovação na Rennova,
 | RN007 | Toda submissão pública deve possuir CAPTCHA válido, verificado no backend. Honeypot e rate limit são proteções complementares. | RF003, RF004, RF005 | CAPTCHA ausente, inválido ou expirado bloqueia a submissão. |
 | RN008 | IA é apoio, não autoridade final. | RF004, RF005, RF012, RF018 | Conteúdo de IA pode ser revisado pela Inovação. |
 | RN009 | Edge Functions de IA devem solicitar e validar JSON estruturado antes de gravar campos controlados. | RF004, RF005, RF012, RF018 | Resposta inválida não deve persistir campos críticos. |
-| RN010 | Impacto e esforço usam escala inteira de 1 a 10. | RF005, RF007, RF008, RF009, RF018 | Valores fora da escala devem ser bloqueados. |
+| RN010 | Cada critério de impacto e esforço recebe nota inteira de 1 a 10 conforme sua escala ancorada. As notas finais são calculadas pelas fórmulas ponderadas das seções 5.3 e 5.4. | RF005, RF007, RF008, RF009, RF018 | Valores fora da escala devem ser bloqueados; o resultado decimal deve ser preservado e o valor arredondado deve ser usado na matriz. |
 | RN011 | Impacto e esforço não devem aparecer no fluxo público do autor. | RF003, RF005 | Notas são internas. |
 | RN012 | Dashboard e detalhe usam cache de `asana_sync`, não chamada Asana ao vivo. | RF006, RF013, RF016 | Evita lentidão, rate limit e dependência externa. |
 | RN013 | A matriz usa esforço no eixo X e impacto no eixo Y. | RF007 | Maior esforço à direita; maior impacto acima. |
-| RN014 | Ideias sem pontuação final podem usar pontuação sugerida pela IA, indicando a origem. | RF007, RF008 | Quando houver nota final, ela prevalece. |
+| RN014 | Ideias sem avaliação final da triagem podem usar os resultados ponderados calculados a partir das notas dos critérios da solução recomendada pela IA, indicando a origem. | RF007, RF008 | Quando houver avaliação final da triagem, ela prevalece. |
 | RN015 | Ideias arquivadas, rejeitadas ou convertidas não aparecem na matriz ativa. | RF007, RF008 | Devem permanecer disponíveis em histórico ou filtros. |
-| RN016 | Somente Inovação registra notas finais e decisão de triagem. | RF002, RF007, RF008, RF009 | Diretoria consulta e comenta, mas não decide. |
-| RN017 | “Vira Projeto” exige `impacto_final`, `esforco_final` e nome do projeto válidos. | RF008, RF009 | Ausência de qualquer item bloqueia a conversão. |
+| RN016 | Somente Inovação registra ou revisa as notas dos critérios e a decisão de triagem. | RF002, RF007, RF008, RF009 | Diretoria consulta critérios, pesos e resultados, e pode comentar, mas não decide. |
+| RN017 | “Vira Projeto” exige avaliação completa dos critérios, `impacto_final`, `esforco_final` e nome do projeto válidos. | RF008, RF009 | Ausência de qualquer item bloqueia a conversão. |
 | RN018 | O Brainstorm Estratégico deve ser gerado após o cadastro da ideia. | RF003, RF018 | A geração pode ser assíncrona, com status controlado. |
 | RN019 | A ideia deve permanecer salva mesmo se a geração do brainstorm falhar. | RF003, RF018, RF020 | Falha de IA não pode causar perda da submissão. |
 | RN020 | Uma resposta válida de brainstorm contém exatamente 3 soluções. | RF018 | Quantidade diferente invalida a resposta controlada. |
 | RN021 | Cada solução indica uma abordagem SCAMPER aplicada. | RF018 | Sempre que possível, usar abordagens diferentes. |
-| RN022 | Cada solução contém nota de impacto e esforço de 1 a 10. | RF018 | Cada nota possui justificativa objetiva. |
+| RN022 | Cada solução contém notas de 1 a 10 para todos os critérios de impacto e esforço, justificativa para cada nota e os resultados finais calculados. | RF018 | As notas devem seguir as escalas ancoradas das seções 5.3 e 5.4. |
 | RN023 | A solução recomendada deve ser uma das 3 soluções geradas. | RF018 | `recommendedSolutionId` deve existir em `solutions`. |
 | RN024 | A justificativa da recomendação considera impacto, esforço, viabilidade e riscos. | RF018 | Não escolher somente pela ambição. |
 | RN025 | O Brainstorm Estratégico usa SCAMPER como framework principal. | RF018, RF019 | SCAMPER não substitui julgamento da Inovação. |
-| RN026 | Notas da solução recomendada alimentam a classificação inicial da matriz. | RF007, RF018, RF019 | Inovação pode revisar na triagem. |
+| RN026 | Os resultados ponderados da solução recomendada alimentam a classificação inicial da matriz. | RF007, RF018, RF019 | Inovação pode revisar as notas dos critérios na triagem; o sistema recalcula os resultados finais. |
 | RN027 | A matriz classifica quadrantes por regra objetiva 1–10. | RF007, RF008 | Ver seção 5.5. |
 | RN028 | Ao converter ideia em projeto, o brainstorm deve ser copiado para o projeto interno. | RF009, RF010, RF020 | Preserva rastreabilidade da decisão. |
 | RN029 | O Asana é ferramenta operacional; o portal mantém governança e dados principais. | RF009, RF013, RF016, RF021 | Falhas do Asana não apagam dados internos. |
@@ -587,53 +603,369 @@ Cada solução deve conter:
 - descrição da solução;
 - racional estratégico;
 - como resolve a demanda;
-- impacto estimado e justificativa;
-- esforço estimado e justificativa;
+- notas dos critérios de impacto, respectivas justificativas e impacto final calculado;
+- notas dos critérios de esforço, respectivas justificativas e esforço final calculado;
 - análise de viabilidade;
 - riscos principais;
 - mitigações sugeridas.
 
 ### 5.3 Métrica de Impacto
 
-| Nota | Interpretação |
-|---|---|
-| 1 a 3 | Baixo impacto |
-| 4 a 6 | Impacto moderado |
-| 7 a 8 | Alto impacto |
-| 9 a 10 | Impacto estratégico/crítico |
+A Métrica de Impacto representa o benefício potencial da ideia para a Rennova.
 
-Critérios e pesos:
+A nota final é calculada a partir dos critérios definidos nesta seção. Cada critério recebe uma nota de **1 a 10**, conforme sua escala ancorada, e participa do resultado conforme o peso estabelecido.
+
+#### 5.3.1 Critérios, pesos e cálculo
 
 | Critério | Peso |
 |---|---:|
-| Alinhamento estratégico com objetivos da Rennova | 20% |
+| Alinhamento estratégico com os objetivos da Rennova | 20% |
 | Gravidade ou relevância da demanda | 15% |
 | Ganho esperado de eficiência, receita, economia, qualidade ou compliance | 25% |
 | Quantidade de áreas, usuários ou processos beneficiados | 15% |
-| Potencial de escala/reutilização em outras áreas | 15% |
+| Potencial de escala ou reutilização em outras áreas | 15% |
 | Urgência ou redução de risco relevante | 10% |
+
+A nota final de Impacto deve ser calculada pela seguinte fórmula:
+
+```text
+Impacto =
+(Alinhamento estratégico × 0,20)
++ (Gravidade da demanda × 0,15)
++ (Ganho esperado × 0,25)
++ (Alcance dos beneficiados × 0,15)
++ (Potencial de escala × 0,15)
++ (Urgência ou redução de risco × 0,10)
+```
+
+O resultado deve ser armazenado com uma casa decimal para garantir rastreabilidade.
+
+Para classificação na matriz Impacto × Esforço, o resultado deve ser arredondado para o número inteiro mais próximo. Resultados terminados em `0,5` devem ser arredondados para cima.
+
+A interpretação da nota final é:
+
+| Nota final | Interpretação |
+|---:|---|
+| 1 a 3 | Impacto baixo |
+| 4 a 6 | Impacto moderado |
+| 7 a 8 | Impacto alto |
+| 9 a 10 | Impacto estratégico ou crítico |
+
+Quando a situação avaliada estiver entre duas descrições da escala de um critério, deve ser utilizada a menor nota, salvo quando houver evidência suficiente para justificar a maior.
+
+#### 5.3.2 Escalas ancoradas dos critérios
+
+##### A. Alinhamento estratégico com os objetivos da Rennova — Peso: 20%
+
+Avalia o vínculo da ideia com objetivos, prioridades, metas ou iniciativas formalmente definidas pela Rennova.
+
+| Nota | Significado exato |
+|---:|---|
+| 1 | Não existe vínculo identificado com objetivos, prioridades ou metas da Rennova. |
+| 2 | Existe apenas uma relação indireta ou genérica com melhorias internas. |
+| 3 | Apoia uma necessidade operacional local, sem vínculo com objetivo formal da área. |
+| 4 | Contribui para um objetivo definido de uma equipe ou departamento. |
+| 5 | Contribui diretamente para uma meta formal de uma área. |
+| 6 | Contribui diretamente para uma prioridade anual ou indicador relevante de uma área. |
+| 7 | Contribui para uma prioridade estratégica da companhia. |
+| 8 | Contribui simultaneamente para duas ou mais prioridades estratégicas. |
+| 9 | É essencial para o cumprimento de uma meta estratégica ou compromisso executivo. |
+| 10 | É indispensável para alcançar um objetivo estratégico crítico da companhia. |
+
+A justificativa deve indicar qual objetivo, meta, indicador ou prioridade está relacionado à ideia.
+
+##### B. Gravidade ou relevância da demanda — Peso: 15%
+
+Avalia o nível de prejuízo, limitação ou consequência causada pelo problema atual.
+
+| Nota | Significado exato |
+|---:|---|
+| 1 | A demanda representa apenas uma preferência ou conveniência, sem prejuízo identificável. |
+| 2 | O problema ocorre raramente e gera impacto mínimo. |
+| 3 | O problema é recorrente, mas está restrito a poucas pessoas ou atividades não críticas. |
+| 4 | O problema causa pequenos atrasos, retrabalho ou dificuldade operacional em uma equipe. |
+| 5 | O problema afeta de forma perceptível a produtividade ou qualidade de um processo de uma área. |
+| 6 | O problema causa atrasos frequentes, retrabalho relevante ou perda de qualidade em uma área. |
+| 7 | O problema afeta múltiplas equipes ou um processo importante da companhia. |
+| 8 | O problema causa perdas relevantes, reclamações, falhas frequentes ou exposição significativa a risco. |
+| 9 | O problema compromete processo crítico, resultado financeiro, qualidade, cliente ou obrigação corporativa. |
+| 10 | O problema ameaça continuidade operacional, segurança, obrigação legal, regulatória ou reputação da companhia. |
+
+##### C. Ganho esperado de eficiência, receita, economia, qualidade ou compliance — Peso: 25%
+
+Avalia a intensidade do principal benefício mensurável esperado.
+
+Deve ser utilizada a dimensão principal do benefício da ideia, como redução de tempo, redução de custo, aumento de receita, redução de erros, aumento de produtividade ou melhoria de qualidade.
+
+| Nota | Significado exato |
+|---:|---|
+| 1 | Não existe ganho mensurável ou o benefício ainda não foi demonstrado. |
+| 2 | Ganho estimado inferior a 5% no indicador principal. |
+| 3 | Ganho estimado entre 5% e 10% no indicador principal. |
+| 4 | Ganho estimado entre 11% e 15% no indicador principal. |
+| 5 | Ganho estimado entre 16% e 20% no indicador principal. |
+| 6 | Ganho estimado entre 21% e 30% no indicador principal. |
+| 7 | Ganho estimado entre 31% e 40% no indicador principal. |
+| 8 | Ganho estimado entre 41% e 50% no indicador principal. |
+| 9 | Ganho estimado entre 51% e 70% no indicador principal. |
+| 10 | Ganho estimado superior a 70% ou eliminação de falha crítica de qualidade ou compliance. |
+
+A justificativa deve registrar o indicador utilizado, seu valor atual e o ganho estimado.
+
+Exemplo:
+
+```text
+Indicador: tempo médio de execução
+Valor atual: 10 horas
+Valor esperado: 7 horas
+Ganho esperado: 30%
+Nota: 6
+```
+
+##### D. Quantidade de áreas, usuários ou processos beneficiados — Peso: 15%
+
+Avalia o alcance direto da solução.
+
+A nota deve ser definida pelo maior alcance comprovado entre usuários, áreas ou processos.
+
+| Nota | Significado exato |
+|---:|---|
+| 1 | Beneficia até 5 usuários ou uma atividade isolada. |
+| 2 | Beneficia entre 6 e 10 usuários. |
+| 3 | Beneficia entre 11 e 25 usuários ou uma equipe. |
+| 4 | Beneficia entre 26 e 50 usuários ou um processo de uma área. |
+| 5 | Beneficia entre 51 e 100 usuários ou duas áreas. |
+| 6 | Beneficia entre 101 e 200 usuários ou três áreas. |
+| 7 | Beneficia entre 201 e 350 usuários ou quatro a cinco áreas. |
+| 8 | Beneficia entre 351 e 500 usuários ou seis ou mais áreas. |
+| 9 | Beneficia a maior parte da companhia ou um processo corporativo de grande alcance. |
+| 10 | Beneficia toda a companhia, todos os usuários de um processo crítico ou um público externo de grande alcance. |
+
+Não devem ser contabilizadas pessoas que não serão diretamente afetadas ou beneficiadas pela solução.
+
+##### E. Potencial de escala ou reutilização em outras áreas — Peso: 15%
+
+Avalia a possibilidade de reutilizar a solução além da demanda original.
+
+| Nota | Significado exato |
+|---:|---|
+| 1 | Solução de uso único, sem possibilidade prática de reutilização. |
+| 2 | Solução extremamente específica para um único caso. |
+| 3 | Pode ser reutilizada somente com grande reconstrução ou alteração. |
+| 4 | Pode ser reutilizada dentro da mesma equipe com adaptações relevantes. |
+| 5 | Pode ser reutilizada em outros processos da mesma área com ajustes moderados. |
+| 6 | Pode ser reutilizada em uma ou duas outras áreas com adaptações. |
+| 7 | Pode ser utilizada por múltiplas áreas com pequenas adaptações. |
+| 8 | Pode se tornar um componente, serviço ou processo padrão da companhia. |
+| 9 | Pode ser aplicada amplamente como padrão corporativo. |
+| 10 | Possui potencial de se tornar plataforma, produto ou capacidade estratégica reutilizável em toda a companhia. |
+
+##### F. Urgência ou redução de risco relevante — Peso: 10%
+
+Avalia o prazo necessário para tratar a demanda ou o risco reduzido pela solução.
+
+| Nota | Significado exato |
+|---:|---|
+| 1 | Não existe prazo, risco ou consequência relevante para postergação. |
+| 2 | A demanda pode aguardar mais de 12 meses sem consequência significativa. |
+| 3 | A demanda deve ser tratada entre 6 e 12 meses. |
+| 4 | A demanda deve ser tratada entre 3 e 6 meses. |
+| 5 | A demanda deve ser tratada entre 2 e 3 meses. |
+| 6 | A demanda deve ser tratada entre 1 e 2 meses ou reduz risco operacional moderado. |
+| 7 | A demanda deve ser tratada em até 30 dias ou reduz risco operacional relevante e recorrente. |
+| 8 | A demanda deve ser tratada em até 15 dias ou está associada a auditoria, compromisso formal ou risco elevado. |
+| 9 | Existe prazo obrigatório iminente ou risco elevado de perda financeira, operacional, regulatória ou reputacional. |
+| 10 | Existe incidente ativo, risco de paralisação, segurança, descumprimento legal ou impacto crítico imediato. |
 
 ### 5.4 Métrica de Esforço
 
-| Nota | Interpretação |
-|---|---|
-| 1 a 3 | Baixo esforço |
-| 4 a 6 | Esforço moderado |
-| 7 a 8 | Alto esforço |
-| 9 a 10 | Esforço muito alto/crítico |
+A Métrica de Esforço representa a quantidade de trabalho, complexidade, dependências e recursos necessários para implementar e manter a ideia.
 
-Critérios e pesos:
+Uma nota maior representa maior esforço de implementação.
+
+A nota final é calculada a partir dos critérios definidos nesta seção. Cada critério recebe uma nota de **1 a 10**, conforme sua escala ancorada, e participa do resultado conforme o peso estabelecido.
+
+As notas não devem ser atribuídas por percepção livre. O avaliador deve identificar a descrição que melhor representa a situação da ideia e utilizar a nota correspondente.
+
+#### 5.4.1 Critérios, pesos e cálculo
 
 | Critério | Peso |
 |---|---:|
 | Complexidade técnica | 25% |
 | Necessidade de integrações ou dados externos | 20% |
 | Tempo estimado de implementação | 20% |
-| Mudança operacional/processual necessária | 15% |
+| Mudança operacional ou processual necessária | 15% |
 | Dependência de outras áreas, fornecedores ou aprovações | 10% |
-| Custo estimado de implantação/manutenção | 10% |
+| Custo estimado de implantação e manutenção | 10% |
+
+A nota final de Esforço deve ser calculada pela seguinte fórmula:
+
+```text
+Esforço =
+(Complexidade técnica × 0,25)
++ (Integrações ou dados externos × 0,20)
++ (Tempo estimado × 0,20)
++ (Mudança operacional × 0,15)
++ (Dependências × 0,10)
++ (Custo × 0,10)
+```
+
+O resultado deve ser armazenado com uma casa decimal para garantir rastreabilidade.
+
+Para classificação na matriz Impacto × Esforço, o resultado deve ser arredondado para o número inteiro mais próximo. Resultados terminados em `0,5` devem ser arredondados para cima.
+
+A interpretação da nota final é:
+
+| Nota final | Interpretação |
+|---:|---|
+| 1 a 3 | Esforço baixo |
+| 4 a 6 | Esforço moderado |
+| 7 a 8 | Esforço alto |
+| 9 a 10 | Esforço muito alto ou crítico |
+
+Quando a situação avaliada estiver entre duas descrições da escala de um critério, deve ser utilizada a maior nota, evitando a subestimação do esforço necessário.
+
+#### 5.4.2 Escalas ancoradas dos critérios
+
+##### A. Complexidade técnica — Peso: 25%
+
+Avalia a dificuldade técnica da implementação considerando arquitetura, componentes, banco de dados, segurança e nível de conhecimento da solução.
+
+| Nota | Significado exato |
+|---:|---|
+| 1 | Configuração simples ou alteração sem desenvolvimento de código. |
+| 2 | Pequena alteração localizada em componente conhecido. |
+| 3 | Desenvolvimento simples em um único componente, utilizando padrões já existentes. |
+| 4 | Alteração em múltiplos componentes do mesmo sistema, sem mudança relevante de arquitetura. |
+| 5 | Nova funcionalidade com regras de negócio, persistência e testes comuns. |
+| 6 | Implementação envolvendo múltiplos componentes, alterações de banco e testes relevantes. |
+| 7 | Nova arquitetura parcial, novo serviço ou tecnologia pouco utilizada pelo time. |
+| 8 | Implementação envolvendo múltiplos sistemas, migração de dados, segurança ou alta criticidade técnica. |
+| 9 | Arquitetura crítica, grande incerteza técnica ou necessidade de prova de conceito antes da implementação. |
+| 10 | Viabilidade técnica ainda não comprovada ou necessidade de redesenho estrutural de plataforma. |
+
+##### B. Necessidade de integrações ou dados externos — Peso: 20%
+
+Avalia a quantidade e dificuldade das integrações ou dependências de dados externos.
+
+| Nota | Significado exato |
+|---:|---|
+| 1 | Nenhuma integração ou dado externo necessário. |
+| 2 | Uso de integração já existente, sem necessidade de alteração. |
+| 3 | Pequena alteração em integração existente e conhecida. |
+| 4 | Uma nova integração simples, síncrona e bem documentada. |
+| 5 | Uma nova integração com autenticação, validação e tratamento de erros. |
+| 6 | Duas novas integrações ou uma integração de média complexidade. |
+| 7 | Três ou mais integrações ou dependência relevante de fornecedor. |
+| 8 | Integrações bidirecionais, assíncronas, com dados sensíveis ou alto volume. |
+| 9 | Integração crítica com sistema legado, instável ou pouco documentado. |
+| 10 | Dependência de múltiplos sistemas críticos externos, sem ambiente de testes, documentação adequada ou garantia de disponibilidade. |
+
+##### C. Tempo estimado de implementação — Peso: 20%
+
+Avalia o esforço total necessário para concluir a entrega.
+
+O tempo deve incluir:
+
+- levantamento e detalhamento;
+- desenvolvimento;
+- testes;
+- correções;
+- homologação;
+- documentação;
+- implantação.
+
+A estimativa representa esforço de trabalho, e não tempo corrido aguardando outras áreas.
+
+| Nota | Significado exato |
+|---:|---|
+| 1 | Até 1 dia útil. |
+| 2 | De 2 a 3 dias úteis. |
+| 3 | De 4 a 5 dias úteis. |
+| 4 | De 6 a 10 dias úteis. |
+| 5 | De 11 a 15 dias úteis. |
+| 6 | De 16 a 22 dias úteis. |
+| 7 | De 23 a 30 dias úteis. |
+| 8 | De 31 a 45 dias úteis. |
+| 9 | De 46 a 60 dias úteis. |
+| 10 | Mais de 60 dias úteis. |
+
+Exemplo:
+
+```text
+Tempo estimado: 18 dias úteis
+Nota: 6
+```
+
+##### D. Mudança operacional ou processual necessária — Peso: 15%
+
+Avalia o nível de alteração causado na rotina, no processo ou na forma de trabalho dos usuários.
+
+| Nota | Significado exato |
+|---:|---|
+| 1 | Nenhuma mudança operacional ou processual. |
+| 2 | Mudança apenas visual ou de configuração, praticamente imperceptível ao usuário. |
+| 3 | Pequena alteração em uma atividade executada por um único perfil. |
+| 4 | Alteração em uma etapa de um processo de uma equipe. |
+| 5 | Mudança relevante em um processo de uma área, exigindo comunicação aos usuários. |
+| 6 | Novo fluxo em uma área, exigindo orientação ou treinamento simples. |
+| 7 | Mudança envolvendo duas ou mais áreas e atualização de procedimentos. |
+| 8 | Mudança ampla, exigindo treinamento formal, transição e acompanhamento de adoção. |
+| 9 | Transformação de processo crítico, com impacto relevante na operação e período de adaptação. |
+| 10 | Mudança no modelo operacional da companhia ou transformação corporativa de grande alcance. |
+
+##### E. Dependência de outras áreas, fornecedores ou aprovações — Peso: 10%
+
+Avalia o quanto a execução depende de pessoas ou organizações fora do time responsável.
+
+| Nota | Significado exato |
+|---:|---|
+| 1 | Nenhuma dependência externa ao time responsável. |
+| 2 | Uma validação simples, sem impacto esperado no prazo. |
+| 3 | Uma dependência com responsável e prazo já definidos. |
+| 4 | Duas dependências internas de baixo risco. |
+| 5 | Dependência relevante de uma área para parte da entrega. |
+| 6 | Dependência de múltiplas pessoas ou áreas internas. |
+| 7 | Dependência de fornecedor, contrato ou aprovação formal. |
+| 8 | Múltiplas dependências externas com risco significativo de atraso. |
+| 9 | Dependências críticas sem prazo garantido ou compromisso formal. |
+| 10 | Implementação bloqueada até decisão, contratação, aprovação regulatória ou entrega externa ainda indefinida. |
+
+##### F. Custo estimado de implantação e manutenção — Peso: 10%
+
+Avalia o custo adicional necessário para implantar a solução e mantê-la durante os primeiros 12 meses.
+
+Devem ser considerados:
+
+- licenças;
+- serviços de terceiros;
+- infraestrutura;
+- consumo de APIs;
+- desenvolvimento contratado;
+- suporte;
+- manutenção;
+- custos recorrentes.
+
+Não deve ser considerado o custo do time interno quando ele já fizer parte da estrutura normal da área.
+
+| Nota | Significado exato |
+|---:|---|
+| 1 | Sem custo adicional. |
+| 2 | Até R$ 1.000. |
+| 3 | De R$ 1.001 a R$ 5.000. |
+| 4 | De R$ 5.001 a R$ 10.000. |
+| 5 | De R$ 10.001 a R$ 25.000. |
+| 6 | De R$ 25.001 a R$ 50.000. |
+| 7 | De R$ 50.001 a R$ 100.000. |
+| 8 | De R$ 100.001 a R$ 250.000. |
+| 9 | De R$ 250.001 a R$ 500.000. |
+| 10 | Acima de R$ 500.000. |
+
+Quando o custo ainda não puder ser confirmado, deve ser utilizada a melhor estimativa disponível, registrando que o valor ainda depende de orçamento ou validação.
 
 ### 5.5 Regra da matriz Impacto × Esforço
+
+A matriz deve utilizar os resultados finais arredondados, calculados conforme as fórmulas das seções 5.3 e 5.4.
 
 | Quadrante | Critério | Interpretação |
 |---|---|---|
@@ -679,7 +1011,8 @@ Colaborador acessa /canvas
 Ideia salva
   -> sistema realiza a primeira tentativa
   -> IA usa SCAMPER e retorna 3 soluções estruturadas
-  -> sistema valida o JSON
+  -> IA atribui notas ancoradas aos critérios de impacto e esforço
+  -> sistema valida o JSON e calcula os resultados ponderados
   -> se válido, salva o brainstorm e define classificação inicial
   -> se falhar, realiza uma segunda tentativa automática
   -> se a segunda tentativa falhar, marca erro
@@ -692,7 +1025,8 @@ Ideia salva
 Inovação acessa /ideias?aba=triagem
   -> abre detalhe da ideia
   -> consulta Canvas, resumo IA, brainstorm, solução recomendada e matriz
-  -> informa ou revisa impacto_final e esforco_final
+  -> revisa as notas dos critérios de impacto e esforço
+  -> sistema recalcula impacto_final e esforco_final
   -> decide Backlog, Arquivar/Rejeitar ou Vira Projeto
   -> arquivamento exige justificativa e auditoria
   -> Diretoria pode consultar os dados, sem registrar decisão
@@ -818,7 +1152,7 @@ O detalhe da ideia deve exibir:
 - status do brainstorm;
 - Brainstorm Estratégico com 3 soluções;
 - solução recomendada destacada;
-- notas de impacto/esforço;
+- notas de cada critério de impacto e esforço, pesos e resultados finais calculados;
 - análise de viabilidade;
 - riscos e mitigações;
 - ação de retentativa do brainstorm para Inovação, quando aplicável;
@@ -827,7 +1161,8 @@ O detalhe da ideia deve exibir:
 A aba Triagem deve:
 
 - apoiar a decisão da Inovação;
-- permitir revisão das notas finais;
+- permitir revisão das notas dos critérios de impacto e esforço;
+- recalcular automaticamente os resultados finais ponderados;
 - registrar decisão, responsável, participantes e data;
 - permitir consulta integral pela Diretoria.
 
@@ -938,10 +1273,10 @@ Ao acionar “Vira Projeto”, deve ser exibido diálogo ou etapa de confirmaç�
 | CA005 | Sistema gera Brainstorm Estratégico com exatamente 3 soluções baseadas em SCAMPER. |
 | CA006 | Cada solução apresenta descrição, racional, resolução da demanda, impacto, esforço, viabilidade, riscos e mitigações. |
 | CA007 | Uma solução é recomendada pela IA com justificativa. |
-| CA008 | Impacto e esforço usam escala 1–10 e justificativa objetiva. |
+| CA008 | Cada critério de impacto e esforço utiliza escala ancorada de 1 a 10, com significado documentado e justificativa; os resultados finais são calculados pelas fórmulas ponderadas. |
 | CA009 | Em caso de falha, o sistema realiza no máximo duas tentativas automáticas de brainstorm e depois disponibiliza retentativa manual para Inovação. |
 | CA010 | Matriz classifica a ideia no quadrante correto e está disponível como aba de `/ideias`. |
-| CA011 | Inovação pode revisar impacto e esforço na triagem; Diretoria consulta sem editar. |
+| CA011 | Inovação pode revisar as notas dos critérios na triagem; o sistema recalcula impacto e esforço finais; Diretoria consulta critérios, pesos e resultados sem editar. |
 | CA012 | “Vira Projeto” é bloqueado sem `impacto_final` e `esforco_final` válidos. |
 | CA013 | Arquivar ou rejeitar exige justificativa e registra responsável, data e participantes informados. |
 | CA014 | Ideias arquivadas permanecem acessíveis na aba de histórico. |
@@ -971,10 +1306,10 @@ Ao acionar “Vira Projeto”, deve ser exibido diálogo ou etapa de confirmaç�
 |---|---|---|
 | PD001 | Permitir conversão sem brainstorm gerado? | Sim, somente com confirmação explícita da Inovação. |
 | PD002 | Permitir regerar brainstorm? | Sim. Serão realizadas duas tentativas automáticas; após falha, Inovação poderá tentar novamente no detalhe da ideia. Não haverá versionamento completo no MVP. |
-| PD003 | Usar notas das 3 soluções ou somente da recomendada? | Salvar as notas das 3 soluções e usar a solução recomendada para a matriz inicial. |
+| PD003 | Usar notas das 3 soluções ou somente da recomendada? | Salvar as notas dos critérios e os resultados ponderados das 3 soluções; usar os resultados da solução recomendada para a matriz inicial. |
 | PD004 | Onde registrar o brainstorm no Asana? | Na descrição do projeto. |
 | PD005 | Criar task inicial para o brainstorm? | Não. Nenhuma task exclusiva será criada. |
-| PD006 | A fórmula ponderada será automática ou assistida pela IA? | A IA justificará as notas com base nos pesos. Cálculo determinístico adicional não faz parte do MVP. |
+| PD006 | Como as notas finais de impacto e esforço serão calculadas? | A IA ou a Inovação atribui as notas dos critérios conforme as escalas ancoradas; o sistema aplica automaticamente as fórmulas ponderadas e calcula os resultados finais. |
 | PD007 | Onde ficam matriz e triagem? | Em abas dentro de `/ideias`. |
 | PD008 | Quais domínios podem submeter ideias? | `@nutriex.com.br`, `@nutriex.com`, `@innovapharma.com` e `@rennova.com`. |
 | PD009 | Como funcionará a sessão? | Será mantido o padrão do Supabase Auth, sem timeout customizado. |
