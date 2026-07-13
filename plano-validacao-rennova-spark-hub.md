@@ -1,7 +1,7 @@
 # Plano de Validação — Portal de Gestão da Inovação Rennova
 
-> Plano objetivo para validar os principais fluxos do **Rennova Spark Hub** antes de aceite funcional/técnico.  
-> Versão atualizada com validação do **Brainstorm Estratégico com IA baseado em SCAMPER**, matriz Impacto × Esforço 1–10 e criação de task inicial no Asana.
+> Plano enxuto para validar os fluxos críticos do **Rennova Spark Hub** antes do aceite.  
+> Baseado na versão 0.6 da especificação funcional.
 
 ---
 
@@ -11,377 +11,103 @@
 |---|---|
 | Projeto | Rennova Spark Hub — Portal de Gestão da Inovação |
 | Responsável | Phablo Tavares |
-| Data | 2026-07-08 |
-| Versão | 0.4 |
-| Objetivo | Validar os fluxos essenciais de submissão, IA, triagem, conversão em projeto, Asana e governança |
+| Documento de referência | `especificacao-funcional-portal-inovacao.md`, versão 0.6 |
+| Data | 2026-07-13 |
+| Versão | 0.5 |
+| Objetivo | Confirmar os fluxos principais, as permissões e a preservação dos dados em falhas. |
 
 ---
 
-## 2. Estratégia de validação
+## 2. Como validar
 
-A validação deve ser objetiva e orientada aos fluxos críticos do produto.
+A validação será manual e concentrada nos fluxos de maior risco. Para cada caso, registrar:
 
-Não é necessário executar uma bateria extensa de testes nesta fase. O foco é confirmar que:
+- `Aprovado`, `Reprovado` ou `Bloqueado`;
+- uma evidência: captura de tela, registro no banco, log ou link do Asana;
+- observação apenas quando houver desvio.
 
-1. o usuário consegue submeter uma ideia;
-2. a IA gera os artefatos esperados;
-3. a Inovação consegue analisar e converter ideias;
-4. o projeto é criado corretamente;
-5. o Asana recebe os dados necessários;
-6. falhas previsíveis não causam perda de dados.
+A entrega não pode ser aceita com falha crítica em submissão, permissões, triagem, conversão, template Asana, idempotência ou preservação dos dados.
 
 ---
 
-## 3. Escopo da validação
+## 3. Pré-requisitos
 
-| Área | Validar |
-|---|---|
-| Canvas público | Submissão de ideia sem login |
-| IA | Sugestões, resumo e Brainstorm Estratégico SCAMPER |
-| Backlog de ideias | Listagem, detalhe, status e matriz |
-| Matriz Impacto × Esforço | Notas 1–10 e quadrante correto |
-| Triagem | Aprovar, rejeitar, manter em análise e converter |
-| Projeto interno | Criação com vínculo à ideia e brainstorm copiado |
-| Asana | Criação de projeto e task inicial `Brainstorm Estratégico IA` |
-| Segurança | Permissões e ausência de tokens no front-end |
-| Falhas | IA indisponível, JSON inválido e falha parcial no Asana |
+- usuário `inovacao` e usuário `diretoria`;
+- acesso ao Supabase, Storage e logs;
+- acesso ao Asana e ao template `INV | Modelo Base`;
+- e-mails válidos dos quatro domínios e um e-mail de domínio não autorizado;
+- arquivos de teste abaixo e acima de 50 MB;
+- possibilidade de simular falhas da IA e do Asana.
 
 ---
 
 ## 4. Casos de validação
 
-### CV001 - Submissão de ideia pelo Canvas público
-
-**Objetivo:** confirmar que uma ideia pode ser enviada sem login.
-
-**Passos:**
-
-1. Acessar `/canvas` sem autenticação.
-2. Preencher dados do autor, área de origem, área impactada e campos do Canvas.
-3. Enviar a ideia.
-
-**Resultado esperado:**
-
-- Ideia é salva no banco.
-- Usuário recebe mensagem de sucesso.
-- Ideia aparece no backlog interno.
-- Nenhum dado técnico sensível é exibido ao usuário.
+| ID | Fluxo | Execução mínima | Resultado esperado | Cobre |
+|---|---|---|---|---|
+| CV001 | Login, sessão e perfis | Entrar como Diretoria e Inovação; atualizar a página; tentar ações restritas. | Sessão segue o padrão do Supabase; Diretoria consulta e comenta, mas não altera notas, decisões ou cadastros; Inovação executa gestão; backend também bloqueia ações indevidas. | RF001, RF002 |
+| CV002 | Canvas, domínios e CAPTCHA | Enviar com campo vazio, domínio inválido, sem CAPTCHA e com cada domínio autorizado. Tentar sair antes do envio. | Somente `@nutriex.com.br`, `@nutriex.com`, `@innovapharma.com` e `@rennova.com` são aceitos; CAPTCHA válido é obrigatório; ideia válida é criada; saída antes do envio apresenta aviso. | RF003, RF005 |
+| CV003 | Sugestão e resumo por IA | Solicitar sugestão por bloco; editar ou ignorar; gerar resumo; simular falha da IA. | Sugestão considera o contexto e é editável; resumo não exibe impacto/esforço; falha da IA não impede preenchimento nem elimina ideia já enviada. | RF004, RF005 |
+| CV004 | Brainstorm e retentativa | Gerar brainstorm; simular falha na primeira tentativa; simular falha nas duas; usar “Tentar novamente”. | Exatamente 3 soluções SCAMPER com notas, justificativas, viabilidade, riscos e mitigações; somente uma retentativa automática; após duas falhas a ideia permanece salva e Inovação pode tentar manualmente. | RF018, RF019 |
+| CV005 | Matriz e triagem | Conferir quadrantes; acessar triagem como Diretoria e Inovação; tentar converter sem notas; arquivar sem e com justificativa. | Matriz usa escala 1–10; Diretoria não edita; notas finais são obrigatórias; arquivamento exige justificativa, responsável e data; ideia arquivada aparece no histórico. | RF007, RF008 |
+| CV006 | Conversão e template Asana | Acionar “Vira Projeto”; tentar sem nome; informar `Portal de Teste`; converter; repetir a conversão. | Nome final `INV | Portal de Teste`; projeto interno vinculado à ideia; Asana usa template `1213945719343548`; estrutura é preservada; brainstorm fica na descrição; nenhuma task exclusiva é criada; repetição não duplica projeto. | RF009, RF020, RF021 |
+| CV007 | Falha parcial Asana | Simular template inacessível e falha após criação do projeto; executar recuperação. | Não há sucesso falso; projeto interno é preservado; GID existente é salvo; estado parcial é registrado; recuperação reutiliza o projeto existente. | RF009, RF017, RF021 |
+| CV008 | Entregas | Adicionar link; enviar arquivo menor que 50 MB; tentar maior que 50 MB; consultar como Diretoria; excluir como Inovação. | Link e arquivo são registrados; arquivo fica no Supabase Storage; limite é aplicado; Diretoria consulta; somente Inovação cria ou exclui; exclusão é auditada. | RF010 |
+| CV009 | Comentários | Criar como Diretoria e Inovação; tentar editar; excluir comentário próprio; tentar excluir comentário alheio como Diretoria; excluir como Inovação. | Ambos podem comentar; edição é bloqueada; autor exclui o próprio; Diretoria não exclui comentário alheio; Inovação exclui qualquer comentário; ações geram log. | RF014, RF017 |
+| CV010 | Sincronização Asana | Alterar tarefas; conferir webhook; simular perda do evento; executar ou aguardar cron. | `asana_sync` contém totais, status, responsáveis e datas; front-end usa cache; cron diário corrige divergências. | RF006, RF013, RF016 |
+| CV011 | Fases, métricas e insight | Concluir fases; conferir progresso; registrar meta/resultado; gerar insight; simular falha da IA. | Progresso é recalculado; métricas permanecem no Supabase; falha da IA não remove meta nem resultado. | RF011, RF012 |
+| CV012 | Segurança e auditoria | Inspecionar bundle e requisições; tentar escrita direta; executar ações críticas; consultar logs. | Nenhum secret está no front-end; RLS bloqueia operações indevidas; ações aparecem em `activity_log`; logs não expõem credenciais ou dados sensíveis. | RF002, RF003, RF015, RF017, RNFs |
 
 ---
 
-### CV002 - Sugestão de IA por bloco do Canvas
-
-**Objetivo:** confirmar que a IA auxilia o preenchimento sem substituir automaticamente o usuário.
-
-**Passos:**
-
-1. Preencher parcialmente um bloco do Canvas.
-2. Solicitar sugestão de IA.
-3. Avaliar resposta retornada.
-
-**Resultado esperado:**
-
-- Sugestão é retornada em linguagem clara.
-- Usuário pode aceitar, editar ou ignorar.
-- Falha de IA mostra mensagem amigável.
-
----
-
-### CV003 - Resumo consolidado da ideia por IA
-
-**Objetivo:** confirmar que a IA gera um resumo útil da ideia.
-
-**Passos:**
-
-1. Submeter ideia com dados completos.
-2. Acionar geração de resumo, se não for automática.
-3. Abrir detalhe da ideia.
-
-**Resultado esperado:**
-
-- Resumo IA é salvo e exibido.
-- O texto não substitui a descrição original.
-- Falha de IA não impede a ideia de ser salva.
-
----
-
-### CV004 - Brainstorm Estratégico IA com SCAMPER
-
-**Objetivo:** confirmar que o brainstorm estratégico é gerado no formato correto.
-
-**Passos:**
-
-1. Cadastrar uma ideia com dados suficientes.
-2. Aguardar ou acionar geração do brainstorm.
-3. Abrir o detalhe da ideia.
-
-**Resultado esperado:**
-
-- Brainstorm possui framework `SCAMPER`.
-- São geradas exatamente 3 soluções.
-- Cada solução informa a abordagem SCAMPER aplicada.
-- Cada solução contém:
-  - descrição;
-  - racional estratégico;
-  - como resolve a demanda;
-  - impacto estimado;
-  - esforço estimado;
-  - análise de viabilidade;
-  - riscos;
-  - mitigações.
-- Uma solução é marcada como recomendada.
-- A recomendação possui justificativa objetiva.
-
----
-
-### CV005 - Métrica de Impacto 1–10
-
-**Objetivo:** confirmar que a nota de impacto segue a regra definida.
-
-**Passos:**
-
-1. Abrir uma ideia com brainstorm gerado.
-2. Conferir impacto das 3 soluções.
-3. Conferir justificativa da nota.
-
-**Resultado esperado:**
-
-- Cada solução possui nota entre 1 e 10.
-- A nota é acompanhada de justificativa.
-- A justificativa considera critérios como alinhamento estratégico, ganho esperado, escala, urgência e relevância.
-
----
-
-### CV006 - Métrica de Esforço 1–10
-
-**Objetivo:** confirmar que a nota de esforço segue a regra definida.
-
-**Passos:**
-
-1. Abrir uma ideia com brainstorm gerado.
-2. Conferir esforço das 3 soluções.
-3. Conferir justificativa da nota.
-
-**Resultado esperado:**
-
-- Cada solução possui nota entre 1 e 10.
-- Quanto maior a nota, maior o esforço.
-- A justificativa considera critérios como complexidade técnica, integrações, prazo, dependências e custo.
-
----
-
-### CV007 - Classificação na matriz Impacto × Esforço
-
-**Objetivo:** confirmar que a matriz usa impacto/esforço corretamente.
-
-**Passos:**
-
-1. Abrir backlog ou matriz de ideias.
-2. Selecionar ideia com brainstorm gerado.
-3. Comparar impacto/esforço da solução recomendada com o quadrante exibido.
-
-**Resultado esperado:**
-
-- A ideia usa, inicialmente, as notas da solução recomendada.
-- Quadrante segue a regra:
-  - impacto >= 7 e esforço <= 4: Oportunidade Imediata;
-  - impacto >= 7 e esforço >= 5: Grande Projeto;
-  - impacto entre 4 e 6 e esforço <= 4: Ganho Tático / Astuto;
-  - impacto <= 6 e esforço >= 5: Retorno Limitado;
-  - impacto <= 3: Baixa Atratividade.
-- Inovação consegue revisar manualmente impacto/esforço, se permitido.
-
----
-
-### CV008 - Falha na geração do brainstorm
-
-**Objetivo:** confirmar que falha de IA não causa perda da ideia.
-
-**Passos:**
-
-1. Simular indisponibilidade da IA ou retorno inválido.
-2. Cadastrar uma ideia.
-3. Abrir detalhe da ideia.
-
-**Resultado esperado:**
-
-- Ideia é salva.
-- `brainstorm_status` fica como `erro` ou equivalente.
-- Sistema exibe mensagem amigável.
-- Sistema permite nova tentativa ou conversão mediante confirmação explícita da Inovação.
-
----
-
-### CV009 - Triagem de ideia
-
-**Objetivo:** confirmar que a Inovação consegue analisar a ideia com apoio da IA.
-
-**Passos:**
-
-1. Acessar backlog interno.
-2. Abrir detalhe de uma ideia.
-3. Avaliar descrição, resumo IA, brainstorm, solução recomendada, impacto/esforço e quadrante.
-4. Executar uma decisão de triagem.
-
-**Resultado esperado:**
-
-- Dados necessários à decisão aparecem na tela.
-- Ação de triagem é registrada.
-- Usuário sem permissão não consegue executar ações de triagem.
-
----
-
-### CV010 - Conversão de ideia em projeto
-
-**Objetivo:** confirmar que uma ideia aprovada vira projeto interno.
-
-**Passos:**
-
-1. Selecionar ideia aprovada ou elegível.
-2. Acionar `Converter em Projeto`.
-3. Confirmar conversão.
-
-**Resultado esperado:**
-
-- Projeto interno é criado.
-- Ideia muda para status `convertida`.
-- Projeto mantém `origin_idea_id` ou vínculo equivalente.
-- Brainstorm Estratégico é copiado para o projeto.
-
----
-
-### CV011 - Criação de projeto no Asana
-
-**Objetivo:** confirmar integração operacional com Asana.
-
-**Passos:**
-
-1. Converter ideia em projeto.
-2. Abrir Asana.
-3. Localizar projeto criado.
-
-**Resultado esperado:**
-
-- Projeto Asana é criado no workspace/time correto.
-- Portal armazena `asana_project_gid` ou identificador equivalente.
-- Falha no Asana não apaga o projeto interno.
-
----
-
-### CV012 - Criação da task inicial no Asana com brainstorm
-
-**Objetivo:** confirmar que o brainstorm é enviado para o Asana em task inicial.
-
-**Passos:**
-
-1. Converter uma ideia com brainstorm gerado.
-2. Abrir projeto correspondente no Asana.
-3. Localizar task `Brainstorm Estratégico IA`.
-4. Conferir descrição da task.
-
-**Resultado esperado:**
-
-- Existe task inicial chamada `Brainstorm Estratégico IA`.
-- A task contém:
-  - ideia de origem;
-  - framework SCAMPER;
-  - solução recomendada;
-  - justificativa da recomendação;
-  - 3 soluções completas;
-  - notas de impacto e esforço;
-  - riscos e mitigações.
-
----
-
-### CV013 - Sincronização Asana → Portal
-
-**Objetivo:** confirmar que o portal recebe dados operacionais do Asana.
-
-**Passos:**
-
-1. Alterar informação operacional no Asana.
-2. Acionar webhook ou aguardar cron de reconciliação.
-3. Abrir detalhe do projeto no portal.
-
-**Resultado esperado:**
-
-- Cache `asana_sync` ou equivalente é atualizado.
-- Bloco Asana no portal reflete a alteração.
-- Falhas são registradas para diagnóstico.
-
----
-
-### CV014 - Permissões internas
-
-**Objetivo:** confirmar que perfis respeitam escopo de acesso.
-
-**Passos:**
-
-1. Acessar com perfil Diretoria.
-2. Tentar editar/triagem/conversão.
-3. Acessar com perfil Inovação.
-4. Executar ações permitidas.
-
-**Resultado esperado:**
-
-- Diretoria acessa dados em leitura.
-- Diretoria não executa ações de gestão.
-- Inovação executa triagem, conversão e administração conforme permissão.
-- Bloqueio ocorre também no backend/RLS, não apenas na interface.
-
----
-
-### CV015 - Logs de auditoria
-
-**Objetivo:** confirmar registro de ações relevantes.
-
-**Passos:**
-
-1. Submeter ideia.
-2. Gerar brainstorm.
-3. Converter em projeto.
-4. Criar projeto/task no Asana.
-5. Consultar logs.
-
-**Resultado esperado:**
-
-- Ações relevantes aparecem em `activity_log` ou mecanismo equivalente.
-- Logs não expõem tokens, secrets ou dados sensíveis desnecessários.
-
----
-
-## 5. Checklist mínimo de aceite
+## 5. Checklist de aceite
 
 | Item | Status |
 |---|---|
-| Canvas público salva ideia válida | Pendente |
-| Sugestão IA por bloco funciona | Pendente |
-| Resumo IA é salvo/exibido | Pendente |
-| Brainstorm SCAMPER gera 3 soluções | Pendente |
-| Solução recomendada é exibida | Pendente |
-| Impacto/esforço 1–10 são exibidos | Pendente |
-| Matriz classifica quadrante corretamente | Pendente |
-| Falha de IA não perde ideia | Pendente |
-| Inovação consegue triar ideia | Pendente |
-| Conversão cria projeto interno | Pendente |
-| Projeto herda brainstorm | Pendente |
-| Asana cria projeto | Pendente |
-| Asana cria task inicial com brainstorm | Pendente |
-| Bloco Asana lê cache sincronizado | Pendente |
-| Permissões funcionam por perfil | Pendente |
-| Logs funcionais são gerados | Pendente |
+| Login, sessão e permissões funcionam no front-end e backend | Pendente |
+| Canvas valida campos, domínios e CAPTCHA | Pendente |
+| Sugestão, resumo e brainstorm funcionam | Pendente |
+| Brainstorm respeita duas tentativas e retentativa manual | Pendente |
+| Matriz, triagem e histórico de arquivadas funcionam | Pendente |
+| Conversão exige notas finais e nome | Pendente |
+| Projeto usa o template Asana `1213945719343548` | Pendente |
+| Brainstorm está na descrição e não em task exclusiva | Pendente |
+| Conversão não cria duplicidade e recupera falha parcial | Pendente |
+| Entregas usam Storage e respeitam 50 MB | Pendente |
+| Comentários não podem ser editados e respeitam exclusão | Pendente |
+| Webhook e cron atualizam o cache do Asana | Pendente |
+| Fases, métricas e insights funcionam | Pendente |
+| Logs e controles de segurança foram verificados | Pendente |
 
 ---
 
-## 6. Critério final de aceite
+## 6. Falhas que bloqueiam o aceite
 
-A entrega pode ser considerada validada quando:
+- submissão aceita sem CAPTCHA válido ou com domínio não autorizado;
+- exposição de tokens, secrets ou `service_role`;
+- Diretoria conseguindo alterar decisão, nota ou cadastro restrito;
+- conversão sem notas finais ou sem nome;
+- criação de projeto fora do template obrigatório;
+- projeto duplicado após retentativa;
+- perda da ideia ou do projeto interno por falha de IA ou Asana;
+- arquivo acima de 50 MB aceito;
+- edição de comentário publicado.
 
-1. uma ideia realista for cadastrada pelo Canvas;
-2. a IA gerar resumo e Brainstorm Estratégico SCAMPER;
-3. a matriz classificar a ideia corretamente;
-4. a Inovação conseguir converter a ideia em projeto;
-5. o projeto interno preservar o brainstorm;
-6. o Asana receber projeto e task inicial com o brainstorm;
-7. falhas de IA/Asana forem tratadas sem perda de dados;
-8. permissões e logs estiverem funcionando conforme esperado.
+---
+
+## 7. Registro da execução
+
+| Caso | Resultado | Evidência | Observação |
+|---|---|---|---|
+| CV001 | Pendente | - | - |
+| CV002 | Pendente | - | - |
+| CV003 | Pendente | - | - |
+| CV004 | Pendente | - | - |
+| CV005 | Pendente | - | - |
+| CV006 | Pendente | - | - |
+| CV007 | Pendente | - | - |
+| CV008 | Pendente | - | - |
+| CV009 | Pendente | - | - |
+| CV010 | Pendente | - | - |
+| CV011 | Pendente | - | - |
+| CV012 | Pendente | - | - |
