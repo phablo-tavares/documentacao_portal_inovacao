@@ -1,7 +1,7 @@
 # Design Técnico — Portal de Gestão da Inovação Rennova
 
 > Fonte técnica para implementação, revisão e manutenção do **Rennova Spark Hub**.  
-> Este documento deriva da versão 0.6 da especificação funcional e consolida Canvas público protegido por CAPTCHA, Brainstorm Estratégico com IA, triagem, integração com Asana pelo template obrigatório, entregas no Supabase Storage e governança de projetos.
+> Este documento deriva da versão 0.7 da especificação funcional e consolida Canvas público protegido por CAPTCHA, Brainstorm Estratégico com IA, pontuação ancorada e ponderada de Impacto × Esforço, triagem, integração com Asana pelo template obrigatório, entregas no Supabase Storage e governança de projetos.
 
 ---
 
@@ -36,10 +36,10 @@
 | Nome do projeto | Rennova Spark Hub — Portal de Gestão da Inovação |
 | Responsável técnico | Phablo Tavares |
 | Área/Time | Inovação / Desenvolvimento de Agentes e Soluções de IA |
-| Documento funcional de referência | `especificacao-funcional-portal-inovacao.md`, versão 0.6 |
+| Documento funcional de referência | `especificacao-funcional-portal-inovacao.md`, versão 0.7 |
 | Data | 2026-07-13 |
-| Versão | 0.5 |
-| Alteração desta versão | CAPTCHA obrigatório, domínios autorizados, sessão padrão Supabase, retentativa de brainstorm, triagem consolidada, template fixo Asana, brainstorm na descrição, entregas no Storage e novas regras de comentários. |
+| Versão | 0.6 |
+| Alteração desta versão | Adequação à especificação funcional 0.7: catálogo único de critérios e escalas ancoradas, cálculo ponderado autoritativo no backend, persistência dos resultados decimal e arredondado, revisão por critério na triagem e validação reproduzível da matriz. |
 
 ---
 
@@ -54,6 +54,7 @@ A solução será dividida em:
 - **portal interno:** autenticação por Supabase Auth e autorização pelos perfis `diretoria` e `inovacao`;
 - **governança:** ideias, triagem, projetos, métricas, comentários, entregas e auditoria armazenados no Supabase;
 - **IA:** sugestões para o Canvas, resumo, Brainstorm Estratégico SCAMPER e insights;
+- **pontuação:** critérios de impacto e esforço com pesos fixos, escalas ancoradas de 1 a 10 e cálculo reproduzível no backend;
 - **Asana:** execução operacional de tarefas e sprints;
 - **sincronização:** webhook como mecanismo principal e cron diário como reconciliação;
 - **arquivos:** Supabase Storage para entregas de projetos, limitadas a 50 MB por arquivo.
@@ -83,13 +84,17 @@ flowchart TD
 
   PublicEF --> Captcha[Provedor CAPTCHA]
   PublicEF --> AI[Provedor de IA]
+  PublicEF --> Scoring[Motor de pontuação]
   PublicEF --> DB
 
   InternalEF --> AI
+  InternalEF --> Scoring
   InternalEF --> DB
   InternalEF --> Storage
   InternalEF --> Asana[Asana API]
 
+  Scoring --> Model[(scoring_models)]
+  Scoring --> DB
   Asana --> Webhook[Asana Webhook]
   Webhook --> InternalEF
   Cron[Cron diário] --> InternalEF
@@ -104,12 +109,14 @@ flowchart TD
 | Frontend público | Formulário do Canvas, sugestões de IA, resumo, CAPTCHA e confirmação de envio. |
 | Frontend interno | Dashboard, ideias, matriz, triagem, projetos, entregas, comentários e administração. |
 | Supabase Auth | Autenticação interna e gerenciamento padrão de sessão. |
-| Supabase Postgres | Fonte de verdade de ideias, projetos, governança e auditoria. |
+| Supabase Postgres | Fonte de verdade de ideias, avaliações, projetos, governança e auditoria. |
 | Supabase RLS | Controle de leitura e escrita por perfil e vínculo do usuário. |
 | Edge Functions públicas | Validação de submissão, domínio, CAPTCHA, anti-spam e chamadas de IA. |
 | Edge Functions autenticadas | Triagem, conversão, IA interna, Asana, uploads controlados e exclusões. |
+| Motor de pontuação | Valida critérios, resolve a descrição oficial da nota, aplica pesos, calcula resultados e arredondamentos. |
+| Catálogo de pontuação | Mantém a versão ativa dos critérios, pesos e escalas ancoradas definidas nas seções 5.3 e 5.4 da especificação funcional. |
 | Supabase Storage | Armazenamento dos arquivos de entrega dos projetos. |
-| Provedor de IA | Sugestões, resumo, brainstorm SCAMPER e insights. |
+| Provedor de IA | Sugestões, resumo, brainstorm SCAMPER e insights; sugere notas dos critérios, mas não calcula o valor autoritativo. |
 | Asana | Operação de tarefas e sprints do projeto. |
 | Webhook Asana | Atualização principal do cache operacional. |
 | Cron diário | Reconciliação de dados do Asana. |
@@ -155,9 +162,9 @@ Regras técnicas do fluxo:
 stateDiagram-v2
   [*] --> pendente
   pendente --> gerando: tentativa 1
-  gerando --> gerado: resposta válida
+  gerando --> gerado: resposta e pontuação válidas
   gerando --> retry_automatico: falha tentativa 1
-  retry_automatico --> gerado: resposta válida tentativa 2
+  retry_automatico --> gerado: resposta e pontuação válidas
   retry_automatico --> erro: falha tentativa 2
   erro --> gerando: retentativa manual pela Inovação
   gerado --> gerando: regerar manualmente
@@ -166,31 +173,74 @@ stateDiagram-v2
 Processamento:
 
 1. buscar os dados completos da ideia;
-2. montar prompt com SCAMPER, contexto e contrato JSON;
-3. executar a tentativa inicial;
-4. validar schema e regras de negócio;
-5. em caso de falha, executar uma única retentativa automática;
-6. após duas falhas, gravar `brainstorm_status = erro`;
-7. disponibilizar retentativa manual no detalhe da ideia somente para Inovação;
-8. não versionar integralmente cada geração no MVP;
-9. registrar tentativas e resultado em log técnico e funcional.
+2. carregar o catálogo ativo de critérios, pesos e escalas ancoradas;
+3. montar o prompt com SCAMPER, contexto, critérios, significados das notas e contrato JSON;
+4. executar a tentativa inicial;
+5. validar exatamente três soluções e todos os critérios obrigatórios;
+6. validar notas inteiras de 1 a 10 e justificativas não vazias;
+7. desconsiderar qualquer nota final calculada pelo provedor e recalcular no backend;
+8. resolver o texto oficial da âncora correspondente a cada nota;
+9. calcular resultados ponderados, resultado com uma casa decimal e resultado inteiro da matriz;
+10. em caso de falha, executar uma única retentativa automática;
+11. após duas falhas, gravar `brainstorm_status = erro`;
+12. disponibilizar retentativa manual no detalhe da ideia somente para Inovação;
+13. registrar tentativas, versão do modelo de pontuação e resultado em log técnico e funcional.
 
-### 3.5 Fluxo de triagem
+### 3.5 Cálculo técnico de Impacto e Esforço
+
+O cálculo autoritativo deve ocorrer no backend. O front-end e o provedor de IA não podem enviar ou sobrescrever diretamente os resultados finais.
+
+```text
+Notas dos critérios
+  -> validar IDs, quantidade, escala e justificativas
+  -> associar cada nota à âncora oficial
+  -> multiplicar nota pelo peso do critério
+  -> somar os valores ponderados
+  -> arredondar para uma casa decimal com ROUND_HALF_UP
+  -> arredondar o valor de uma casa decimal para inteiro com ROUND_HALF_UP
+  -> persistir avaliação, versão do modelo, valor decimal e valor da matriz
+```
+
+Regras de cálculo:
+
+- todos os seis critérios de Impacto e os seis critérios de Esforço são obrigatórios;
+- cada critério deve aparecer exatamente uma vez;
+- a nota deve ser inteira entre 1 e 10;
+- a justificativa é obrigatória;
+- os pesos devem somar exatamente `1,00` em cada métrica;
+- usar aritmética decimal, evitando erros de ponto flutuante;
+- resultado ponderado: uma casa decimal;
+- resultado usado na matriz: inteiro de 1 a 10;
+- arredondamento: metade para cima (`ROUND_HALF_UP`);
+- para Impacto, quando a situação estiver entre duas âncoras, orientar uso da menor nota;
+- para Esforço, quando a situação estiver entre duas âncoras, orientar uso da maior nota;
+- o texto da âncora é obtido pelo catálogo oficial e não deve ser aceito do cliente ou da IA como fonte de verdade.
+
+Exemplo de validação:
+
+```text
+Impacto: 7, 6, 8, 5, 6, 4 -> 6,35 -> 6,4 -> matriz 6
+Esforço: 6, 5, 6, 4, 3, 2 -> 4,80 -> 4,8 -> matriz 5
+```
+
+### 3.6 Fluxo de triagem
 
 ```text
 /ideias?aba=triagem
-  -> carregar ideias elegíveis
-  -> exibir Canvas, resumo, brainstorm e classificação inicial
-  -> Inovação informa impacto_final e esforco_final
+  -> carregar ideias elegíveis e o modelo de pontuação vigente
+  -> exibir Canvas, resumo, brainstorm e avaliação inicial
+  -> Inovação revisa notas e justificativas de cada critério
+  -> backend valida a avaliação e recalcula impacto_final e esforco_final
+  -> exibir resultado decimal, valor arredondado e quadrante
   -> escolher Backlog, Arquivar/Rejeitar ou Vira Projeto
   -> arquivamento exige justificativa
-  -> registrar responsável, data e participantes informados
+  -> registrar avaliação, versão do modelo, responsável, data e participantes
   -> atualizar status e activity_log
 ```
 
-A Diretoria pode acessar a aba e os detalhes, mas não pode alterar notas nem registrar decisões.
+A Diretoria pode acessar a aba, visualizar critérios, pesos, âncoras, justificativas e resultados, mas não pode alterar avaliações nem registrar decisões.
 
-### 3.6 Fluxo de conversão em projeto e Asana
+### 3.7 Fluxo de conversão em projeto e Asana
 
 ```mermaid
 sequenceDiagram
@@ -232,7 +282,7 @@ Regras técnicas:
 - registrar o `asana_project_gid` assim que ele existir, mesmo em falha parcial posterior;
 - não marcar a conversão como totalmente concluída enquanto houver falha crítica não recuperada.
 
-### 3.7 Sincronização Asana → Portal
+### 3.8 Sincronização Asana → Portal
 
 ```mermaid
 flowchart LR
@@ -259,7 +309,7 @@ Dados mínimos sincronizados:
 
 O front-end não deve consultar a API do Asana durante a renderização.
 
-### 3.8 Gestão de entregas
+### 3.9 Gestão de entregas
 
 ```mermaid
 sequenceDiagram
@@ -291,7 +341,7 @@ Regras:
 - acesso deve respeitar autenticação e RLS;
 - exclusão do registro deve excluir ou invalidar o objeto correspondente.
 
-### 3.9 Comentários de governança
+### 3.10 Comentários de governança
 
 - Diretoria e Inovação podem criar comentários.
 - Comentários publicados são imutáveis.
@@ -348,6 +398,10 @@ Regras:
 | DT016 | Entregas em Supabase Storage | Mantém arquivos e permissões na mesma plataforma. |
 | DT017 | Comentários imutáveis | Simplifica auditoria; correções ocorrem por exclusão e novo comentário. |
 | DT018 | Exclusão lógica de comentários recomendada | Preserva rastreabilidade sem exibir conteúdo removido. |
+| DT019 | Catálogo único e versionado de pontuação | Evita divergência entre documentação, interface, IA e backend. |
+| DT020 | Cálculo de pontuação autoritativo no backend | Impede manipulação de resultados e garante fórmula reproduzível. |
+| DT021 | Armazenar resultado decimal e valor arredondado | Preserva rastreabilidade do cálculo e mantém posicionamento inteiro na matriz. |
+| DT022 | IA e cliente enviam somente notas dos critérios e justificativas | Resultados finais recebidos externamente são ignorados e recalculados. |
 
 ---
 
@@ -360,7 +414,8 @@ Regras:
 |---|---|
 | `profiles` | Perfil interno, role e status do usuário. |
 | `departments` | Cadastro interno usado em projetos, filtros e administração. |
-| `ideas` | Canvas, autor, resumo, brainstorm, notas e decisão. |
+| `scoring_models` | Catálogo versionado dos critérios, pesos e escalas ancoradas. |
+| `ideas` | Canvas, autor, resumo, brainstorm, avaliações inicial/final e decisão. |
 | `triage_sessions` | Sessões e períodos de triagem. |
 | `idea_triage_decisions` | Decisão, justificativa e participantes. |
 | `projects` | Governança dos projetos convertidos. |
@@ -388,17 +443,23 @@ Regras:
 | `status` | enum/text | Estado controlado da ideia. |
 | `ai_summary` | text | Resumo consolidado. |
 | `summary_status` | enum/text | `pendente`, `gerando`, `gerado`, `erro`. |
-| `strategic_brainstorm` | jsonb | Brainstorm completo. |
+| `strategic_brainstorm` | jsonb | Brainstorm completo, incluindo avaliações das três soluções. |
 | `brainstorm_status` | enum/text | `pendente`, `gerando`, `gerado`, `erro`. |
 | `brainstorm_attempt_count` | smallint | Tentativas da geração atual. |
 | `brainstorm_last_error` | text | Erro sanitizado. |
 | `brainstorm_generated_at` | timestamptz | Última geração válida. |
 | `recommended_solution_id` | text | Solução recomendada. |
-| `impact_ai` | smallint | Nota inicial da IA. |
-| `effort_ai` | smallint | Nota inicial da IA. |
-| `impact_final` | smallint | Nota final da triagem. |
-| `effort_final` | smallint | Nota final da triagem. |
-| `quadrant` | enum/text | Quadrante calculado. |
+| `ai_scoring` | jsonb | Snapshot da pontuação da solução recomendada pela IA. |
+| `impact_ai` | numeric(3,1) | Resultado ponderado inicial de Impacto. |
+| `effort_ai` | numeric(3,1) | Resultado ponderado inicial de Esforço. |
+| `impact_ai_rounded` | smallint | Valor inteiro inicial usado na matriz. |
+| `effort_ai_rounded` | smallint | Valor inteiro inicial usado na matriz. |
+| `final_scoring` | jsonb | Avaliação final da triagem, com critérios, notas, justificativas e versão do modelo. |
+| `impact_final` | numeric(3,1) | Resultado ponderado final de Impacto. |
+| `effort_final` | numeric(3,1) | Resultado ponderado final de Esforço. |
+| `impact_final_rounded` | smallint | Valor inteiro final usado na matriz. |
+| `effort_final_rounded` | smallint | Valor inteiro final usado na matriz. |
+| `quadrant` | enum/text | Quadrante calculado pelos valores arredondados. |
 | `converted_project_id` | uuid | Projeto gerado, quando aplicável. |
 | `created_at` | timestamptz | Criação. |
 | `updated_at` | timestamptz | Atualização. |
@@ -436,12 +497,61 @@ Regras:
 | `created_at` | timestamptz | Criação. |
 | `updated_at` | timestamptz | Atualização. |
 
-### 6.5 Estrutura do Brainstorm Estratégico
+### 6.5 Modelo de pontuação
+
+O catálogo deve ser mantido em `scoring_models`, sem tela administrativa no MVP.
+
+| Campo | Tipo sugerido | Observação |
+|---|---|---|
+| `id` | uuid | Identificador. |
+| `version` | text | Ex.: `1.0`. |
+| `impact_definition` | jsonb | Seis critérios, pesos e dez âncoras de cada critério. |
+| `effort_definition` | jsonb | Seis critérios, pesos e dez âncoras de cada critério. |
+| `active` | boolean | Apenas um modelo ativo. |
+| `created_at` | timestamptz | Data de criação. |
+
+O conteúdo inicial deve ser semeado por migration exatamente conforme as seções 5.3 e 5.4 da especificação funcional 0.7.
+
+IDs técnicos recomendados:
+
+| Métrica | Critério | ID | Peso |
+|---|---|---|---:|
+| Impacto | Alinhamento estratégico | `strategic_alignment` | 0,20 |
+| Impacto | Gravidade da demanda | `demand_severity` | 0,15 |
+| Impacto | Ganho esperado | `expected_gain` | 0,25 |
+| Impacto | Alcance dos beneficiados | `beneficiary_reach` | 0,15 |
+| Impacto | Escala/reutilização | `scalability` | 0,15 |
+| Impacto | Urgência/redução de risco | `urgency_risk_reduction` | 0,10 |
+| Esforço | Complexidade técnica | `technical_complexity` | 0,25 |
+| Esforço | Integrações/dados externos | `external_integrations` | 0,20 |
+| Esforço | Tempo de implementação | `implementation_time` | 0,20 |
+| Esforço | Mudança operacional | `operational_change` | 0,15 |
+| Esforço | Dependências | `dependencies` | 0,10 |
+| Esforço | Custo de 12 meses | `cost_12_months` | 0,10 |
+
+```ts
+interface CriterionAssessment {
+  criterionId: string;
+  score: number; // inteiro de 1 a 10
+  justification: string;
+  anchorText: string; // preenchido pelo backend a partir do catálogo
+}
+
+interface ScoringResult {
+  modelVersion: string;
+  criteria: CriterionAssessment[];
+  weightedScore: number; // uma casa decimal
+  roundedScore: number;  // inteiro usado na matriz
+}
+```
+
+### 6.6 Estrutura do Brainstorm Estratégico
 
 ```ts
 interface StrategicBrainstorm {
   framework: "SCAMPER";
   generatedAt: string;
+  scoringModelVersion: string;
   recommendedSolutionId: string;
   recommendationReason: string;
   solutions: [BrainstormSolution, BrainstormSolution, BrainstormSolution];
@@ -461,17 +571,15 @@ interface BrainstormSolution {
   description: string;
   strategicRationale: string;
   demandResolution: string;
-  impactScore: number;
-  impactJustification: string;
-  effortScore: number;
-  effortJustification: string;
+  impact: ScoringResult;
+  effort: ScoringResult;
   viabilityAnalysis: string;
   risks: string[];
   mitigations: string[];
 }
 ```
 
-### 6.6 `project_deliveries`
+### 6.7 `project_deliveries`
 
 | Campo | Tipo sugerido | Observação |
 |---|---|---|
@@ -489,7 +597,7 @@ interface BrainstormSolution {
 | `created_at` | timestamptz | Criação. |
 | `deleted_at` | timestamptz | Exclusão lógica, se adotada. |
 
-### 6.7 `project_comments`
+### 6.8 `project_comments`
 
 | Campo | Tipo sugerido | Observação |
 |---|---|---|
@@ -503,7 +611,7 @@ interface BrainstormSolution {
 
 Não deve existir operação funcional de `UPDATE body` após a publicação.
 
-### 6.8 `asana_sync`
+### 6.9 `asana_sync`
 
 | Campo | Tipo sugerido | Observação |
 |---|---|---|
@@ -518,12 +626,14 @@ Não deve existir operação funcional de `UPDATE body` após a publicação.
 | `sync_status` | enum/text | Estado da sincronização. |
 | `last_error` | text | Erro sanitizado. |
 
-### 6.9 Índices e constraints
+### 6.10 Índices e constraints
 
 - `unique(projects.origin_idea_id)` para impedir dupla conversão;
 - `unique(projects.asana_project_gid)` quando não nulo;
 - índices em `ideas.status`, `ideas.created_at`, `ideas.quadrant`;
-- checks para notas entre 1 e 10;
+- checks para resultados decimais entre 1,0 e 10,0 e valores arredondados entre 1 e 10;
+- validação server-side para exatamente seis critérios por métrica, notas inteiras, justificativas e pesos totalizando 1,00;
+- índice único parcial garantindo apenas um `scoring_models.active = true`;
 - check para `project_deliveries.size_bytes <= 52428800`;
 - índice em `project_deliveries.project_id`;
 - índice em `project_comments.project_id, created_at`;
@@ -584,11 +694,30 @@ Entrada mínima:
 
 Comportamento:
 
+- carregar o modelo de pontuação ativo;
+- incluir no prompt os critérios e significados oficiais das notas;
 - em execução automática, realizar no máximo duas tentativas;
 - em execução manual, iniciar uma nova geração controlada;
-- validar exatamente três soluções;
-- gravar somente resposta válida;
-- atualizar status e contadores.
+- exigir exatamente três soluções;
+- exigir todos os critérios de Impacto e Esforço em cada solução;
+- aceitar da IA somente `criterionId`, `score` e `justification`;
+- validar as notas e resolver `anchorText` no backend;
+- recalcular os resultados ponderados, ignorando resultados finais enviados pela IA;
+- gravar somente resposta válida, incluindo a versão do modelo;
+- atualizar status, contadores e resultados iniciais da solução recomendada.
+
+Saída resumida:
+
+```json
+{
+  "ideaId": "uuid",
+  "brainstormStatus": "gerado",
+  "scoringModelVersion": "1.0",
+  "recommendedSolutionId": "solution_1",
+  "impact": { "weightedScore": 6.4, "roundedScore": 6 },
+  "effort": { "weightedScore": 4.8, "roundedScore": 5 }
+}
+```
 
 ### API005 — `POST /functions/v1/ideas/{id}/retry-brainstorm`
 
@@ -603,20 +732,50 @@ Entrada:
 
 ```json
 {
-  "impactFinal": 8,
-  "effortFinal": 4,
+  "impactCriteria": [
+    {
+      "criterionId": "strategic_alignment",
+      "score": 7,
+      "justification": "Contribui para prioridade estratégica formal."
+    }
+  ],
+  "effortCriteria": [
+    {
+      "criterionId": "implementation_time",
+      "score": 6,
+      "justification": "Estimativa total de 18 dias úteis."
+    }
+  ],
   "decision": "backlog|arquivada|virou_projeto",
   "reason": "string|null",
   "participants": ["string"]
 }
 ```
 
-Validações:
+Validações e processamento:
 
-- role `inovacao`;
-- notas de 1 a 10;
-- justificativa obrigatória para arquivar/rejeitar;
+- exigir role `inovacao`;
+- exigir exatamente os seis critérios de cada métrica;
+- validar IDs, notas inteiras de 1 a 10 e justificativas;
+- resolver as âncoras oficiais pelo modelo ativo;
+- calcular no backend `impact_final`, `esforco_final` e valores arredondados;
+- não aceitar resultados finais enviados pelo cliente;
+- persistir snapshot da avaliação e versão do modelo;
+- recalcular o quadrante;
+- exigir justificativa para arquivar/rejeitar;
 - decisão “virou projeto” deve encaminhar para a API de conversão com nome do projeto.
+
+Saída resumida:
+
+```json
+{
+  "impactFinal": 6.4,
+  "impactRounded": 6,
+  "effortFinal": 4.8,
+  "effortRounded": 5,
+  "quadrant": "retorno_limitado"
+}
+```
 
 ### API007 — `POST /functions/v1/convert-idea-to-project`
 
@@ -707,6 +866,18 @@ Validações:
 
 Gera insight executivo usando métrica, meta e resultado armazenados no Supabase.
 
+### API015 — `GET /functions/v1/scoring-model`
+
+Retorna o catálogo ativo para exibição no detalhe e na triagem.
+
+Regras:
+
+- acesso somente para usuários internos autenticados;
+- retorno somente leitura;
+- incluir versão, critérios, pesos e âncoras;
+- não permitir alteração pelo front-end;
+- a indisponibilidade do catálogo bloqueia nova avaliação, mas não impede leitura de avaliações já persistidas com snapshot.
+
 ---
 
 <a id="dt-8-integracoes-externas"></a>
@@ -728,6 +899,10 @@ Regras:
 - JSON estruturado para respostas persistidas;
 - validação de schema;
 - duas tentativas automáticas apenas para o brainstorm;
+- incluir o catálogo oficial de notas no prompt;
+- exigir notas e justificativas para todos os critérios;
+- ignorar qualquer resultado ponderado declarado pela IA e recalcular no backend;
+- registrar a versão do modelo usada;
 - logs sem prompt completo quando houver dados sensíveis.
 
 ### 8.2 Provedor CAPTCHA
@@ -769,8 +944,9 @@ Conteúdo mínimo da descrição:
 ## Solução recomendada
 - Nome: [...]
 - Justificativa: [...]
-- Impacto: [1-10]
-- Esforço: [1-10]
+- Impacto ponderado: [decimal] — matriz [inteiro]
+- Esforço ponderado: [decimal] — matriz [inteiro]
+- Critérios e justificativas: [...]
 
 ## Soluções avaliadas
 ### Solução 1
@@ -824,8 +1000,8 @@ Políticas:
 | Canvas | - | - | Enviar via Edge Function |
 | Dashboard | Ler | Ler | Não |
 | Ideias/backlog | Ler | Ler/gerir | Não |
-| Matriz | Ler | Ler/editar notas | Não |
-| Triagem | Ler | Decidir | Não |
+| Matriz | Ler critérios, pesos e resultados | Revisar critérios e justificativas | Não |
+| Triagem | Ler avaliação completa | Avaliar critérios e decidir | Não |
 | Projetos | Ler | Gerir | Não |
 | Entregas | Ler/baixar | Criar/excluir/ler | Não |
 | Comentários | Criar, ler e excluir os próprios | Criar, ler e excluir qualquer | Não |
@@ -857,8 +1033,13 @@ Políticas:
 | Falha de brainstorm tentativa 1 | Executar uma retentativa automática. |
 | Falha de brainstorm tentativa 2 | Marcar erro e permitir retentativa manual. |
 | JSON inválido | Não persistir resposta inválida. |
+| Critério ausente, duplicado ou desconhecido | Rejeitar a avaliação e não calcular resultado. |
+| Nota fora de 1–10 ou não inteira | Rejeitar a avaliação. |
+| Justificativa vazia | Bloquear persistência da avaliação. |
+| Modelo de pontuação indisponível | Bloquear nova avaliação e manter avaliações existentes legíveis pelo snapshot. |
+| Resultado enviado pelo cliente ou IA diverge do backend | Ignorar o resultado externo e usar exclusivamente o cálculo backend. |
 | Nome do projeto vazio | Bloquear conversão. |
-| Notas finais ausentes | Bloquear conversão. |
+| Avaliação final incompleta | Bloquear conversão. |
 | Ideia já convertida | Retornar projeto existente ou conflito, sem duplicar. |
 | Template Asana indisponível | Manter projeto interno em estado de erro/pendência; não confirmar conversão completa. |
 | Job Asana com timeout | Persistir operação e permitir recuperação. |
@@ -899,7 +1080,9 @@ Eventos funcionais:
 - geração de resumo;
 - cada ciclo de geração de brainstorm;
 - retentativa manual;
-- alteração de notas finais;
+- geração dos resultados ponderados;
+- alteração de notas ou justificativas dos critérios, com valores anterior e posterior;
+- versão do modelo de pontuação utilizada;
 - decisão de triagem;
 - arquivamento/rejeição;
 - conversão em projeto;
@@ -943,6 +1126,9 @@ Não registrar tokens, secrets, conteúdo binário, senha, `service_role` ou res
 - limitar upload a 50 MB;
 - normalizar nomes de arquivo e impedir path traversal;
 - tratar respostas de IA como não confiáveis;
+- não aceitar resultados ponderados calculados no cliente ou pela IA;
+- calcular e arredondar pontuações somente no backend com aritmética decimal;
+- validar critérios, pesos e âncoras contra o catálogo ativo;
 - validar payloads com schema;
 - proteger webhooks contra reprocessamento e chamadas inválidas;
 - evitar exposição de mensagens técnicas ao usuário.
@@ -962,16 +1148,17 @@ Não registrar tokens, secrets, conteúdo binário, senha, `service_role` ou res
 
 Ordem de implantação:
 
-1. aplicar migrations e constraints;
-2. criar bucket e policies do Storage;
-3. publicar Edge Functions;
-4. configurar secrets e allowlist de domínios;
-5. configurar CAPTCHA;
-6. configurar acesso ao template Asana;
-7. configurar webhook e cron;
-8. publicar o front-end;
-9. executar o plano de validação;
-10. registrar evidências e aprovação.
+1. aplicar migrations, constraints e seed do modelo de pontuação `1.0`;
+2. executar testes unitários das fórmulas, pesos e arredondamento;
+3. criar bucket e policies do Storage;
+4. publicar Edge Functions;
+5. configurar secrets e allowlist de domínios;
+6. configurar CAPTCHA;
+7. configurar acesso ao template Asana;
+8. configurar webhook e cron;
+9. publicar o front-end;
+10. executar o plano de validação;
+11. registrar evidências e aprovação.
 
 ---
 
@@ -1003,6 +1190,7 @@ Ordem de implantação:
 | `PROJECT_DELIVERIES_BUCKET` | `project-deliveries`. |
 | `PROJECT_DELIVERY_MAX_BYTES` | `52428800`. |
 | `BRAINSTORM_AUTO_ATTEMPTS` | `2`. |
+| `SCORING_MODEL_VERSION` | `1.0`. |
 
 ---
 
@@ -1015,6 +1203,10 @@ Ordem de implantação:
 | Validação de domínio inconsistente | Acesso indevido ou bloqueio incorreto | Função server-side única e testes automatizados. |
 | IA retorna JSON inválido | Brainstorm não gerado | Schema, duas tentativas e retentativa manual. |
 | IA gera conteúdo genérico | Baixa utilidade | Prompt estruturado com SCAMPER e contexto completo. |
+| IA atribui nota incompatível com a âncora | Priorização inconsistente | Prompt com catálogo completo, justificativa obrigatória e revisão humana. |
+| Divergência entre UI, IA e backend | Mesma nota com significados diferentes | Catálogo único versionado e endpoint somente leitura. |
+| Erro de ponto flutuante ou arredondamento | Quadrante incorreto | Aritmética decimal e `ROUND_HALF_UP` com testes unitários. |
+| Cliente manipula resultado final | Priorização indevida | Backend ignora resultados externos e recalcula pelos critérios. |
 | Conversão duplicada | Projetos duplicados | Constraint, idempotência e estado de operação. |
 | Template Asana sem acesso | Conversão incompleta | Validação prévia e erro recuperável. |
 | Falha após criação do Asana | Estado parcial | Persistir GID e retomar operação. |
@@ -1034,7 +1226,7 @@ Ordem de implantação:
 |---|---|
 | Auth e sessão | RF001, RF002 |
 | Canvas, domínios e CAPTCHA | RF003, RF004, RF005 |
-| Dashboard e matriz | RF006, RF007 |
+| Dashboard, matriz e motor de pontuação | RF006, RF007, RF008, RF018; seções 5.3–5.5 |
 | Triagem e histórico | RF008 |
 | Conversão e template Asana | RF009, RF020, RF021 |
 | Projeto e entregas | RF010, RF011, RF012 |
