@@ -1,12 +1,7 @@
-Biblioteca
-/
-plano-validacao-portal-inovacao.md
-
-
 # Plano de Validação — Portal de Gestão da Inovação Rennova
 
 > Plano enxuto para validar os fluxos críticos do **Rennova Spark Hub** antes do aceite.  
-> Baseado na versão 0.7 da especificação funcional e na versão 0.6 do design técnico.
+> Baseado na versão 0.8 da especificação funcional e na versão 0.7 do design técnico.
 
 ---
 
@@ -16,23 +11,23 @@ plano-validacao-portal-inovacao.md
 |---|---|
 | Projeto | Rennova Spark Hub — Portal de Gestão da Inovação |
 | Responsável | Phablo Tavares |
-| Documento funcional de referência | `especificacao-funcional-portal-inovacao.md`, versão 0.7 |
-| Documento técnico de referência | `design-tecnico-portal-inovacao.md`, versão 0.6 |
-| Data | 2026-07-13 |
-| Versão | 0.6 |
-| Objetivo | Confirmar os fluxos principais, o cálculo reproduzível de Impacto × Esforço, as permissões e a preservação dos dados em falhas. |
+| Documento funcional de referência | `especificacao-funcional-portal-inovacao.md`, versão 0.8 |
+| Documento técnico de referência | `design-tecnico-portal-inovacao.md`, versão 0.7 |
+| Data | 2026-07-14 |
+| Versão | 0.7 |
+| Objetivo | Confirmar o acesso protegido ao Canvas, a complementação por IA, a pontuação reproduzível, as permissões e a preservação dos dados em falhas. |
 
 ---
 
 ## 2. Como validar
 
-A validação será manual, complementada por testes unitários das fórmulas de pontuação. Para cada caso, registrar:
+A validação será manual, complementada por testes unitários do motor de pontuação. Para cada caso, registrar:
 
 - `Aprovado`, `Reprovado` ou `Bloqueado`;
 - uma evidência: captura de tela, resposta da API, registro no banco, log ou link do Asana;
 - observação apenas quando houver desvio.
 
-A entrega não pode ser aceita com falha crítica em submissão, permissões, cálculo de pontuação, triagem, conversão, template Asana, idempotência ou preservação dos dados.
+A entrega não pode ser aceita com falha crítica no CAPTCHA, submissão, complementação, permissões, pontuação, triagem, conversão, template Asana, idempotência ou preservação dos dados.
 
 ---
 
@@ -40,12 +35,14 @@ A entrega não pode ser aceita com falha crítica em submissão, permissões, c�
 
 - usuário `inovacao` e usuário `diretoria`;
 - acesso ao Supabase, Storage e logs;
-- modelo de pontuação `1.0` semeado conforme as seções 5.3 e 5.4 da especificação;
+- modelo de pontuação `2.0` semeado conforme as seções 5.3 e 5.4;
 - acesso ao Asana e ao template `INV | Modelo Base`;
-- e-mails válidos dos quatro domínios e um e-mail de domínio não autorizado;
+- e-mails válidos dos quatro domínios e um domínio não autorizado;
 - arquivos de teste abaixo e acima de 50 MB;
-- possibilidade de simular falhas da IA, do catálogo de pontuação e do Asana;
-- duas ideias de teste com dados suficientes para calcular todas as notas.
+- possibilidade de simular falhas da IA, CAPTCHA, catálogo e Asana;
+- um Canvas claramente suficiente;
+- um Canvas que exija complementação;
+- um Canvas que permaneça incompleto após respostas parciais.
 
 ### 3.1 Massa de teste para o cálculo
 
@@ -53,29 +50,27 @@ A entrega não pode ser aceita com falha crítica em submissão, permissões, c�
 
 | Critério | Nota | Peso |
 |---|---:|---:|
-| Alinhamento estratégico | 7 | 20% |
-| Gravidade da demanda | 6 | 15% |
-| Ganho esperado | 8 | 25% |
-| Alcance dos beneficiados | 5 | 15% |
-| Potencial de escala | 6 | 15% |
+| Gravidade da demanda | 6 | 20% |
+| Ganho esperado | 8 | 30% |
+| Alcance dos beneficiados | 6 | 20% |
+| Potencial de escala | 8 | 20% |
 | Urgência/redução de risco | 4 | 10% |
 
-Resultado esperado: `6,35`, armazenado como `6,4` e arredondado para a matriz como `6`.
+Resultado esperado: `6,8`, arredondado para a matriz como `7`.
 
 **Esforço:**
 
 | Critério | Nota | Peso |
 |---|---:|---:|
-| Complexidade técnica | 6 | 25% |
-| Integrações/dados externos | 5 | 20% |
+| Complexidade técnica | 6 | 30% |
+| Integrações/dados externos | 4 | 25% |
 | Tempo de implementação | 6 | 20% |
 | Mudança operacional | 4 | 15% |
-| Dependências | 3 | 10% |
 | Custo de 12 meses | 2 | 10% |
 
-Resultado esperado: `4,80`, armazenado como `4,8` e arredondado para a matriz como `5`.
+Resultado esperado: `4,8`, arredondado para a matriz como `5`.
 
-A nota `6` em **Tempo estimado de implementação** deve aparecer com o significado exato **“De 16 a 22 dias úteis”**.
+A nota `6` em **Tempo estimado de implementação** deve aparecer com o significado exato **“De 11 a 22 dias úteis”**.
 
 ---
 
@@ -83,20 +78,24 @@ A nota `6` em **Tempo estimado de implementação** deve aparecer com o signific
 
 | ID | Fluxo | Execução mínima | Resultado esperado | Cobre |
 |---|---|---|---|---|
-| CV001 | Login, sessão e perfis | Entrar como Diretoria e Inovação; atualizar a página; tentar ações restritas. | Sessão segue o padrão do Supabase; Diretoria consulta e comenta, mas não altera critérios, decisões ou cadastros; Inovação executa gestão; backend também bloqueia ações indevidas. | RF001, RF002 |
-| CV002 | Canvas, domínios e CAPTCHA | Enviar com campo vazio, domínio inválido, sem CAPTCHA e com cada domínio autorizado. Tentar sair antes do envio. | Somente `@nutriex.com.br`, `@nutriex.com`, `@innovapharma.com` e `@rennova.com` são aceitos; CAPTCHA válido é obrigatório; ideia válida é criada; saída antes do envio apresenta aviso. | RF003, RF005 |
-| CV003 | Sugestão e resumo por IA | Solicitar sugestão por bloco; editar ou ignorar; gerar resumo; simular falha da IA. | Sugestão considera o contexto e é editável; resumo não exibe Impacto/Esforço; falha da IA não impede preenchimento nem elimina ideia já enviada. | RF004, RF005 |
-| CV004 | Brainstorm, critérios e retentativa | Gerar brainstorm; inspecionar as três soluções; simular falha na primeira tentativa e nas duas; usar “Tentar novamente”. | Exatamente 3 soluções SCAMPER; cada solução contém os 12 critérios, notas inteiras, justificativas, âncoras oficiais e resultados recalculados pelo backend; somente uma retentativa automática; após duas falhas a ideia permanece salva e Inovação pode tentar manualmente. | RF018, RF019 |
-| CV005 | Cálculo de Impacto | Informar a massa de Impacto da seção 3.1; tentar omitir, duplicar ou usar nota fora de 1–10; comparar pesos e âncoras exibidos. | Backend aceita somente os seis critérios válidos, usa os pesos `20/15/25/15/15/10`, calcula `6,4`, arredonda para `6` e exibe o significado oficial de cada nota. Resultado final enviado pelo cliente ou IA é ignorado. | RF007, RF008, RF018; 5.3 |
-| CV006 | Cálculo de Esforço | Informar a massa de Esforço da seção 3.1; conferir especialmente Tempo = 6; tentar valor decimal ou critério ausente. | Backend usa os pesos `25/20/20/15/10/10`, calcula `4,8`, arredonda para `5`; Tempo = 6 significa `16 a 22 dias úteis`; notas não inteiras, critérios ausentes ou justificativas vazias são bloqueados. | RF007, RF008, RF018; 5.4 |
-| CV007 | Recalculo, matriz e triagem | Salvar a massa completa; alterar Alinhamento estratégico de 7 para 8; acessar como Diretoria e Inovação. | Impacto muda de `6,4/6` para `6,6/7`; Esforço permanece `4,8/5`; quadrante muda de `Retorno Limitado` para `Grande Projeto`; Diretoria somente consulta; Inovação revisa critérios e o sistema recalcula automaticamente. | RF007, RF008; 5.5 |
-| CV008 | Conversão e template Asana | Tentar converter sem avaliação completa e sem nome; informar `Portal de Teste`; converter; repetir a conversão. | Conversão é bloqueada sem avaliação; nome final `INV | Portal de Teste`; projeto interno vinculado à ideia; Asana usa template `1213945719343548`; estrutura é preservada; brainstorm fica na descrição; nenhuma task exclusiva é criada; repetição não duplica projeto. | RF009, RF020, RF021 |
-| CV009 | Falha parcial Asana | Simular template inacessível e falha após criação do projeto; executar recuperação. | Não há sucesso falso; projeto interno é preservado; GID existente é salvo; estado parcial é registrado; recuperação reutiliza o projeto existente. | RF009, RF017, RF021 |
-| CV010 | Entregas | Adicionar link; enviar arquivo menor que 50 MB; tentar maior que 50 MB; consultar como Diretoria; excluir como Inovação. | Link e arquivo são registrados; arquivo fica no Supabase Storage; limite é aplicado; Diretoria consulta; somente Inovação cria ou exclui; exclusão é auditada. | RF010 |
-| CV011 | Comentários | Criar como Diretoria e Inovação; tentar editar; excluir comentário próprio; tentar excluir comentário alheio como Diretoria; excluir como Inovação. | Ambos podem comentar; edição é bloqueada; autor exclui o próprio; Diretoria não exclui comentário alheio; Inovação exclui qualquer comentário; ações geram log. | RF014, RF017 |
-| CV012 | Sincronização Asana | Alterar tarefas; conferir webhook; simular perda do evento; executar ou aguardar cron. | `asana_sync` contém totais, status, responsáveis e datas; front-end usa cache; cron diário corrige divergências. | RF006, RF013, RF016 |
-| CV013 | Fases, métricas e insight | Concluir fases; conferir progresso; registrar meta/resultado; gerar insight; simular falha da IA. | Progresso é recalculado; métricas permanecem no Supabase; falha da IA não remove meta nem resultado. | RF011, RF012 |
-| CV014 | Segurança e auditoria | Inspecionar bundle e requisições; tentar escrita direta e manipular resultados finais; executar ações críticas; consultar logs. | Nenhum secret está no front-end; RLS bloqueia operações indevidas; valores finais manipulados são ignorados; logs registram versão do modelo, alterações dos critérios e ações críticas sem expor credenciais. | RF002, RF003, RF007, RF008, RF015, RF017, RNFs |
+| CV001 | Login, sessão e perfis | Entrar como Diretoria e Inovação; atualizar a página; tentar ações restritas. | Sessão segue o Supabase; Diretoria consulta e comenta sem alterar decisões; Inovação executa gestão; backend bloqueia ações indevidas. | RF001, RF002 |
+| CV002 | CAPTCHA antes do Canvas | Acessar `/canvas`; tentar visualizar ou chamar APIs sem CAPTCHA; validar CAPTCHA; expirar a sessão durante o preenchimento. | Antes da validação somente o CAPTCHA é exibido; APIs públicas rejeitam sessão ausente; após validação o Canvas é liberado; expiração solicita novo CAPTCHA sem perder dados locais. | RF003, RF022 |
+| CV003 | Canvas, domínios, sugestão e resumo | Testar campo vazio, domínio inválido e quatro domínios válidos; solicitar sugestão; gerar e editar resumo. | Campos obrigatórios e domínio são validados; sugestão é editável; resumo considera o contexto disponível e não exibe notas. | RF003, RF004, RF005 |
+| CV004 | Canvas suficiente | Preencher uma ideia completa e solicitar continuidade. | IA registra contexto suficiente; nenhum modal é aberto; fluxo segue para o resumo. | RF022 |
+| CV005 | Complementação única | Preencher Canvas insuficiente; conferir perguntas; responder parcialmente; tentar provocar nova rodada; concluir envio. | Abre somente um modal com 1 a 10 perguntas contextuais; respostas parciais são aceitas; não há segunda rodada; perguntas e respostas são persistidas. | RF005, RF019, RF022 |
+| CV006 | Falha da avaliação de suficiência | Simular timeout ou JSON inválido; enviar a ideia; acessar o detalhe como Inovação; executar retentativa. | Ideia é salva; brainstorm fica aguardando avaliação; não há perda de dados; retentativa interna conclui a avaliação e inicia o brainstorm sem novo modal público. | RF003, RF018, RF019, RF022 |
+| CV007 | Brainstorm e retentativas | Gerar brainstorm; inspecionar soluções; simular falha na primeira e nas duas tentativas; usar “Tentar novamente”. | Exatamente 3 soluções SCAMPER; cada solução contém 5 critérios de Impacto e 5 de Esforço; somente uma retentativa automática; após duas falhas a ideia permanece salva. | RF018, RF019 |
+| CV008 | Cálculo de Impacto | Usar a massa da seção 3.1; omitir, duplicar ou usar nota não permitida; testar nota `2` em alcance. | Backend usa pesos `20/30/20/20/10`, calcula `6,8` e matriz `7`; exige cinco critérios; rejeita nota fora de `2/4/6/8/10` e rejeita `2` em alcance. | RF007, RF008, RF018; 5.3 |
+| CV009 | Cálculo de Esforço | Usar a massa da seção 3.1; tentar nota decimal, ímpar ou critério ausente. | Backend usa pesos `30/25/20/15/10`, calcula `4,8` e matriz `5`; Tempo = 6 significa `11 a 22 dias úteis`; valores inválidos são bloqueados. | RF007, RF008, RF018; 5.4 |
+| CV010 | Recalculo, matriz e triagem | Salvar a massa; alterar Ganho esperado de 8 para 6; acessar como Diretoria e Inovação. | Impacto muda de `6,8/7` para `6,2/6`; quadrante muda de `Grande Projeto` para `Retorno Limitado`; Diretoria consulta; Inovação revisa e o backend recalcula. | RF007, RF008; 5.5 |
+| CV011 | Detalhe interno da ideia | Abrir ideia com complementação como Diretoria e Inovação. | Canvas, decisão de suficiência, perguntas, respostas, resumo, brainstorm e pontuações são exibidos em leitura; prompts e dados técnicos não são expostos. | RF019, RF022 |
+| CV012 | Conversão e template Asana | Tentar converter sem avaliação final e sem nome; informar `Portal de Teste`; converter; repetir. | Conversão é bloqueada quando inválida; nome final `INV | Portal de Teste`; template correto é usado; brainstorm fica na descrição; repetição não duplica projeto. | RF009, RF020, RF021 |
+| CV013 | Falha parcial Asana | Simular template inacessível e falha após criação; executar recuperação. | Não há sucesso falso; projeto interno e GID são preservados; recuperação reutiliza o projeto existente. | RF009, RF017, RF021 |
+| CV014 | Entregas | Adicionar link; enviar arquivo menor e maior que 50 MB; consultar como Diretoria; excluir como Inovação. | Link e arquivo válidos são registrados; limite é aplicado; Diretoria consulta; somente Inovação cria ou exclui; exclusão é auditada. | RF010 |
+| CV015 | Comentários | Criar como Diretoria e Inovação; tentar editar e excluir conforme diferentes permissões. | Comentários não são editáveis; autor exclui o próprio; Inovação exclui qualquer; ações geram log. | RF014, RF017 |
+| CV016 | Sincronização Asana | Alterar tarefas; conferir webhook; simular perda do evento; executar cron. | `asana_sync` é atualizado; front-end usa cache; cron corrige divergências. | RF006, RF013, RF016 |
+| CV017 | Fases, métricas e insight | Concluir fases; registrar meta/resultado; gerar insight; simular falha da IA. | Progresso é recalculado; métricas permanecem salvas; falha da IA não remove dados. | RF011, RF012 |
+| CV018 | Segurança e auditoria | Inspecionar bundle e requisições; tentar escrita direta, reutilizar sessão, criar segunda rodada e manipular resultados. | Nenhum secret está no front-end; RLS bloqueia escrita; sessão expirada ou consumida é rejeitada; segunda rodada é impedida; resultados externos são ignorados; logs não expõem tokens ou respostas completas. | RF002, RF003, RF007, RF008, RF017, RF022, RNFs |
 
 ---
 
@@ -104,23 +103,30 @@ A nota `6` em **Tempo estimado de implementação** deve aparecer com o signific
 
 | Item | Status |
 |---|---|
-| Login, sessão e permissões funcionam no front-end e backend | Pendente |
-| Canvas valida campos, domínios e CAPTCHA | Pendente |
-| Sugestão, resumo e brainstorm funcionam | Pendente |
-| Brainstorm respeita duas tentativas e retentativa manual | Pendente |
-| As três soluções possuem os 12 critérios e justificativas | Pendente |
-| Catálogo exibe pesos e significados exatos das notas | Pendente |
-| Fórmula de Impacto retorna `6,4` para a massa definida | Pendente |
+| CAPTCHA é exibido antes do Canvas e validado no backend | Pendente |
+| Sessão do Canvas é temporária, restrita e renovável sem perda local | Pendente |
+| Canvas valida campos e domínios autorizados | Pendente |
+| Canvas suficiente não abre modal | Pendente |
+| Canvas insuficiente abre uma única rodada com até 10 perguntas | Pendente |
+| Respostas parciais não bloqueiam o envio | Pendente |
+| Perguntas e respostas aparecem no detalhe interno | Pendente |
+| Falha de suficiência preserva a ideia e permite recuperação | Pendente |
+| Resumo usa Canvas e complementação disponível | Pendente |
+| Brainstorm respeita 3 soluções e duas tentativas automáticas | Pendente |
+| Cada solução possui 5 critérios de Impacto e 5 de Esforço | Pendente |
+| Catálogo exibe pesos, notas permitidas e âncoras oficiais | Pendente |
+| Fórmula de Impacto retorna `6,8` para a massa definida | Pendente |
 | Fórmula de Esforço retorna `4,8` para a massa definida | Pendente |
-| Arredondamento da matriz usa metade para cima | Pendente |
-| Alterar um critério recalcula resultados e quadrante | Pendente |
-| Matriz, triagem e histórico de arquivadas funcionam | Pendente |
-| Conversão exige avaliação final completa e nome | Pendente |
+| Alcance rejeita a nota `2` | Pendente |
+| Arredondamento usa metade para cima | Pendente |
+| Alterar um critério recalcula resultado e quadrante | Pendente |
+| Matriz, triagem e histórico funcionam | Pendente |
+| Conversão exige avaliação final e nome | Pendente |
 | Projeto usa o template Asana `1213945719343548` | Pendente |
 | Brainstorm está na descrição e não em task exclusiva | Pendente |
-| Conversão não cria duplicidade e recupera falha parcial | Pendente |
+| Conversão é idempotente e recupera falha parcial | Pendente |
 | Entregas usam Storage e respeitam 50 MB | Pendente |
-| Comentários não podem ser editados e respeitam exclusão | Pendente |
+| Comentários respeitam imutabilidade e exclusão | Pendente |
 | Webhook e cron atualizam o cache do Asana | Pendente |
 | Fases, métricas e insights funcionam | Pendente |
 | Logs e controles de segurança foram verificados | Pendente |
@@ -129,18 +135,25 @@ A nota `6` em **Tempo estimado de implementação** deve aparecer com o signific
 
 ## 6. Falhas que bloqueiam o aceite
 
-- submissão aceita sem CAPTCHA válido ou com domínio não autorizado;
+- Canvas exibido sem CAPTCHA válido;
+- API pública aceitando sessão ausente, expirada ou inválida;
 - exposição de tokens, secrets ou `service_role`;
-- Diretoria conseguindo alterar critérios, decisão ou cadastro restrito;
-- peso, âncora ou critério divergente da especificação funcional 0.7;
-- nota final calculada pelo cliente ou pela IA sendo aceita sem recálculo do backend;
-- critério ausente, duplicado, fora da escala ou sem justificativa sendo persistido;
-- fórmula ou arredondamento produzindo resultado diferente da massa de teste;
-- matriz usando valor decimal no lugar do valor inteiro arredondado;
+- domínio não autorizado aceito;
+- mais de uma rodada pública de complementação ou mais de 10 perguntas;
+- respostas parciais bloqueando indevidamente a submissão;
+- perguntas e respostas não persistidas com a ideia;
+- falha de suficiência causando perda da ideia;
+- brainstorm iniciado automaticamente enquanto a avaliação está em erro;
+- Diretoria alterando critérios, decisão ou cadastro restrito;
+- peso, critério, nota permitida ou âncora divergente da especificação 0.8;
+- resultado calculado pelo cliente ou IA aceito sem recálculo do backend;
+- critério ausente, duplicado ou sem justificativa persistido;
+- nota fora da escala aceita, incluindo nota `2` em alcance;
+- fórmula ou arredondamento diferente da massa de teste;
 - conversão sem avaliação final completa ou sem nome;
 - criação de projeto fora do template obrigatório;
 - projeto duplicado após retentativa;
-- perda da ideia ou do projeto interno por falha de IA ou Asana;
+- perda da ideia ou projeto interno por falha de IA ou Asana;
 - arquivo acima de 50 MB aceito;
 - edição de comentário publicado.
 
@@ -164,3 +177,7 @@ A nota `6` em **Tempo estimado de implementação** deve aparecer com o signific
 | CV012 | Pendente | - | - |
 | CV013 | Pendente | - | - |
 | CV014 | Pendente | - | - |
+| CV015 | Pendente | - | - |
+| CV016 | Pendente | - | - |
+| CV017 | Pendente | - | - |
+| CV018 | Pendente | - | - |
