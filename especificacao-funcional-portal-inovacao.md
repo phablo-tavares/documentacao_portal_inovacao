@@ -1,7 +1,7 @@
 # Especificação Funcional — Portal de Gestão da Inovação Rennova
 
 > Fonte funcional para orientar construção, aceite e evolução do **Rennova Spark Hub**.  
-> Esta versão consolida os comentários de revisão e as decisões funcionais sobre Canvas público, Brainstorm Estratégico com IA, matriz Impacto × Esforço, triagem, conversão de ideias, integração com o Asana, entregas e governança. As métricas de impacto e esforço utilizam critérios ponderados e escalas ancoradas de 1 a 10.
+> Esta versão consolida as decisões funcionais sobre Canvas público, avaliação de suficiência e complementação por IA, Brainstorm Estratégico com IA, matriz Impacto × Esforço, triagem, conversão de ideias, integração com o Asana, entregas e governança. As métricas de impacto e esforço utilizam critérios ponderados e escalas ancoradas nas notas 2, 4, 6, 8 e 10, com exceção da escala específica de alcance dos beneficiados.
 
 ---
 
@@ -42,36 +42,36 @@
     - [RF019 - Exibição do brainstorm no detalhe da ideia](#rf019---exibição-do-brainstorm-no-detalhe-da-ideia)
     - [RF020 - Cópia do brainstorm para projeto convertido](#rf020---cópia-do-brainstorm-para-projeto-convertido)
     - [RF021 - Configuração inicial do projeto no Asana](#rf021---configuração-inicial-do-projeto-no-asana)
+    - [RF022 - Avaliação de suficiência e complementação estratégica](#rf022---avaliação-de-suficiência-e-complementação-estratégica)
   - [5. Regras de negócio](#5-regras-de-negócio)
     - [5.1 Framework SCAMPER](#51-framework-scamper)
     - [5.2 Estrutura obrigatória de cada solução](#52-estrutura-obrigatória-de-cada-solução)
     - [5.3 Métrica de Impacto](#53-métrica-de-impacto)
       - [5.3.1 Critérios, pesos e cálculo](#531-critérios-pesos-e-cálculo)
       - [5.3.2 Escalas ancoradas dos critérios](#532-escalas-ancoradas-dos-critérios)
-        - [A. Alinhamento estratégico com os objetivos da Rennova — Peso: 20%](#a-alinhamento-estratégico-com-os-objetivos-da-rennova--peso-20)
-        - [B. Gravidade ou relevância da demanda — Peso: 15%](#b-gravidade-ou-relevância-da-demanda--peso-15)
-        - [C. Ganho esperado de eficiência, receita, economia, qualidade ou compliance — Peso: 25%](#c-ganho-esperado-de-eficiência-receita-economia-qualidade-ou-compliance--peso-25)
-        - [D. Quantidade de áreas, usuários ou processos beneficiados — Peso: 15%](#d-quantidade-de-áreas-usuários-ou-processos-beneficiados--peso-15)
-        - [E. Potencial de escala ou reutilização em outras áreas — Peso: 15%](#e-potencial-de-escala-ou-reutilização-em-outras-áreas--peso-15)
-        - [F. Urgência ou redução de risco relevante — Peso: 10%](#f-urgência-ou-redução-de-risco-relevante--peso-10)
+        - [A. Gravidade ou relevância da demanda — Peso: 20%](#a-gravidade-ou-relevância-da-demanda--peso-20)
+        - [B. Ganho esperado de eficiência, receita, economia, qualidade ou compliance — Peso: 30%](#b-ganho-esperado-de-eficiência-receita-economia-qualidade-ou-compliance--peso-30)
+        - [C. Quantidade de áreas, usuários ou processos beneficiados — Peso: 20%](#c-quantidade-de-áreas-usuários-ou-processos-beneficiados--peso-20)
+        - [D. Potencial de escala ou reutilização em outras áreas — Peso: 20%](#d-potencial-de-escala-ou-reutilização-em-outras-áreas--peso-20)
+        - [E. Urgência ou redução de risco relevante — Peso: 10%](#e-urgência-ou-redução-de-risco-relevante--peso-10)
     - [5.4 Métrica de Esforço](#54-métrica-de-esforço)
       - [5.4.1 Critérios, pesos e cálculo](#541-critérios-pesos-e-cálculo)
       - [5.4.2 Escalas ancoradas dos critérios](#542-escalas-ancoradas-dos-critérios)
-        - [A. Complexidade técnica — Peso: 25%](#a-complexidade-técnica--peso-25)
-        - [B. Necessidade de integrações ou dados externos — Peso: 20%](#b-necessidade-de-integrações-ou-dados-externos--peso-20)
+        - [A. Complexidade técnica — Peso: 30%](#a-complexidade-técnica--peso-30)
+        - [B. Necessidade de integrações ou dados externos — Peso: 25%](#b-necessidade-de-integrações-ou-dados-externos--peso-25)
         - [C. Tempo estimado de implementação — Peso: 20%](#c-tempo-estimado-de-implementação--peso-20)
         - [D. Mudança operacional ou processual necessária — Peso: 15%](#d-mudança-operacional-ou-processual-necessária--peso-15)
-        - [E. Dependência de outras áreas, fornecedores ou aprovações — Peso: 10%](#e-dependência-de-outras-áreas-fornecedores-ou-aprovações--peso-10)
-        - [F. Custo estimado de implantação e manutenção — Peso: 10%](#f-custo-estimado-de-implantação-e-manutenção--peso-10)
+        - [E. Custo estimado de implantação e manutenção — Peso: 10%](#e-custo-estimado-de-implantação-e-manutenção--peso-10)
     - [5.5 Regra da matriz Impacto × Esforço](#55-regra-da-matriz-impacto--esforço)
     - [5.6 Recomendação da IA](#56-recomendação-da-ia)
   - [6. Fluxos de usuário](#6-fluxos-de-usuário)
-    - [6.1 Submissão pública de ideia](#61-submissão-pública-de-ideia)
-    - [6.2 Geração do Brainstorm Estratégico IA](#62-geração-do-brainstorm-estratégico-ia)
-    - [6.3 Triagem de ideia](#63-triagem-de-ideia)
-    - [6.4 Conversão em projeto com Asana](#64-conversão-em-projeto-com-asana)
-    - [6.5 Sincronização Asana → Portal](#65-sincronização-asana--portal)
-    - [6.6 Gestão de entregas](#66-gestão-de-entregas)
+    - [6.1 Acesso e submissão pública de ideia](#61-acesso-e-submissão-pública-de-ideia)
+    - [6.2 Avaliação de suficiência e complementação](#62-avaliação-de-suficiência-e-complementação)
+    - [6.3 Geração do Brainstorm Estratégico IA](#63-geração-do-brainstorm-estratégico-ia)
+    - [6.4 Triagem de ideia](#64-triagem-de-ideia)
+    - [6.5 Conversão em projeto com Asana](#65-conversão-em-projeto-com-asana)
+    - [6.6 Sincronização Asana → Portal](#66-sincronização-asana--portal)
+    - [6.7 Gestão de entregas](#67-gestão-de-entregas)
   - [7. Mapa de navegação](#7-mapa-de-navegação)
   - [8. Telas e comportamento visual](#8-telas-e-comportamento-visual)
     - [Tela 1 - Canvas público](#tela-1---canvas-público)
@@ -97,9 +97,9 @@
 | Nome do projeto | Rennova Spark Hub — Portal de Gestão da Inovação |
 | Responsável pelo documento | Phablo Tavares |
 | Área/Time | Inovação / Desenvolvimento de Agentes e Soluções de IA |
-| Data | 2026-07-13 |
-| Versão | 0.7 |
-| Alteração desta versão | Inclusão de escalas ancoradas para cada nota dos critérios de impacto e esforço; cálculo ponderado e reproduzível das notas finais; adequação da geração por IA, triagem, matriz e critérios de aceite à nova metodologia. |
+| Data | 2026-07-14 |
+| Versão | 0.8 |
+| Alteração desta versão | Simplificação das métricas de impacto e esforço; inclusão da avaliação de suficiência do Canvas, complementação estratégica condicional por IA e adequação dos fluxos, regras, telas e critérios de aceite. |
 
 ---
 
@@ -113,23 +113,25 @@ A área de Inovação da Rennova recebe ideias de diferentes áreas, avalia pote
 
 Já existe um protótipo visual no Lovable/GitHub, com Dashboard, Projetos, Detalhe de Projeto e Ideias usando dados mockados. A entrega alvo deve transformar o protótipo em produto funcional com Supabase, autenticação, banco real, IA e integração com o Asana.
 
+Antes do Brainstorm Estratégico, a IA deve avaliar se as informações do Canvas são suficientes. Quando necessário, o autor responderá uma única rodada de até 10 perguntas estratégicas para complementar o contexto usado no resumo, nas notas de impacto e esforço e no brainstorm.
+
 O cadastro da ideia deve gerar um **Brainstorm Estratégico com IA**, usando SCAMPER como framework de inovação. O brainstorm apoiará a triagem, acompanhará a ideia quando convertida e será registrado na descrição do projeto criado no Asana.
 
 <a id="ef-2-2-objetivo"></a>
 ### 2.2 Objetivo
 
-Construir um portal interno para centralizar a gestão da inovação na Rennova, permitindo que colaboradores submetam ideias, a IA apoie a estruturação e a análise inicial, a Inovação qualifique e priorize iniciativas, a Diretoria acompanhe o portfólio e projetos aprovados sejam integrados ao Asana para execução operacional.
+Construir um portal interno para centralizar a gestão da inovação na Rennova, permitindo que colaboradores submetam ideias, a IA apoie a estruturação, a complementação e a análise inicial, a Inovação qualifique e priorize iniciativas, a Diretoria acompanhe o portfólio e projetos aprovados sejam integrados ao Asana para execução operacional.
 
 <a id="ef-2-3-publico-alvo-usuarios"></a>
 ### 2.3 Público-alvo / usuários
 
 | Ator / Perfil | Responsabilidade | Principais ações |
 |---|---|---|
-| Colaborador / Autor da ideia | Submeter ideia pelo Canvas público | Preencher Canvas, solicitar sugestões de IA, revisar resumo, concluir CAPTCHA e aprovar submissão |
-| Inovação | Gerir funil e governança da inovação | Triar ideias, revisar impacto/esforço, consultar brainstorm, converter ideias, gerir projetos, fases, métricas, entregas, comentários e cadastros |
+| Colaborador / Autor da ideia | Submeter ideia pelo Canvas público | Concluir CAPTCHA, preencher Canvas, solicitar sugestões de IA, responder complementação quando necessária, revisar resumo e aprovar submissão |
+| Inovação | Gerir funil e governança da inovação | Triar ideias, consultar complementações, revisar impacto/esforço, consultar brainstorm, converter ideias, gerir projetos, fases, métricas, entregas, comentários e cadastros |
 | Diretoria | Acompanhar portfólio em visão executiva | Consultar dashboard, backlog, matriz, triagem e detalhes de ideias/projetos; registrar comentários de governança |
 | Administrador funcional | Gerir cadastros básicos | Gerenciar departamentos e perfis de usuários |
-| Sistema / Integrações | Executar automações | Gerar sugestões, resumos, brainstorms e insights; criar projetos no Asana; preencher a descrição do projeto; sincronizar dados e registrar logs |
+| Sistema / Integrações | Executar automações | Validar CAPTCHA, avaliar suficiência, gerar perguntas, resumos, brainstorms e insights; criar projetos no Asana; sincronizar dados e registrar logs |
 
 ---
 
@@ -141,15 +143,18 @@ Construir um portal interno para centralizar a gestão da inovação na Rennova,
 
 - [x] Base visual inicial com tema escuro, dashboard, projetos, detalhes e ideias usando `mockData`.
 - [ ] Canvas público sem login para submissão de ideias.
+- [ ] CAPTCHA obrigatório e validado antes da exibição do Canvas.
 - [ ] Validação de e-mail por lista de domínios corporativos autorizados.
-- [ ] Verificação CAPTCHA obrigatória no Canvas público.
 - [ ] Sugestões de IA por bloco do Canvas considerando o contexto completo da ideia.
-- [ ] Resumo consolidado da ideia por IA.
+- [ ] Avaliação de suficiência das informações do Canvas por IA.
+- [ ] Modal condicional com uma rodada de até 10 perguntas estratégicas.
+- [ ] Persistência das perguntas e respostas complementares vinculadas à ideia.
+- [ ] Resumo consolidado da ideia por IA usando Canvas e complementação.
 - [ ] Aprovação ou ajuste do resumo pelo autor.
 - [ ] Brainstorm Estratégico com IA baseado em SCAMPER ao cadastrar ideia.
 - [ ] Geração de 3 soluções estratégicas por ideia.
 - [ ] Recomendação de uma solução pela IA, com justificativa.
-- [ ] Métricas de impacto e esforço em escala 1–10, com critérios ponderados, significado exato de cada nota e cálculo reproduzível.
+- [ ] Métricas de impacto e esforço com critérios ponderados, escalas ancoradas simplificadas e cálculo reproduzível.
 - [ ] Matriz Impacto × Esforço para ideias elegíveis.
 - [ ] Login com Supabase Auth por e-mail e senha.
 - [ ] Controle de acesso por perfis `diretoria` e `inovacao`.
@@ -184,6 +189,7 @@ Construir um portal interno para centralizar a gestão da inovação na Rennova,
 - Acompanhamento da evolução da ideia pelo autor após aprovação, salvo definição em nova fase.
 - Edição colaborativa avançada do brainstorm.
 - Versionamento completo de múltiplas gerações de brainstorm.
+- Mais de uma rodada de perguntas complementares no Canvas.
 - Treinamento de modelo próprio de IA.
 - Cálculo financeiro detalhado de ROI por IA.
 - Edição de comentários de governança já publicados.
@@ -197,7 +203,7 @@ Construir um portal interno para centralizar a gestão da inovação na Rennova,
 - Supabase será usado para Auth, Postgres, RLS, Edge Functions e Storage.
 - A sessão seguirá o comportamento padrão do Supabase Auth, incluindo persistência e renovação automática de tokens, sem timeout customizado nesta versão.
 - Asana será a fonte operacional de tarefas e sprints.
-- Supabase será a fonte de verdade para ideias, triagem, governança, métricas, usuários, entregas e visão executiva.
+- Supabase será a fonte de verdade para ideias, complementações, triagem, governança, métricas, usuários, entregas e visão executiva.
 - Tokens de Asana e IA ficarão somente em secrets nas Edge Functions.
 - Workspace, portfólio e owner padrão do Asana serão parametrizados.
 - O template Asana será fixo e identificado pelo ID `1213945719343548`.
@@ -205,6 +211,7 @@ Construir um portal interno para centralizar a gestão da inovação na Rennova,
 - Link de referência do template: `https://app.asana.com/0/project-templates/1213945719343548/list`.
 - A credencial utilizada pela integração terá acesso ao template, ao workspace e ao portfólio necessários.
 - Respostas de IA serão estruturadas em JSON e validadas antes de gravação.
+- A IA decidirá se o Canvas possui informações suficientes para prosseguir sem perguntas adicionais.
 - O Brainstorm Estratégico usará SCAMPER como base de ideação.
 - O Brainstorm Estratégico completo será registrado na descrição do projeto Asana.
 - A primeira versão priorizará desktop e responsividade básica para web.
@@ -215,8 +222,9 @@ Construir um portal interno para centralizar a gestão da inovação na Rennova,
 - Não expor chaves, tokens ou `service_role` no front-end.
 - Não chamar Asana nem provedores de IA diretamente pelo browser.
 - Evitar edição manual ampla do front-end fora do Lovable.
+- Não exibir o Canvas antes da validação do CAPTCHA.
 - Proteger o formulário público com CAPTCHA obrigatório, rate limit e honeypot.
-- Validar o token CAPTCHA no backend antes de persistir a ideia.
+- Validar o token CAPTCHA no backend e manter uma sessão de acesso válida durante o preenchimento e a submissão.
 - Aceitar submissões apenas dos domínios de e-mail autorizados.
 - Não exibir impacto/esforço ao autor da ideia no fluxo público.
 - Aplicar permissões no front-end e reforçá-las por RLS/Edge Functions.
@@ -266,14 +274,14 @@ Construir um portal interno para centralizar a gestão da inovação na Rennova,
 
 | Item | Especificação |
 |---|---|
-| Descrição | Permitir que colaborador envie ideia pela rota pública `/canvas`, sem login, após validação do e-mail corporativo e conclusão do CAPTCHA. |
+| Descrição | Permitir que colaborador acesse e envie ideia pela rota pública `/canvas`, sem login, após validação prévia do CAPTCHA. |
 | Ator | Colaborador. |
-| Pré-condições | Rota pública disponível; Edge Function `submit-idea` configurada; serviço CAPTCHA configurado; lista de domínios autorizados disponível. |
-| Fluxo principal | 1. Acessar `/canvas`.<br>2. Preencher identificação, área/departamento em campo aberto e blocos do Canvas.<br>3. Informar e-mail corporativo.<br>4. Concluir o CAPTCHA.<br>5. Solicitar o envio.<br>6. Edge Function valida campos obrigatórios, domínio do e-mail, CAPTCHA, honeypot e rate limit.<br>7. Sistema grava `ideas.status = enviada`.<br>8. Sistema inicia ou chama a geração de resumo por IA.<br>9. Sistema inicia a geração do Brainstorm Estratégico IA.<br>10. Exibir confirmação de envio. |
-| Exceções | Campos obrigatórios vazios: bloquear e destacar campos.<br>E-mail com domínio não autorizado: bloquear.<br>CAPTCHA ausente, inválido ou expirado: bloquear sem criar a ideia.<br>Serviço CAPTCHA indisponível: informar indisponibilidade e não criar a ideia.<br>Rate limit ou honeypot acionado: bloquear com mensagem genérica.<br>Falha de gravação: exibir erro e permitir nova tentativa.<br>Falha de IA após a gravação: manter a ideia salva e registrar pendência ou erro de IA.<br>Usuário tenta sair antes do envio: exibir aviso de perda dos dados preenchidos. |
-| Critérios de aceite | Colaborador sem login acessa `/canvas`; Canvas incompleto é bloqueado; somente os domínios autorizados são aceitos; CAPTCHA válido é obrigatório; submissão válida cria registro em `ideas` com status `enviada`; falha de IA não elimina a ideia; saída antes do envio apresenta aviso. |
-| Regras | RN004, RN005, RN006, RN007, RN008, RN009, RN011, RN018, RN019, RN030, RN032, RN034. |
-| Observação | Escrita pública no banco ocorrerá somente via Edge Function com `service_role`. A validação de CAPTCHA deverá ocorrer no backend. |
+| Pré-condições | Rota pública disponível; Edge Functions de CAPTCHA e `submit-idea` configuradas; lista de domínios autorizados disponível. |
+| Fluxo principal | 1. Acessar `/canvas`.<br>2. Exibir somente a etapa de verificação CAPTCHA.<br>3. Validar o CAPTCHA no backend.<br>4. Liberar o Canvas após validação válida.<br>5. Preencher identificação, área/departamento em campo aberto e blocos do Canvas.<br>6. Informar e-mail corporativo.<br>7. Solicitar a continuidade do envio.<br>8. Executar a avaliação de suficiência do RF022.<br>9. Gerar e apresentar o resumo conforme RF005.<br>10. Autor aprova ou complementa o resumo.<br>11. Edge Function valida campos obrigatórios, domínio do e-mail, sessão CAPTCHA, honeypot e rate limit.<br>12. Sistema grava `ideas.status = enviada`, o resumo e a complementação existente.<br>13. Sistema inicia a geração do Brainstorm Estratégico IA quando a avaliação de suficiência estiver concluída.<br>14. Exibir confirmação de envio. |
+| Exceções | CAPTCHA ausente, inválido ou expirado antes do acesso: não exibir o Canvas.<br>Sessão CAPTCHA expirada durante o preenchimento: solicitar nova validação sem descartar os dados locais.<br>Campos obrigatórios vazios: bloquear e destacar campos.<br>E-mail com domínio não autorizado: bloquear.<br>Serviço CAPTCHA indisponível: informar indisponibilidade e não liberar o Canvas.<br>Rate limit ou honeypot acionado: bloquear com mensagem genérica.<br>Falha de gravação: exibir erro e permitir nova tentativa.<br>Falha técnica na avaliação de suficiência: permitir a submissão, salvar a ideia e manter o brainstorm pendente para recuperação controlada.<br>Falha de IA após a gravação: manter a ideia salva e registrar pendência ou erro de IA.<br>Usuário tenta sair antes do envio: exibir aviso de perda dos dados preenchidos. |
+| Critérios de aceite | Colaborador sem login acessa a etapa de CAPTCHA; o Canvas só é exibido após validação válida; Canvas incompleto é bloqueado; somente domínios autorizados são aceitos; submissão válida cria registro em `ideas` com status `enviada`; falha de IA não elimina a ideia; saída antes do envio apresenta aviso. |
+| Regras | RN004, RN005, RN006, RN007, RN008, RN009, RN011, RN018, RN019, RN030, RN032, RN034, RN045, RN046, RN048, RN049. |
+| Observação | Escrita pública no banco ocorrerá somente via Edge Function com `service_role`. A validação do CAPTCHA deverá ocorrer no backend. |
 
 <a id="ef-rf004-sugestao-de-ia-por-bloco-do-canvas"></a>
 ### RF004 - Sugestão de IA por bloco do Canvas
@@ -282,11 +290,11 @@ Construir um portal interno para centralizar a gestão da inovação na Rennova,
 |---|---|
 | Descrição | Permitir que o autor solicite sugestão de IA para cada bloco do Canvas, considerando o conteúdo já preenchido e o objetivo geral da ideia. |
 | Ator | Colaborador. |
-| Pré-condições | `/canvas` aberto; `ai-assist-block` configurada; provider de IA configurado por secret. |
+| Pré-condições | CAPTCHA validado; `/canvas` liberado; `ai-assist-block` configurada; provider de IA configurado por secret. |
 | Fluxo principal | 1. Clicar em “Sugestão IA” em um bloco.<br>2. Enviar o bloco, os demais campos preenchidos e o objetivo geral para a Edge Function.<br>3. IA retorna sugestão contextualizada e objetiva.<br>4. Sistema exibe sugestão para aceitar, editar ou ignorar. |
 | Exceções | IA indisponível: manter edição manual.<br>Resposta inválida: ignorar resposta, registrar erro e exibir mensagem genérica.<br>Conteúdo insuficiente: IA pode retornar pergunta orientadora ou sugestão limitada. |
 | Critérios de aceite | Sugestão considera o contexto completo disponível; retorna texto editável; falha de IA não impede preenchimento manual. |
-| Regras | RN007, RN008, RN009, RN030, RN032. |
+| Regras | RN007, RN008, RN009, RN030, RN032, RN045. |
 | Observação | Enviar ao provider somente o contexto necessário para a funcionalidade. |
 
 <a id="ef-rf005-resumo-de-ia-e-aprovacao-pelo-autor"></a>
@@ -296,11 +304,11 @@ Construir um portal interno para centralizar a gestão da inovação na Rennova,
 |---|---|
 | Descrição | Gerar resumo consolidado da ideia e permitir aprovação ou complemento pelo autor antes da conclusão da submissão. |
 | Ator | Autor da ideia. |
-| Pré-condições | Canvas preenchido com dados mínimos; `ai-summarize-idea` configurada. |
-| Fluxo principal | 1. Enviar os blocos do Canvas para a Edge Function.<br>2. IA retorna JSON com resumo e classificação inicial.<br>3. Exibir o resumo ao autor, sem notas de impacto e esforço.<br>4. Autor aprova ou complementa.<br>5. Após a submissão válida, gravar a ideia, o resumo e a aprovação do autor.<br>6. Seguir para geração do brainstorm e triagem. |
+| Pré-condições | Canvas preenchido; avaliação de suficiência concluída ou complementação encerrada; `ai-summarize-idea` configurada. |
+| Fluxo principal | 1. Enviar os blocos do Canvas e as respostas complementares existentes para a Edge Function.<br>2. IA retorna JSON com resumo e classificação inicial.<br>3. Exibir o resumo ao autor, sem notas de impacto e esforço.<br>4. Autor aprova ou complementa.<br>5. Incorporar o ajuste ao resumo.<br>6. Após a submissão válida, gravar a ideia, o resumo e a aprovação do autor.<br>7. Seguir para geração do brainstorm e triagem. |
 | Exceções | IA falha: permitir submissão com resumo pendente para Inovação.<br>JSON inválido: não gravar campos controlados e registrar erro.<br>Autor complementa: incorporar o ajuste antes da submissão.<br>Autor abandona a página: dados não enviados não são persistidos; o navegador deve alertar sobre a perda. |
-| Critérios de aceite | Resumo válido é exibido ao autor; aprovação ou complemento é registrado na submissão; impacto e esforço nunca aparecem ao autor; dados não enviados não são persistidos. |
-| Regras | RN004, RN007, RN008, RN009, RN011, RN030, RN032. |
+| Critérios de aceite | Resumo considera Canvas e respostas complementares existentes; resumo válido é exibido ao autor; aprovação ou complemento é registrado na submissão; impacto e esforço nunca aparecem ao autor; dados não enviados não são persistidos. |
+| Regras | RN004, RN007, RN008, RN009, RN011, RN030, RN032, RN046, RN047, RN048. |
 | Observação | Não haverá retomada posterior de Canvas não enviado nesta versão. |
 
 <a id="ef-rf006-dashboard-executivo"></a>
@@ -322,12 +330,12 @@ Construir um portal interno para centralizar a gestão da inovação na Rennova,
 
 | Item | Especificação |
 |---|---|
-| Descrição | Exibir ideias elegíveis em matriz de priorização Impacto × Esforço, usando escala 1–10, dentro da área de ideias. |
+| Descrição | Exibir ideias elegíveis em matriz de priorização Impacto × Esforço, usando resultados finais entre 2 e 10, dentro da área de ideias. |
 | Ator | Diretoria e Inovação. |
-| Pré-condições | Usuário autenticado; ideias elegíveis com notas dos critérios de impacto e esforço suficientes para calcular os resultados finais ou com brainstorm gerado. |
+| Pré-condições | Usuário autenticado; ideias elegíveis com notas válidas dos critérios de impacto e esforço ou com brainstorm gerado. |
 | Fluxo principal | 1. Acessar `/ideias?aba=matriz`.<br>2. Buscar ideias elegíveis em `aprovada_autor`, `em_triagem` ou `backlog`.<br>3. Quando não houver avaliação final da triagem, usar as notas ponderadas da solução recomendada pela IA.<br>4. Diferenciar a avaliação inicial da IA e a avaliação final da triagem.<br>5. Calcular impacto e esforço pelas fórmulas das seções 5.3 e 5.4.<br>6. Arredondar os resultados para classificação na matriz.<br>7. Plotar esforço no eixo X e impacto no eixo Y.<br>8. Classificar o quadrante pela regra objetiva.<br>9. Permitir acesso ao detalhe da ideia e às notas de cada critério. |
-| Exceções | Ideia sem avaliação completa: não plotar e listar como pendente.<br>Nota de critério ausente ou fora de 1–10: não calcular a nota final e bloquear o salvamento da avaliação.<br>Sem elegíveis: exibir estado vazio.<br>Diretoria: leitura sem ações de decisão. |
-| Critérios de aceite | Ideias elegíveis aparecem nos quadrantes calculados a partir das notas ponderadas; os critérios, pesos e resultados ficam visíveis; ideias convertidas ou arquivadas não aparecem na matriz ativa; Diretoria não altera avaliações; Inovação pode revisar notas dos critérios e o sistema recalcula os resultados finais. |
+| Exceções | Ideia sem avaliação completa: não plotar e listar como pendente.<br>Nota de critério ausente ou diferente das notas permitidas: não calcular a nota final e bloquear o salvamento da avaliação.<br>Sem elegíveis: exibir estado vazio.<br>Diretoria: leitura sem ações de decisão. |
+| Critérios de aceite | Ideias elegíveis aparecem nos quadrantes calculados a partir das notas ponderadas; critérios, pesos e resultados ficam visíveis; ideias convertidas ou arquivadas não aparecem na matriz ativa; Diretoria não altera avaliações; Inovação pode revisar notas e o sistema recalcula os resultados finais. |
 | Regras | RN010, RN013, RN014, RN015, RN016, RN017, RN026, RN027. |
 | Observação | Não haverá rota independente `/matriz`. |
 
@@ -339,8 +347,8 @@ Construir um portal interno para centralizar a gestão da inovação na Rennova,
 | Descrição | Permitir que a Inovação realize a triagem, revise as notas dos critérios de impacto e esforço e registre a decisão; permitir que a Diretoria consulte os dados da triagem. |
 | Ator | Inovação para gestão; Diretoria em leitura. |
 | Pré-condições | Usuário autenticado; ideias em `aprovada_autor`, `em_triagem` ou estado elegível. |
-| Fluxo principal | 1. Acessar `/ideias?aba=triagem`.<br>2. Listar ideias elegíveis do período.<br>3. Revisar Canvas, descrição, resumo IA, brainstorm e solução recomendada.<br>4. Revisar ou informar obrigatoriamente as notas de 1 a 10 de cada critério de impacto e esforço, usando as escalas ancoradas das seções 5.3 e 5.4.<br>5. Sistema calcula automaticamente `impacto_final` e `esforco_final` pelas fórmulas ponderadas.<br>6. Exibir notas dos critérios, pesos, resultado decimal e resultado arredondado usado na matriz.<br>7. Decidir: Vira Projeto, Backlog ou Arquivar/Rejeitar.<br>8. Para arquivar/rejeitar, informar justificativa obrigatória em texto livre.<br>9. Registrar data, usuário responsável e participantes da decisão, quando informados.<br>10. Atualizar status, registrar sessão em `triage_sessions` e log em `activity_log`.<br>11. Disponibilizar ideias arquivadas em `/ideias?aba=arquivadas`. |
-| Exceções | Nota de critério ausente ou fora de 1–10: bloquear o cálculo e o salvamento da avaliação.<br>“Vira Projeto” sem cálculo final completo: bloquear.<br>“Vira Projeto” sem brainstorm gerado: permitir somente com confirmação explícita da Inovação.<br>Arquivamento sem justificativa: bloquear.<br>Falha ao converter no Asana: manter ideia e projeto em estado seguro e exibir erro.<br>Usuário sem permissão de decisão: bloquear alterações. |
+| Fluxo principal | 1. Acessar `/ideias?aba=triagem`.<br>2. Listar ideias elegíveis do período.<br>3. Revisar Canvas, respostas complementares, resumo IA, brainstorm e solução recomendada.<br>4. Revisar ou informar obrigatoriamente as notas permitidas para cada critério de impacto e esforço, usando as escalas das seções 5.3 e 5.4.<br>5. Sistema calcula automaticamente `impacto_final` e `esforco_final` pelas fórmulas ponderadas.<br>6. Exibir notas dos critérios, pesos, resultado decimal e resultado arredondado usado na matriz.<br>7. Decidir: Vira Projeto, Backlog ou Arquivar/Rejeitar.<br>8. Para arquivar/rejeitar, informar justificativa obrigatória em texto livre.<br>9. Registrar data, usuário responsável e participantes da decisão, quando informados.<br>10. Atualizar status, registrar sessão em `triage_sessions` e log em `activity_log`.<br>11. Disponibilizar ideias arquivadas em `/ideias?aba=arquivadas`. |
+| Exceções | Nota de critério ausente ou diferente das notas permitidas: bloquear o cálculo e o salvamento da avaliação.<br>“Vira Projeto” sem cálculo final completo: bloquear.<br>“Vira Projeto” sem brainstorm gerado: permitir somente com confirmação explícita da Inovação.<br>Arquivamento sem justificativa: bloquear.<br>Falha ao converter no Asana: manter ideia e projeto em estado seguro e exibir erro.<br>Usuário sem permissão de decisão: bloquear alterações. |
 | Critérios de aceite | Todas as notas dos critérios são válidas e justificadas; resultados finais são calculados automaticamente; Backlog permanece na matriz; arquivamento registra justificativa, autor e data; ideias arquivadas ficam disponíveis no histórico; Vira Projeto somente prossegue quando a avaliação estiver completa. |
 | Regras | RN001, RN010, RN015, RN016, RN017, RN018, RN026, RN027, RN028, RN030, RN032, RN043. |
 | Observação | A triagem será uma aba da área de ideias, sem rota independente. |
@@ -467,8 +475,8 @@ Construir um portal interno para centralizar a gestão da inovação na Rennova,
 | Pré-condições | Tabela `activity_log` disponível. |
 | Fluxo principal | 1. Usuário ou sistema executa ação relevante.<br>2. Sistema identifica entidade, ação, ator e detalhes não sensíveis.<br>3. Sistema grava log.<br>4. Inovação consulta logs quando necessário. |
 | Exceções | Falha ao gravar log não crítico: não bloquear fluxo principal, mas registrar erro técnico quando possível.<br>Dados sensíveis: remover ou mascarar antes de gravar. |
-| Critérios de aceite | Conversão, mudanças de status, arquivamento, comentários, entregas e exclusões relevantes geram log; logs não contêm tokens, senhas ou chaves. |
-| Regras | RN030, RN032, RN043. |
+| Critérios de aceite | Avaliação de suficiência, complementação, conversão, mudanças de status, arquivamento, comentários, entregas e exclusões relevantes geram log; logs não contêm tokens, senhas ou chaves. |
+| Regras | RN030, RN032, RN043, RN046, RN049. |
 | Observação | Log funcional não substitui monitoramento técnico das Edge Functions. |
 
 <a id="ef-rf018-brainstorm-estrategico-com-ia"></a>
@@ -478,11 +486,11 @@ Construir um portal interno para centralizar a gestão da inovação na Rennova,
 |---|---|
 | Descrição | Gerar automaticamente um Brainstorm Estratégico com IA após o cadastro de uma nova ideia. |
 | Ator | Sistema / IA. |
-| Pré-condições | Ideia cadastrada com dados mínimos; provider de IA configurado; Edge Function de brainstorm disponível. |
-| Fluxo principal | 1. Sistema salva a ideia.<br>2. Sistema aciona a Edge Function de IA.<br>3. IA usa SCAMPER como base.<br>4. IA gera exatamente 3 soluções estratégicas.<br>5. Para cada solução, a IA atribui nota de 1 a 10 a cada critério de impacto e esforço, conforme as escalas ancoradas das seções 5.3 e 5.4, e registra a justificativa correspondente.<br>6. Sistema valida as notas e calcula automaticamente o impacto e o esforço finais de cada solução pelas fórmulas ponderadas.<br>7. Cada solução também recebe análise de viabilidade, riscos e mitigações.<br>8. IA recomenda uma solução.<br>9. Sistema valida a resposta estruturada.<br>10. Sistema salva o brainstorm vinculado à ideia. |
-| Exceções | Primeira tentativa falha: realizar uma segunda tentativa automática.<br>Segunda tentativa falha: marcar brainstorm como `erro`, manter a ideia salva e disponibilizar retentativa manual no detalhe da ideia.<br>Resposta inválida, critério ausente ou nota fora de 1–10: tratar como tentativa com falha e não persistir conteúdo inválido.<br>Timeout: tratar como tentativa com falha.<br>Dados insuficientes: registrar erro controlado ou análise limitada somente se a estrutura obrigatória continuar válida. |
-| Critérios de aceite | São realizadas no máximo duas tentativas automáticas por geração; brainstorm válido contém exatamente 3 soluções; cada solução possui todos os critérios de impacto e esforço com notas ancoradas e justificativas; as notas finais são calculadas pelas fórmulas ponderadas; uma solução é recomendada; após duas falhas, a ideia permanece disponível com ação manual de retentativa. |
-| Regras | RN007, RN008, RN009, RN018, RN019, RN020, RN021, RN022, RN023, RN024, RN025, RN035. |
+| Pré-condições | Ideia cadastrada; avaliação de suficiência concluída; Canvas e respostas complementares disponíveis; provider de IA configurado; Edge Function de brainstorm disponível. |
+| Fluxo principal | 1. Sistema reúne Canvas, respostas complementares e resumo disponível.<br>2. Sistema aciona a Edge Function de IA.<br>3. IA usa SCAMPER como base.<br>4. IA gera exatamente 3 soluções estratégicas.<br>5. Para cada solução, a IA atribui uma nota permitida a cada critério de impacto e esforço, conforme as escalas das seções 5.3 e 5.4, e registra a justificativa correspondente.<br>6. Quando as informações permanecerem incompletas após a complementação, a IA pode realizar inferências coerentes para atribuir as notas.<br>7. Sistema valida as notas e calcula automaticamente o impacto e o esforço finais de cada solução pelas fórmulas ponderadas.<br>8. Cada solução recebe análise de viabilidade, riscos e mitigações.<br>9. IA recomenda uma solução.<br>10. Sistema valida a resposta estruturada.<br>11. Sistema salva o brainstorm vinculado à ideia. |
+| Exceções | Primeira tentativa falha: realizar uma segunda tentativa automática.<br>Segunda tentativa falha: marcar brainstorm como `erro`, manter a ideia salva e disponibilizar retentativa manual no detalhe da ideia.<br>Resposta inválida, critério ausente ou nota diferente das permitidas: tratar como tentativa com falha e não persistir conteúdo inválido.<br>Timeout: tratar como tentativa com falha.<br>Avaliação de suficiência com erro técnico: manter brainstorm pendente até retentativa controlada. |
+| Critérios de aceite | São realizadas no máximo duas tentativas automáticas por geração; brainstorm válido contém exatamente 3 soluções; cada solução possui todos os critérios de impacto e esforço com notas permitidas e justificativas; resultados finais são calculados pelas fórmulas ponderadas; uma solução é recomendada; após duas falhas, a ideia permanece disponível com ação manual de retentativa. |
+| Regras | RN007, RN008, RN009, RN018, RN019, RN020, RN021, RN022, RN023, RN024, RN025, RN035, RN046, RN047, RN048, RN049. |
 | Observação | As duas tentativas correspondem à tentativa inicial e a uma retentativa automática. Retentativas manuais posteriores não exigem versionamento completo. |
 
 <a id="ef-rf019-exibicao-do-brainstorm-no-detalhe-da-ideia"></a>
@@ -490,14 +498,14 @@ Construir um portal interno para centralizar a gestão da inovação na Rennova,
 
 | Item | Especificação |
 |---|---|
-| Descrição | Exibir o Brainstorm Estratégico e seu status no detalhe da ideia. |
-| Ator | Inovação e Diretoria em leitura; retentativa disponível somente para Inovação. |
-| Pré-condições | Ideia existente; usuário autenticado; brainstorm gerado, pendente ou com erro. |
-| Fluxo principal | 1. Usuário abre o detalhe da ideia.<br>2. Sistema exibe status do brainstorm.<br>3. Se gerado, exibe as 3 soluções.<br>4. Destaca a solução recomendada.<br>5. Exibe impacto, esforço, viabilidade, riscos e mitigações.<br>6. Se houver erro após as duas tentativas automáticas, exibe “Tentar novamente” para Inovação.<br>7. Cada acionamento manual inicia uma nova geração controlada. |
-| Exceções | Brainstorm pendente: indicar geração em andamento.<br>Brainstorm com erro: exibir mensagem amigável e ação manual para Inovação.<br>Retentativa manual falha: manter status de erro e permitir novo acionamento posterior.<br>Usuário sem permissão: bloquear ações de retentativa e decisão. |
-| Critérios de aceite | Usuário visualiza soluções, notas, riscos, mitigações e recomendação; Inovação pode acionar nova tentativa após falha das duas tentativas automáticas. |
-| Regras | RN001, RN002, RN018, RN019, RN026, RN027, RN035. |
-| Observação | O detalhe deve preservar a descrição original e o resumo IA, sem substituir o conteúdo do autor. |
+| Descrição | Exibir o contexto complementar, o Brainstorm Estratégico e seus status no detalhe da ideia. |
+| Ator | Inovação e Diretoria em leitura; retentativas disponíveis somente para Inovação. |
+| Pré-condições | Ideia existente; usuário autenticado; avaliação de suficiência e brainstorm em qualquer estado. |
+| Fluxo principal | 1. Usuário abre o detalhe da ideia.<br>2. Sistema exibe o resultado da avaliação de suficiência.<br>3. Quando existentes, exibe perguntas estratégicas e respostas do autor.<br>4. Sistema exibe status do brainstorm.<br>5. Se gerado, exibe as 3 soluções.<br>6. Destaca a solução recomendada.<br>7. Exibe impacto, esforço, viabilidade, riscos e mitigações.<br>8. Se houver erro técnico na avaliação de suficiência, exibe ação de retentativa para Inovação.<br>9. Se houver erro após as duas tentativas automáticas do brainstorm, exibe “Tentar novamente” para Inovação. |
+| Exceções | Avaliação ou brainstorm pendente: indicar processamento pendente.<br>Avaliação ou brainstorm com erro: exibir mensagem amigável e ação manual para Inovação.<br>Retentativa manual falha: manter status de erro e permitir novo acionamento posterior.<br>Usuário sem permissão: bloquear ações de retentativa e decisão. |
+| Critérios de aceite | Usuário visualiza Canvas, perguntas e respostas complementares existentes, soluções, notas, riscos, mitigações e recomendação; Inovação pode acionar retentativas após falhas. |
+| Regras | RN001, RN002, RN018, RN019, RN026, RN027, RN035, RN047, RN049. |
+| Observação | O detalhe deve preservar separadamente o conteúdo original do Canvas, as respostas do autor e o conteúdo gerado pela IA. |
 
 <a id="ef-rf020-copia-do-brainstorm-para-projeto-convertido"></a>
 ### RF020 - Cópia do brainstorm para projeto convertido
@@ -527,6 +535,20 @@ Construir um portal interno para centralizar a gestão da inovação na Rennova,
 | Regras | RN028, RN029, RN030, RN031, RN032, RN036, RN037, RN038, RN039, RN040, RN044. |
 | Observação | O template é fixo e não haverá mecanismo de versionamento ou homologação de alterações futuras neste escopo. |
 
+<a id="ef-rf022-avaliacao-de-suficiencia-e-complementacao-estrategica"></a>
+### RF022 - Avaliação de suficiência e complementação estratégica
+
+| Item | Especificação |
+|---|---|
+| Descrição | Avaliar por IA se o Canvas possui informações suficientes e, somente quando necessário, solicitar uma rodada de perguntas estratégicas antes do resumo e do brainstorm. |
+| Ator | Colaborador / Sistema / IA. |
+| Pré-condições | CAPTCHA validado; Canvas com campos obrigatórios preenchidos; Edge Function de avaliação configurada. |
+| Fluxo principal | 1. Autor solicita continuar com a submissão.<br>2. Sistema envia o conteúdo completo do Canvas para a IA.<br>3. IA decide se as informações são suficientes.<br>4. Se suficientes, registrar o resultado e seguir diretamente para o resumo.<br>5. Se insuficientes, IA gera de 1 a 10 perguntas estratégicas.<br>6. Sistema valida quantidade e estrutura das perguntas.<br>7. Abrir modal com uma única rodada de perguntas.<br>8. Autor responde integral ou parcialmente e conclui a complementação.<br>9. Persistir perguntas e respostas vinculadas à ideia durante a submissão.<br>10. Incorporar as respostas ao contexto utilizado no resumo, nas notas e no brainstorm.<br>11. Prosseguir sem abrir nova rodada de perguntas. |
+| Exceções | Resposta da IA inválida, sem decisão ou com mais de 10 perguntas: tratar como falha técnica.<br>Falha técnica ou timeout: permitir que o autor conclua a submissão; salvar a ideia com avaliação em erro e manter o brainstorm pendente até retentativa pela Inovação.<br>Informações ainda incompletas após a rodada: não bloquear o envio e permitir que a IA realize inferências no brainstorm e nas notas.<br>Falha ao salvar perguntas ou respostas: não concluir a submissão até recuperar a persistência ou descartar a complementação de forma controlada. |
+| Critérios de aceite | Canvas suficiente não abre modal; Canvas considerado insuficiente abre somente uma rodada com até 10 perguntas; perguntas são contextuais, objetivas, não repetem informações já fornecidas e não apresentam notas ao autor; respostas são persistidas e utilizadas nas etapas seguintes; informações remanescentes incompletas não bloqueiam o envio; falha técnica não causa perda da ideia. |
+| Regras | RN007, RN008, RN009, RN011, RN030, RN032, RN045, RN046, RN047, RN048, RN049. |
+| Observação | A decisão de suficiência pertence ao modelo de IA. Não haverá segunda rodada de complementação no MVP. |
+
 ---
 
 <a id="ef-5-regras-de-negocio"></a>
@@ -537,35 +559,35 @@ Construir um portal interno para centralizar a gestão da inovação na Rennova,
 | RN001 | O portal terá perfis `diretoria` e `inovacao`. | RF001, RF002, RF006–RF017, RF019 | Diretoria consulta e comenta; Inovação executa gestão e decisões. |
 | RN002 | Permissões devem ser reforçadas por RLS e/ou Edge Functions. | RF002, RF008, RF010, RF014, RF015, RF019 | Ocultar ação na UI não basta. |
 | RN003 | Usuário com `profiles.ativo = false` não acessa áreas internas. | RF001, RF002 | O bloqueio ocorre ao carregar o perfil, mesmo que o Auth ainda reconheça a conta. |
-| RN004 | Campos obrigatórios do Canvas: nome, e-mail, área/departamento em texto livre, Problema, Indicadores, Como resolver sem IA, Como resolver com IA e Para quem/personas. Dados/fontes e Ferramentas são opcionais. | RF003, RF005 | Envio deve ser bloqueado se qualquer obrigatório estiver ausente. |
+| RN004 | Campos obrigatórios do Canvas: nome, e-mail, área/departamento em texto livre, Problema, Indicadores, Como resolver sem IA, Como resolver com IA e Para quem/personas. Dados/fontes e Ferramentas são opcionais. | RF003, RF005, RF022 | Envio deve ser bloqueado se qualquer obrigatório estiver ausente. |
 | RN005 | Ideias devem seguir status controlados: `rascunho`, `enviada`, `resumo_gerado`, `aprovada_autor`, `em_triagem`, `virou_projeto`, `backlog`, `arquivada`. | RF003, RF005, RF007, RF008, RF009 | Transições inválidas devem ser bloqueadas. |
 | RN006 | O front público não pode inserir diretamente em `ideas`; toda submissão passa por `submit-idea`. | RF003 | Insert anônimo direto deve ser bloqueado por RLS. |
-| RN007 | Toda submissão pública deve possuir CAPTCHA válido, verificado no backend. Honeypot e rate limit são proteções complementares. | RF003, RF004, RF005 | CAPTCHA ausente, inválido ou expirado bloqueia a submissão. |
-| RN008 | IA é apoio, não autoridade final. | RF004, RF005, RF012, RF018 | Conteúdo de IA pode ser revisado pela Inovação. |
-| RN009 | Edge Functions de IA devem solicitar e validar JSON estruturado antes de gravar campos controlados. | RF004, RF005, RF012, RF018 | Resposta inválida não deve persistir campos críticos. |
-| RN010 | Cada critério de impacto e esforço recebe nota inteira de 1 a 10 conforme sua escala ancorada. As notas finais são calculadas pelas fórmulas ponderadas das seções 5.3 e 5.4. | RF005, RF007, RF008, RF009, RF018 | Valores fora da escala devem ser bloqueados; o resultado decimal deve ser preservado e o valor arredondado deve ser usado na matriz. |
-| RN011 | Impacto e esforço não devem aparecer no fluxo público do autor. | RF003, RF005 | Notas são internas. |
+| RN007 | O CAPTCHA deve ser validado no backend antes da exibição do Canvas. A sessão validada, o honeypot e o rate limit protegem a submissão. | RF003, RF004, RF005, RF022 | CAPTCHA ausente, inválido ou expirado impede o acesso ao Canvas. |
+| RN008 | IA é apoio, não autoridade final. | RF004, RF005, RF012, RF018, RF022 | Conteúdo de IA pode ser revisado pela Inovação. |
+| RN009 | Edge Functions de IA devem solicitar e validar JSON estruturado antes de gravar campos controlados. | RF004, RF005, RF012, RF018, RF022 | Resposta inválida não deve persistir campos críticos. |
+| RN010 | Cada critério de impacto e esforço recebe uma das notas `2`, `4`, `6`, `8` ou `10`, conforme sua escala ancorada. O critério de alcance dos beneficiados utiliza `4`, `6`, `8` ou `10`. | RF005, RF007, RF008, RF009, RF018 | Valores diferentes devem ser bloqueados; o resultado decimal é preservado e o arredondado é usado na matriz. |
+| RN011 | Impacto e esforço não devem aparecer no fluxo público do autor. | RF003, RF005, RF022 | Notas são internas. |
 | RN012 | Dashboard e detalhe usam cache de `asana_sync`, não chamada Asana ao vivo. | RF006, RF013, RF016 | Evita lentidão, rate limit e dependência externa. |
 | RN013 | A matriz usa esforço no eixo X e impacto no eixo Y. | RF007 | Maior esforço à direita; maior impacto acima. |
 | RN014 | Ideias sem avaliação final da triagem podem usar os resultados ponderados calculados a partir das notas dos critérios da solução recomendada pela IA, indicando a origem. | RF007, RF008 | Quando houver avaliação final da triagem, ela prevalece. |
 | RN015 | Ideias arquivadas, rejeitadas ou convertidas não aparecem na matriz ativa. | RF007, RF008 | Devem permanecer disponíveis em histórico ou filtros. |
 | RN016 | Somente Inovação registra ou revisa as notas dos critérios e a decisão de triagem. | RF002, RF007, RF008, RF009 | Diretoria consulta critérios, pesos e resultados, e pode comentar, mas não decide. |
 | RN017 | “Vira Projeto” exige avaliação completa dos critérios, `impacto_final`, `esforco_final` e nome do projeto válidos. | RF008, RF009 | Ausência de qualquer item bloqueia a conversão. |
-| RN018 | O Brainstorm Estratégico deve ser gerado após o cadastro da ideia. | RF003, RF018 | A geração pode ser assíncrona, com status controlado. |
+| RN018 | O Brainstorm Estratégico deve ser gerado após o cadastro da ideia e a conclusão da avaliação de suficiência. | RF003, RF018, RF022 | A geração pode ser assíncrona, com status controlado. |
 | RN019 | A ideia deve permanecer salva mesmo se a geração do brainstorm falhar. | RF003, RF018, RF020 | Falha de IA não pode causar perda da submissão. |
 | RN020 | Uma resposta válida de brainstorm contém exatamente 3 soluções. | RF018 | Quantidade diferente invalida a resposta controlada. |
 | RN021 | Cada solução indica uma abordagem SCAMPER aplicada. | RF018 | Sempre que possível, usar abordagens diferentes. |
-| RN022 | Cada solução contém notas de 1 a 10 para todos os critérios de impacto e esforço, justificativa para cada nota e os resultados finais calculados. | RF018 | As notas devem seguir as escalas ancoradas das seções 5.3 e 5.4. |
+| RN022 | Cada solução contém todos os critérios de impacto e esforço com notas permitidas, justificativa para cada nota e resultados finais calculados. | RF018 | As notas seguem as escalas das seções 5.3 e 5.4. |
 | RN023 | A solução recomendada deve ser uma das 3 soluções geradas. | RF018 | `recommendedSolutionId` deve existir em `solutions`. |
 | RN024 | A justificativa da recomendação considera impacto, esforço, viabilidade e riscos. | RF018 | Não escolher somente pela ambição. |
 | RN025 | O Brainstorm Estratégico usa SCAMPER como framework principal. | RF018, RF019 | SCAMPER não substitui julgamento da Inovação. |
-| RN026 | Os resultados ponderados da solução recomendada alimentam a classificação inicial da matriz. | RF007, RF018, RF019 | Inovação pode revisar as notas dos critérios na triagem; o sistema recalcula os resultados finais. |
-| RN027 | A matriz classifica quadrantes por regra objetiva 1–10. | RF007, RF008 | Ver seção 5.5. |
+| RN026 | Os resultados ponderados da solução recomendada alimentam a classificação inicial da matriz. | RF007, RF018, RF019 | Inovação pode revisar as notas na triagem; o sistema recalcula os resultados finais. |
+| RN027 | A matriz classifica quadrantes por regra objetiva usando os resultados finais arredondados. | RF007, RF008 | Ver seção 5.5. |
 | RN028 | Ao converter ideia em projeto, o brainstorm deve ser copiado para o projeto interno. | RF009, RF010, RF020 | Preserva rastreabilidade da decisão. |
 | RN029 | O Asana é ferramenta operacional; o portal mantém governança e dados principais. | RF009, RF013, RF016, RF021 | Falhas do Asana não apagam dados internos. |
-| RN030 | Ações relevantes geram log funcional sem dados sensíveis. | RF003–RF021 | Logs apoiam auditoria e troubleshooting. |
+| RN030 | Ações relevantes geram log funcional sem dados sensíveis. | RF003–RF022 | Logs apoiam auditoria e troubleshooting. |
 | RN031 | O Brainstorm Estratégico deve ser registrado na descrição do projeto Asana criado pelo template obrigatório. | RF009, RF021 | Não criar task exclusiva de brainstorm. |
-| RN032 | Falhas de IA ou Asana devem ser tratadas sem perda de dados principais. | RF003, RF009, RF018, RF021 | Registrar erro e permitir recuperação. |
+| RN032 | Falhas de IA ou Asana devem ser tratadas sem perda de dados principais. | RF003, RF009, RF018, RF021, RF022 | Registrar erro e permitir recuperação. |
 | RN033 | Comentários operacionais de tarefas permanecem no Asana; comentários de governança ficam no portal. | RF014 | Evita duplicidade de ferramentas. |
 | RN034 | O Canvas aceita somente e-mails terminados exatamente em `@nutriex.com.br`, `@nutriex.com`, `@innovapharma.com` ou `@rennova.com`, sem diferenciação entre maiúsculas e minúsculas. | RF003 | Remover espaços antes da validação e rejeitar qualquer outro domínio. |
 | RN035 | Cada geração automática de brainstorm possui no máximo duas tentativas: tentativa inicial e uma retentativa automática. Após ambas falharem, Inovação pode tentar novamente no detalhe da ideia. | RF018, RF019 | Retentativas manuais não exigem versionamento completo. |
@@ -578,6 +600,11 @@ Construir um portal interno para centralizar a gestão da inovação na Rennova,
 | RN042 | Comentários publicados não podem ser editados. O autor pode excluir o próprio comentário e Inovação pode excluir qualquer comentário por governança. | RF002, RF010, RF014 | Criação e exclusão devem ser auditadas. |
 | RN043 | Arquivar ou rejeitar uma ideia exige justificativa em texto livre, data, responsável e registro dos participantes informados. | RF008, RF017 | Dados devem permanecer no histórico. |
 | RN044 | O template Asana é considerado fixo para o escopo e não terá mecanismo de versionamento ou tratamento de alterações futuras. | RF009, RF021 | A integração continuará apontando para o mesmo ID. |
+| RN045 | O Canvas somente pode ser exibido após validação válida do CAPTCHA. | RF003, RF004, RF022 | A verificação ocorre antes do preenchimento. |
+| RN046 | Após o preenchimento, a IA decide se o Canvas possui informações suficientes para seguir ao resumo e ao brainstorm. | RF003, RF005, RF017, RF018, RF022 | Se considerar suficiente, nenhum modal é aberto. |
+| RN047 | Quando necessário, a IA gera uma única rodada de até 10 perguntas objetivas, contextuais e não repetitivas; perguntas e respostas são persistidas e usadas nas etapas seguintes. | RF005, RF018, RF019, RF022 | As perguntas não devem exibir nem solicitar notas ao autor. |
+| RN048 | Informações ainda incompletas após a rodada de complementação não bloqueiam a submissão; a IA pode inferir as notas e o brainstorm a partir do contexto disponível. | RF003, RF005, RF018, RF022 | Não haverá nova rodada de perguntas. |
+| RN049 | Falha técnica na avaliação de suficiência não bloqueia nem apaga a submissão; o brainstorm permanece pendente até retentativa controlada pela Inovação. | RF003, RF017, RF018, RF019, RF022 | A falha deve ser registrada e recuperável. |
 
 ### 5.1 Framework SCAMPER
 
@@ -613,28 +640,34 @@ Cada solução deve conter:
 
 A Métrica de Impacto representa o benefício potencial da ideia para a Rennova.
 
-A nota final é calculada a partir dos critérios definidos nesta seção. Cada critério recebe uma nota de **1 a 10**, conforme sua escala ancorada, e participa do resultado conforme o peso estabelecido.
+A nota final é calculada a partir dos critérios definidos nesta seção. Cada critério recebe uma das seguintes notas:
+
+```text
+2, 4, 6, 8 ou 10
+```
+
+Não são permitidas notas intermediárias.
+
+O critério **Quantidade de áreas, usuários ou processos beneficiados** utiliza somente as notas `4`, `6`, `8` e `10`, conforme sua escala específica.
 
 #### 5.3.1 Critérios, pesos e cálculo
 
 | Critério | Peso |
 |---|---:|
-| Alinhamento estratégico com os objetivos da Rennova | 20% |
-| Gravidade ou relevância da demanda | 15% |
-| Ganho esperado de eficiência, receita, economia, qualidade ou compliance | 25% |
-| Quantidade de áreas, usuários ou processos beneficiados | 15% |
-| Potencial de escala ou reutilização em outras áreas | 15% |
+| Gravidade ou relevância da demanda | 20% |
+| Ganho esperado de eficiência, receita, economia, qualidade ou compliance | 30% |
+| Quantidade de áreas, usuários ou processos beneficiados | 20% |
+| Potencial de escala ou reutilização em outras áreas | 20% |
 | Urgência ou redução de risco relevante | 10% |
 
 A nota final de Impacto deve ser calculada pela seguinte fórmula:
 
 ```text
 Impacto =
-(Alinhamento estratégico × 0,20)
-+ (Gravidade da demanda × 0,15)
-+ (Ganho esperado × 0,25)
-+ (Alcance dos beneficiados × 0,15)
-+ (Potencial de escala × 0,15)
+(Gravidade da demanda × 0,20)
++ (Ganho esperado × 0,30)
++ (Alcance dos beneficiados × 0,20)
++ (Potencial de escala × 0,20)
 + (Urgência ou redução de risco × 0,10)
 ```
 
@@ -646,69 +679,48 @@ A interpretação da nota final é:
 
 | Nota final | Interpretação |
 |---:|---|
-| 1 a 3 | Impacto baixo |
+| 2 a 3 | Impacto baixo |
 | 4 a 6 | Impacto moderado |
 | 7 a 8 | Impacto alto |
 | 9 a 10 | Impacto estratégico ou crítico |
 
-Quando a situação avaliada estiver entre duas descrições da escala de um critério, deve ser utilizada a menor nota, salvo quando houver evidência suficiente para justificar a maior.
+Quando a situação avaliada estiver entre duas descrições, deve ser utilizada a menor nota, salvo quando houver evidência suficiente para justificar a maior.
 
 #### 5.3.2 Escalas ancoradas dos critérios
 
-##### A. Alinhamento estratégico com os objetivos da Rennova — Peso: 20%
-
-Avalia o vínculo da ideia com objetivos, prioridades, metas ou iniciativas formalmente definidas pela Rennova.
-
-| Nota | Significado exato |
-|---:|---|
-| 1 | Não existe vínculo identificado com objetivos, prioridades ou metas da Rennova. |
-| 2 | Existe apenas uma relação indireta ou genérica com melhorias internas. |
-| 3 | Apoia uma necessidade operacional local, sem vínculo com objetivo formal da área. |
-| 4 | Contribui para um objetivo definido de uma equipe ou departamento. |
-| 5 | Contribui diretamente para uma meta formal de uma área. |
-| 6 | Contribui diretamente para uma prioridade anual ou indicador relevante de uma área. |
-| 7 | Contribui para uma prioridade estratégica da companhia. |
-| 8 | Contribui simultaneamente para duas ou mais prioridades estratégicas. |
-| 9 | É essencial para o cumprimento de uma meta estratégica ou compromisso executivo. |
-| 10 | É indispensável para alcançar um objetivo estratégico crítico da companhia. |
-
-A justificativa deve indicar qual objetivo, meta, indicador ou prioridade está relacionado à ideia.
-
-##### B. Gravidade ou relevância da demanda — Peso: 15%
+##### A. Gravidade ou relevância da demanda — Peso: 20%
 
 Avalia o nível de prejuízo, limitação ou consequência causada pelo problema atual.
 
 | Nota | Significado exato |
 |---:|---|
-| 1 | A demanda representa apenas uma preferência ou conveniência, sem prejuízo identificável. |
-| 2 | O problema ocorre raramente e gera impacto mínimo. |
-| 3 | O problema é recorrente, mas está restrito a poucas pessoas ou atividades não críticas. |
-| 4 | O problema causa pequenos atrasos, retrabalho ou dificuldade operacional em uma equipe. |
-| 5 | O problema afeta de forma perceptível a produtividade ou qualidade de um processo de uma área. |
-| 6 | O problema causa atrasos frequentes, retrabalho relevante ou perda de qualidade em uma área. |
-| 7 | O problema afeta múltiplas equipes ou um processo importante da companhia. |
-| 8 | O problema causa perdas relevantes, reclamações, falhas frequentes ou exposição significativa a risco. |
-| 9 | O problema compromete processo crítico, resultado financeiro, qualidade, cliente ou obrigação corporativa. |
-| 10 | O problema ameaça continuidade operacional, segurança, obrigação legal, regulatória ou reputação da companhia. |
+| 2 | A demanda representa uma conveniência ou um problema pouco frequente, com impacto mínimo e sem prejuízo relevante. |
+| 4 | O problema é recorrente, mas localizado, causando pequenos atrasos, retrabalho ou dificuldades operacionais em uma equipe. |
+| 6 | O problema afeta de forma frequente a produtividade, a qualidade ou a execução de um processo de uma área ou departamento. |
+| 8 | O problema afeta múltiplas equipes ou um processo importante, causando perdas relevantes, falhas frequentes, reclamações ou exposição significativa a risco. |
+| 10 | O problema compromete processo crítico, resultado financeiro, cliente, qualidade, continuidade operacional ou obrigação legal, regulatória ou reputacional. |
 
-##### C. Ganho esperado de eficiência, receita, economia, qualidade ou compliance — Peso: 25%
+##### B. Ganho esperado de eficiência, receita, economia, qualidade ou compliance — Peso: 30%
 
 Avalia a intensidade do principal benefício mensurável esperado.
 
-Deve ser utilizada a dimensão principal do benefício da ideia, como redução de tempo, redução de custo, aumento de receita, redução de erros, aumento de produtividade ou melhoria de qualidade.
+Deve ser utilizada a dimensão principal do benefício da ideia, como:
+
+- redução de tempo;
+- redução de custo;
+- aumento de receita;
+- redução de erros;
+- aumento de produtividade;
+- melhoria de qualidade;
+- melhoria de compliance.
 
 | Nota | Significado exato |
 |---:|---|
-| 1 | Não existe ganho mensurável ou o benefício ainda não foi demonstrado. |
-| 2 | Ganho estimado inferior a 5% no indicador principal. |
-| 3 | Ganho estimado entre 5% e 10% no indicador principal. |
-| 4 | Ganho estimado entre 11% e 15% no indicador principal. |
-| 5 | Ganho estimado entre 16% e 20% no indicador principal. |
-| 6 | Ganho estimado entre 21% e 30% no indicador principal. |
-| 7 | Ganho estimado entre 31% e 40% no indicador principal. |
-| 8 | Ganho estimado entre 41% e 50% no indicador principal. |
-| 9 | Ganho estimado entre 51% e 70% no indicador principal. |
-| 10 | Ganho estimado superior a 70% ou eliminação de falha crítica de qualidade ou compliance. |
+| 2 | O ganho ainda não foi demonstrado ou representa melhoria inferior a 5% no indicador principal. |
+| 4 | Ganho estimado entre 5% e 15% no indicador principal. |
+| 6 | Ganho estimado entre 16% e 30% no indicador principal. |
+| 8 | Ganho estimado entre 31% e 50% no indicador principal. |
+| 10 | Ganho estimado superior a 50% ou eliminação de falha crítica de qualidade, segurança ou compliance. |
 
 A justificativa deve registrar o indicador utilizado, seu valor atual e o ganho estimado.
 
@@ -722,68 +734,56 @@ Ganho esperado: 30%
 Nota: 6
 ```
 
-##### D. Quantidade de áreas, usuários ou processos beneficiados — Peso: 15%
+##### C. Quantidade de áreas, usuários ou processos beneficiados — Peso: 20%
 
-Avalia o alcance direto da solução.
-
-A nota deve ser definida pelo maior alcance comprovado entre usuários, áreas ou processos.
+Avalia o alcance direto da solução dentro da estrutura organizacional.
 
 | Nota | Significado exato |
 |---:|---|
-| 1 | Beneficia até 5 usuários ou uma atividade isolada. |
-| 2 | Beneficia entre 6 e 10 usuários. |
-| 3 | Beneficia entre 11 e 25 usuários ou uma equipe. |
-| 4 | Beneficia entre 26 e 50 usuários ou um processo de uma área. |
-| 5 | Beneficia entre 51 e 100 usuários ou duas áreas. |
-| 6 | Beneficia entre 101 e 200 usuários ou três áreas. |
-| 7 | Beneficia entre 201 e 350 usuários ou quatro a cinco áreas. |
-| 8 | Beneficia entre 351 e 500 usuários ou seis ou mais áreas. |
-| 9 | Beneficia a maior parte da companhia ou um processo corporativo de grande alcance. |
-| 10 | Beneficia toda a companhia, todos os usuários de um processo crítico ou um público externo de grande alcance. |
+| 4 | Beneficia somente a própria equipe. |
+| 6 | Beneficia de duas a três equipes. |
+| 8 | Beneficia todo o departamento. |
+| 10 | Beneficia departamentos pertencentes a outras gerências ou diretorias. |
 
-Não devem ser contabilizadas pessoas que não serão diretamente afetadas ou beneficiadas pela solução.
+Devem ser consideradas somente as equipes e os departamentos diretamente afetados ou beneficiados pela solução.
 
-##### E. Potencial de escala ou reutilização em outras áreas — Peso: 15%
+##### D. Potencial de escala ou reutilização em outras áreas — Peso: 20%
 
 Avalia a possibilidade de reutilizar a solução além da demanda original.
 
 | Nota | Significado exato |
 |---:|---|
-| 1 | Solução de uso único, sem possibilidade prática de reutilização. |
-| 2 | Solução extremamente específica para um único caso. |
-| 3 | Pode ser reutilizada somente com grande reconstrução ou alteração. |
-| 4 | Pode ser reutilizada dentro da mesma equipe com adaptações relevantes. |
-| 5 | Pode ser reutilizada em outros processos da mesma área com ajustes moderados. |
-| 6 | Pode ser reutilizada em uma ou duas outras áreas com adaptações. |
-| 7 | Pode ser utilizada por múltiplas áreas com pequenas adaptações. |
-| 8 | Pode se tornar um componente, serviço ou processo padrão da companhia. |
-| 9 | Pode ser aplicada amplamente como padrão corporativo. |
-| 10 | Possui potencial de se tornar plataforma, produto ou capacidade estratégica reutilizável em toda a companhia. |
+| 2 | Solução de uso único ou extremamente específica, sem possibilidade prática de reutilização. |
+| 4 | Pode ser reutilizada somente dentro da própria equipe, exigindo adaptações relevantes ou reconstrução parcial. |
+| 6 | Pode ser reutilizada em outros processos da mesma área ou em uma ou duas outras áreas, com adaptações moderadas. |
+| 8 | Pode ser utilizada por múltiplas áreas com pequenas adaptações ou se tornar um componente, serviço ou processo padrão. |
+| 10 | Pode ser aplicada amplamente como padrão corporativo, plataforma, produto ou capacidade estratégica reutilizável. |
 
-##### F. Urgência ou redução de risco relevante — Peso: 10%
+##### E. Urgência ou redução de risco relevante — Peso: 10%
 
 Avalia o prazo necessário para tratar a demanda ou o risco reduzido pela solução.
 
 | Nota | Significado exato |
 |---:|---|
-| 1 | Não existe prazo, risco ou consequência relevante para postergação. |
-| 2 | A demanda pode aguardar mais de 12 meses sem consequência significativa. |
-| 3 | A demanda deve ser tratada entre 6 e 12 meses. |
-| 4 | A demanda deve ser tratada entre 3 e 6 meses. |
-| 5 | A demanda deve ser tratada entre 2 e 3 meses. |
-| 6 | A demanda deve ser tratada entre 1 e 2 meses ou reduz risco operacional moderado. |
-| 7 | A demanda deve ser tratada em até 30 dias ou reduz risco operacional relevante e recorrente. |
-| 8 | A demanda deve ser tratada em até 15 dias ou está associada a auditoria, compromisso formal ou risco elevado. |
-| 9 | Existe prazo obrigatório iminente ou risco elevado de perda financeira, operacional, regulatória ou reputacional. |
-| 10 | Existe incidente ativo, risco de paralisação, segurança, descumprimento legal ou impacto crítico imediato. |
+| 2 | Não existe prazo relevante ou a demanda pode aguardar mais de 12 meses sem consequência significativa. |
+| 4 | A demanda deve ser tratada entre 3 e 12 meses. |
+| 6 | A demanda deve ser tratada entre 1 e 3 meses ou reduz risco operacional moderado. |
+| 8 | A demanda deve ser tratada em até 30 dias ou está associada a auditoria, compromisso formal ou risco elevado. |
+| 10 | Existe prazo obrigatório iminente, incidente ativo, risco de paralisação, segurança, perda relevante ou descumprimento legal ou regulatório. |
 
 ### 5.4 Métrica de Esforço
 
-A Métrica de Esforço representa a quantidade de trabalho, complexidade, dependências e recursos necessários para implementar e manter a ideia.
+A Métrica de Esforço representa a quantidade de trabalho, complexidade e recursos necessários para implementar e manter a ideia.
 
 Uma nota maior representa maior esforço de implementação.
 
-A nota final é calculada a partir dos critérios definidos nesta seção. Cada critério recebe uma nota de **1 a 10**, conforme sua escala ancorada, e participa do resultado conforme o peso estabelecido.
+A nota final é calculada a partir dos critérios definidos nesta seção. Cada critério recebe uma das seguintes notas:
+
+```text
+2, 4, 6, 8 ou 10
+```
+
+Não são permitidas notas intermediárias.
 
 As notas não devem ser atribuídas por percepção livre. O avaliador deve identificar a descrição que melhor representa a situação da ideia e utilizar a nota correspondente.
 
@@ -791,22 +791,20 @@ As notas não devem ser atribuídas por percepção livre. O avaliador deve iden
 
 | Critério | Peso |
 |---|---:|
-| Complexidade técnica | 25% |
-| Necessidade de integrações ou dados externos | 20% |
+| Complexidade técnica | 30% |
+| Necessidade de integrações ou dados externos | 25% |
 | Tempo estimado de implementação | 20% |
 | Mudança operacional ou processual necessária | 15% |
-| Dependência de outras áreas, fornecedores ou aprovações | 10% |
 | Custo estimado de implantação e manutenção | 10% |
 
 A nota final de Esforço deve ser calculada pela seguinte fórmula:
 
 ```text
 Esforço =
-(Complexidade técnica × 0,25)
-+ (Integrações ou dados externos × 0,20)
+(Complexidade técnica × 0,30)
++ (Integrações ou dados externos × 0,25)
 + (Tempo estimado × 0,20)
 + (Mudança operacional × 0,15)
-+ (Dependências × 0,10)
 + (Custo × 0,10)
 ```
 
@@ -818,48 +816,38 @@ A interpretação da nota final é:
 
 | Nota final | Interpretação |
 |---:|---|
-| 1 a 3 | Esforço baixo |
+| 2 a 3 | Esforço baixo |
 | 4 a 6 | Esforço moderado |
 | 7 a 8 | Esforço alto |
 | 9 a 10 | Esforço muito alto ou crítico |
 
-Quando a situação avaliada estiver entre duas descrições da escala de um critério, deve ser utilizada a maior nota, evitando a subestimação do esforço necessário.
+Quando a situação avaliada estiver entre duas descrições, deve ser utilizada a maior nota, evitando a subestimação do esforço necessário.
 
 #### 5.4.2 Escalas ancoradas dos critérios
 
-##### A. Complexidade técnica — Peso: 25%
+##### A. Complexidade técnica — Peso: 30%
 
-Avalia a dificuldade técnica da implementação considerando arquitetura, componentes, banco de dados, segurança e nível de conhecimento da solução.
-
-| Nota | Significado exato |
-|---:|---|
-| 1 | Configuração simples ou alteração sem desenvolvimento de código. |
-| 2 | Pequena alteração localizada em componente conhecido. |
-| 3 | Desenvolvimento simples em um único componente, utilizando padrões já existentes. |
-| 4 | Alteração em múltiplos componentes do mesmo sistema, sem mudança relevante de arquitetura. |
-| 5 | Nova funcionalidade com regras de negócio, persistência e testes comuns. |
-| 6 | Implementação envolvendo múltiplos componentes, alterações de banco e testes relevantes. |
-| 7 | Nova arquitetura parcial, novo serviço ou tecnologia pouco utilizada pelo time. |
-| 8 | Implementação envolvendo múltiplos sistemas, migração de dados, segurança ou alta criticidade técnica. |
-| 9 | Arquitetura crítica, grande incerteza técnica ou necessidade de prova de conceito antes da implementação. |
-| 10 | Viabilidade técnica ainda não comprovada ou necessidade de redesenho estrutural de plataforma. |
-
-##### B. Necessidade de integrações ou dados externos — Peso: 20%
-
-Avalia a quantidade e dificuldade das integrações ou dependências de dados externos.
+Avalia a dificuldade técnica da implementação considerando arquitetura, componentes, banco de dados, segurança e nível de conhecimento necessário.
 
 | Nota | Significado exato |
 |---:|---|
-| 1 | Nenhuma integração ou dado externo necessário. |
-| 2 | Uso de integração já existente, sem necessidade de alteração. |
-| 3 | Pequena alteração em integração existente e conhecida. |
-| 4 | Uma nova integração simples, síncrona e bem documentada. |
-| 5 | Uma nova integração com autenticação, validação e tratamento de erros. |
-| 6 | Duas novas integrações ou uma integração de média complexidade. |
-| 7 | Três ou mais integrações ou dependência relevante de fornecedor. |
-| 8 | Integrações bidirecionais, assíncronas, com dados sensíveis ou alto volume. |
-| 9 | Integração crítica com sistema legado, instável ou pouco documentado. |
-| 10 | Dependência de múltiplos sistemas críticos externos, sem ambiente de testes, documentação adequada ou garantia de disponibilidade. |
+| 2 | Configuração simples ou pequena alteração localizada em um componente conhecido. |
+| 4 | Desenvolvimento simples em um único componente ou alteração em múltiplos componentes do mesmo sistema, sem mudança relevante de arquitetura. |
+| 6 | Nova funcionalidade com regras de negócio, persistência, alterações de banco de dados e testes relevantes. |
+| 8 | Implementação envolvendo nova arquitetura parcial, nova tecnologia, múltiplos sistemas, migração de dados, segurança ou alta criticidade técnica. |
+| 10 | Arquitetura crítica, grande incerteza técnica, necessidade de prova de conceito, viabilidade não comprovada ou redesenho estrutural da plataforma. |
+
+##### B. Necessidade de integrações ou dados externos — Peso: 25%
+
+Avalia a quantidade e a dificuldade das integrações ou dependências de dados externos.
+
+| Nota | Significado exato |
+|---:|---|
+| 2 | Nenhuma integração é necessária ou será utilizada uma integração existente sem alterações. |
+| 4 | Exige pequena alteração em integração existente ou uma nova integração simples e bem documentada. |
+| 6 | Exige integração com autenticação, validação e tratamento de erros, duas novas integrações ou uma integração de média complexidade. |
+| 8 | Exige três ou mais integrações, comunicação bidirecional ou assíncrona, dados sensíveis, alto volume ou dependência relevante de fornecedor. |
+| 10 | Exige integração crítica com sistemas legados, instáveis ou pouco documentados, ou múltiplos sistemas externos sem ambiente de testes ou garantia de disponibilidade. |
 
 ##### C. Tempo estimado de implementação — Peso: 20%
 
@@ -879,16 +867,11 @@ A estimativa representa esforço de trabalho, e não tempo corrido aguardando ou
 
 | Nota | Significado exato |
 |---:|---|
-| 1 | Até 1 dia útil. |
-| 2 | De 2 a 3 dias úteis. |
-| 3 | De 4 a 5 dias úteis. |
-| 4 | De 6 a 10 dias úteis. |
-| 5 | De 11 a 15 dias úteis. |
-| 6 | De 16 a 22 dias úteis. |
-| 7 | De 23 a 30 dias úteis. |
-| 8 | De 31 a 45 dias úteis. |
-| 9 | De 46 a 60 dias úteis. |
-| 10 | Mais de 60 dias úteis. |
+| 2 | Até 3 dias úteis. |
+| 4 | De 4 a 10 dias úteis. |
+| 6 | De 11 a 22 dias úteis. |
+| 8 | De 23 a 45 dias úteis. |
+| 10 | Mais de 45 dias úteis. |
 
 Exemplo:
 
@@ -903,35 +886,13 @@ Avalia o nível de alteração causado na rotina, no processo ou na forma de tra
 
 | Nota | Significado exato |
 |---:|---|
-| 1 | Nenhuma mudança operacional ou processual. |
-| 2 | Mudança apenas visual ou de configuração, praticamente imperceptível ao usuário. |
-| 3 | Pequena alteração em uma atividade executada por um único perfil. |
-| 4 | Alteração em uma etapa de um processo de uma equipe. |
-| 5 | Mudança relevante em um processo de uma área, exigindo comunicação aos usuários. |
-| 6 | Novo fluxo em uma área, exigindo orientação ou treinamento simples. |
-| 7 | Mudança envolvendo duas ou mais áreas e atualização de procedimentos. |
-| 8 | Mudança ampla, exigindo treinamento formal, transição e acompanhamento de adoção. |
-| 9 | Transformação de processo crítico, com impacto relevante na operação e período de adaptação. |
-| 10 | Mudança no modelo operacional da companhia ou transformação corporativa de grande alcance. |
+| 2 | Nenhuma mudança operacional relevante ou apenas alteração visual ou de configuração praticamente imperceptível ao usuário. |
+| 4 | Pequena alteração em uma atividade ou em uma etapa de processo executada por uma equipe. |
+| 6 | Mudança relevante em um processo de uma área, exigindo comunicação, orientação ou treinamento simples. |
+| 8 | Mudança envolvendo múltiplas áreas, atualização de procedimentos, treinamento formal, transição e acompanhamento de adoção. |
+| 10 | Transformação de processo crítico, mudança no modelo operacional ou transformação corporativa de grande alcance. |
 
-##### E. Dependência de outras áreas, fornecedores ou aprovações — Peso: 10%
-
-Avalia o quanto a execução depende de pessoas ou organizações fora do time responsável.
-
-| Nota | Significado exato |
-|---:|---|
-| 1 | Nenhuma dependência externa ao time responsável. |
-| 2 | Uma validação simples, sem impacto esperado no prazo. |
-| 3 | Uma dependência com responsável e prazo já definidos. |
-| 4 | Duas dependências internas de baixo risco. |
-| 5 | Dependência relevante de uma área para parte da entrega. |
-| 6 | Dependência de múltiplas pessoas ou áreas internas. |
-| 7 | Dependência de fornecedor, contrato ou aprovação formal. |
-| 8 | Múltiplas dependências externas com risco significativo de atraso. |
-| 9 | Dependências críticas sem prazo garantido ou compromisso formal. |
-| 10 | Implementação bloqueada até decisão, contratação, aprovação regulatória ou entrega externa ainda indefinida. |
-
-##### F. Custo estimado de implantação e manutenção — Peso: 10%
+##### E. Custo estimado de implantação e manutenção — Peso: 10%
 
 Avalia o custo adicional necessário para implantar a solução e mantê-la durante os primeiros 12 meses.
 
@@ -950,18 +911,13 @@ Não deve ser considerado o custo do time interno quando ele já fizer parte da 
 
 | Nota | Significado exato |
 |---:|---|
-| 1 | Sem custo adicional. |
-| 2 | Até R$ 1.000. |
-| 3 | De R$ 1.001 a R$ 5.000. |
-| 4 | De R$ 5.001 a R$ 10.000. |
-| 5 | De R$ 10.001 a R$ 25.000. |
-| 6 | De R$ 25.001 a R$ 50.000. |
-| 7 | De R$ 50.001 a R$ 100.000. |
-| 8 | De R$ 100.001 a R$ 250.000. |
-| 9 | De R$ 250.001 a R$ 500.000. |
-| 10 | Acima de R$ 500.000. |
+| 2 | Sem custo adicional ou custo de até R$ 1.000. |
+| 4 | De R$ 1.001 a R$ 10.000. |
+| 6 | De R$ 10.001 a R$ 50.000. |
+| 8 | De R$ 50.001 a R$ 250.000. |
+| 10 | Acima de R$ 250.000. |
 
-Quando o custo ainda não puder ser confirmado, deve ser utilizada a melhor estimativa disponível, registrando que o valor ainda depende de orçamento ou validação.
+Quando o custo ainda não puder ser confirmado, deve ser utilizada a melhor estimativa disponível, registrando que o valor depende de orçamento ou validação.
 
 ### 5.5 Regra da matriz Impacto × Esforço
 
@@ -986,32 +942,54 @@ A IA deve recomendar a solução com melhor equilíbrio entre:
 - aderência à demanda original;
 - possibilidade de execução no contexto da Rennova.
 
+Quando o contexto permanecer incompleto após a rodada de complementação, a IA pode utilizar inferências coerentes para concluir a análise.
+
 ---
 
 <a id="ef-6-fluxos-de-usuario"></a>
 ## 6. Fluxos de usuário
 
-### 6.1 Submissão pública de ideia
+### 6.1 Acesso e submissão pública de ideia
 
 ```text
 Colaborador acessa /canvas
-  -> preenche identificação, e-mail, área/departamento e blocos do Canvas
+  -> sistema exibe a verificação CAPTCHA
+  -> colaborador conclui o CAPTCHA
+  -> backend valida e libera o Canvas
+  -> colaborador preenche identificação, e-mail, área/departamento e blocos
   -> solicita sugestões pontuais de IA, se necessário
-  -> revisa e aprova o resumo gerado por IA
-  -> conclui o CAPTCHA
-  -> sistema valida domínio de e-mail, CAPTCHA e proteções anti-spam
-  -> sistema salva a ideia
-  -> sistema inicia geração do Brainstorm Estratégico IA
+  -> solicita continuar com a submissão
+  -> sistema executa a avaliação de suficiência
+  -> sistema gera o resumo com o contexto disponível
+  -> colaborador revisa e aprova o resumo
+  -> sistema valida domínio, sessão CAPTCHA e proteções anti-spam
+  -> sistema salva a ideia e os dados complementares
+  -> sistema inicia o Brainstorm Estratégico quando elegível
   -> sistema confirma a submissão
 ```
 
-### 6.2 Geração do Brainstorm Estratégico IA
+### 6.2 Avaliação de suficiência e complementação
 
 ```text
-Ideia salva
+Canvas preenchido
+  -> IA decide se as informações são suficientes
+  -> se suficientes, segue diretamente para o resumo
+  -> se insuficientes, IA gera até 10 perguntas estratégicas
+  -> sistema abre um único modal de complementação
+  -> colaborador responde integral ou parcialmente
+  -> sistema incorpora as respostas ao contexto
+  -> sistema segue para o resumo sem nova rodada
+  -> se ocorrer falha técnica, permite o envio e mantém o brainstorm pendente
+```
+
+### 6.3 Geração do Brainstorm Estratégico IA
+
+```text
+Ideia salva e avaliação de suficiência concluída
   -> sistema realiza a primeira tentativa
+  -> IA usa Canvas, complementação e resumo disponível
   -> IA usa SCAMPER e retorna 3 soluções estruturadas
-  -> IA atribui notas ancoradas aos critérios de impacto e esforço
+  -> IA atribui notas permitidas aos critérios de impacto e esforço
   -> sistema valida o JSON e calcula os resultados ponderados
   -> se válido, salva o brainstorm e define classificação inicial
   -> se falhar, realiza uma segunda tentativa automática
@@ -1019,12 +997,12 @@ Ideia salva
   -> detalhe da ideia disponibiliza retentativa manual para Inovação
 ```
 
-### 6.3 Triagem de ideia
+### 6.4 Triagem de ideia
 
 ```text
 Inovação acessa /ideias?aba=triagem
   -> abre detalhe da ideia
-  -> consulta Canvas, resumo IA, brainstorm, solução recomendada e matriz
+  -> consulta Canvas, complementação, resumo IA, brainstorm, solução recomendada e matriz
   -> revisa as notas dos critérios de impacto e esforço
   -> sistema recalcula impacto_final e esforco_final
   -> decide Backlog, Arquivar/Rejeitar ou Vira Projeto
@@ -1032,7 +1010,7 @@ Inovação acessa /ideias?aba=triagem
   -> Diretoria pode consultar os dados, sem registrar decisão
 ```
 
-### 6.4 Conversão em projeto com Asana
+### 6.5 Conversão em projeto com Asana
 
 ```text
 Inovação aciona Vira Projeto
@@ -1050,7 +1028,7 @@ Inovação aciona Vira Projeto
   -> ideia passa para status virou_projeto
 ```
 
-### 6.5 Sincronização Asana → Portal
+### 6.6 Sincronização Asana → Portal
 
 ```text
 Asana envia webhook ao ocorrer alteração
@@ -1060,7 +1038,7 @@ Asana envia webhook ao ocorrer alteração
   -> dashboard e bloco Asana leem os dados cacheados
 ```
 
-### 6.6 Gestão de entregas
+### 6.7 Gestão de entregas
 
 ```text
 Inovação acessa o detalhe do projeto
@@ -1078,14 +1056,14 @@ Inovação acessa o detalhe do projeto
 
 | Rota | Acesso | Objetivo |
 |---|---|---|
-| `/canvas` | Público | Submissão de ideias por colaboradores |
+| `/canvas` | Público | Validação CAPTCHA e submissão de ideias por colaboradores |
 | `/login` | Público | Login no portal interno |
 | `/` ou `/dashboard` | Diretoria / Inovação | Visão executiva do portfólio |
 | `/ideias?aba=backlog` | Diretoria / Inovação | Backlog de ideias |
 | `/ideias?aba=matriz` | Diretoria / Inovação | Matriz Impacto × Esforço |
 | `/ideias?aba=triagem` | Diretoria / Inovação | Triagem; leitura para Diretoria e gestão para Inovação |
 | `/ideias?aba=arquivadas` | Diretoria / Inovação | Histórico de ideias arquivadas ou rejeitadas |
-| `/ideias/:id` | Diretoria / Inovação | Detalhe da ideia, resumo IA e brainstorm |
+| `/ideias/:id` | Diretoria / Inovação | Detalhe da ideia, complementação, resumo IA e brainstorm |
 | `/projetos` | Diretoria / Inovação | Lista de projetos de inovação |
 | `/projetos/:id` | Diretoria / Inovação | Detalhe, governança, entregas, fases, métricas e Asana |
 | `/admin` | Inovação / Admin | Departamentos e usuários |
@@ -1100,11 +1078,16 @@ As rotas independentes `/matriz` e `/triagem` não fazem parte da navegação fi
 ### Tela 1 - Canvas público
 
 - Deve ser simples, sem login e responsivo.
+- Ao acessar `/canvas`, deve exibir inicialmente somente a verificação CAPTCHA.
+- O Canvas deve ser exibido apenas após validação válida do CAPTCHA.
 - Deve conter nome, e-mail, área/departamento em texto livre e blocos da ideia.
 - Deve validar os quatro domínios corporativos autorizados.
-- Deve conter CAPTCHA obrigatório antes da submissão.
 - Pode oferecer sugestões de IA por bloco.
-- Deve permitir revisão do resumo IA.
+- Ao continuar, deve exibir estado de análise enquanto a IA avalia a suficiência.
+- Quando necessário, deve abrir modal com uma única rodada de até 10 perguntas estratégicas.
+- O modal deve permitir respostas em texto livre e conclusão com respostas parciais.
+- Se o Canvas for considerado suficiente, o modal não deve ser aberto.
+- Deve permitir revisão do resumo IA após a avaliação ou complementação.
 - Não deve mostrar notas de impacto/esforço ao autor.
 - Deve alertar sobre perda dos dados quando o usuário tentar sair antes do envio.
 - Após envio, deve exibir confirmação clara.
@@ -1141,12 +1124,15 @@ A listagem deve apresentar, conforme aplicável:
 - impacto;
 - esforço;
 - quadrante;
+- status da avaliação de suficiência;
 - status do brainstorm.
 
 O detalhe da ideia deve exibir:
 
 - descrição original;
 - Canvas e respostas principais;
+- resultado da avaliação de suficiência;
+- perguntas estratégicas e respostas complementares, quando existentes;
 - resumo IA;
 - classificação IA;
 - status do brainstorm;
@@ -1155,12 +1141,13 @@ O detalhe da ideia deve exibir:
 - notas de cada critério de impacto e esforço, pesos e resultados finais calculados;
 - análise de viabilidade;
 - riscos e mitigações;
-- ação de retentativa do brainstorm para Inovação, quando aplicável;
+- ação de retentativa da avaliação ou do brainstorm para Inovação, quando aplicável;
 - ações de backlog, arquivar/rejeitar e converter conforme permissão.
 
 A aba Triagem deve:
 
 - apoiar a decisão da Inovação;
+- permitir consulta das respostas complementares;
 - permitir revisão das notas dos critérios de impacto e esforço;
 - recalcular automaticamente os resultados finais ponderados;
 - registrar decisão, responsável, participantes e data;
@@ -1219,7 +1206,7 @@ Ao acionar “Vira Projeto”, deve ser exibido diálogo ou etapa de confirmaç�
 | RNF008 | Logs não devem armazenar tokens, senhas, chaves, prompts sensíveis completos ou dados desnecessários. |
 | RNF009 | Dashboard deve usar dados cacheados para evitar chamadas externas em tempo real. |
 | RNF010 | O sistema deve permitir retentativa controlada em falhas de integração. |
-| RNF011 | O token CAPTCHA deve ser validado no backend e nunca considerado válido apenas pelo estado do front-end. |
+| RNF011 | O token CAPTCHA deve ser validado no backend antes da exibição do Canvas e não pode ser considerado válido apenas pelo estado do front-end. |
 | RNF012 | Validação de domínios de e-mail deve ser feita no backend, sem diferenciação de maiúsculas e minúsculas. |
 | RNF013 | Upload deve ser interrompido antes da persistência quando o arquivo exceder 50 MB. |
 | RNF014 | Arquivos armazenados não devem ser executados pelo portal; devem ser disponibilizados como conteúdo de entrega. |
@@ -1227,6 +1214,8 @@ Ao acionar “Vira Projeto”, deve ser exibido diálogo ou etapa de confirmaç�
 | RNF016 | A criação do projeto Asana deve ser idempotente e impedir duplicidade em retentativas. |
 | RNF017 | O identificador do template Asana deve ser configurado em ambiente seguro e validado pela Edge Function. |
 | RNF018 | O webhook será o mecanismo principal de atualização do Asana e o cron diário será o mecanismo de reconciliação. |
+| RNF019 | A avaliação de suficiência, as perguntas e as respostas devem usar JSON estruturado e validação de esquema. |
+| RNF020 | Falha técnica na avaliação de suficiência deve permitir a submissão e manter o brainstorm recuperável, sem perda dos dados da ideia. |
 
 ---
 
@@ -1235,14 +1224,19 @@ Ao acionar “Vira Projeto”, deve ser exibido diálogo ou etapa de confirmaç�
 
 | Situação | Mensagem sugerida |
 |---|---|
+| CAPTCHA necessário | Confirme a verificação de segurança para acessar o Canvas. |
+| CAPTCHA inválido ou expirado | A verificação de segurança expirou ou não é válida. Realize a validação novamente. |
+| CAPTCHA indisponível | A verificação de segurança está temporariamente indisponível. Tente novamente mais tarde. |
+| Analisando informações | Estamos analisando as informações da ideia. |
+| Complementação necessária | Precisamos de algumas informações adicionais para compreender melhor a ideia. |
+| Falha na avaliação de suficiência | Não foi possível concluir a análise complementar. A ideia ainda poderá ser enviada. |
+| Complementação salva | Informações adicionais registradas com sucesso. |
 | Ideia enviada | Ideia enviada com sucesso. A área de Inovação fará a análise. |
 | Falha ao enviar ideia | Ocorreu um erro na plataforma e não foi possível enviar a ideia. Tente novamente. Caso o problema persista por mais de 24 horas, entre em contato com o time de Inovação pelo Teams. |
 | E-mail não autorizado | Utilize um e-mail corporativo autorizado para enviar a ideia. |
-| CAPTCHA não concluído | Confirme a verificação de segurança antes de enviar a ideia. |
-| CAPTCHA inválido ou expirado | A verificação de segurança expirou ou não é válida. Realize a validação novamente. |
-| CAPTCHA indisponível | A verificação de segurança está temporariamente indisponível. Tente novamente mais tarde. |
 | Saída com dados não enviados | Os dados preenchidos ainda não foram enviados e serão perdidos se você sair desta página. |
 | IA indisponível | A ideia foi salva, mas a análise por IA não pôde ser gerada no momento. |
+| Brainstorm aguardando avaliação | A ideia foi salva e o brainstorm será gerado após a recuperação da análise complementar. |
 | Brainstorm gerado | Brainstorm Estratégico gerado com sucesso. |
 | Brainstorm em segunda tentativa | A primeira geração não foi concluída. Uma nova tentativa está sendo realizada. |
 | Brainstorm com erro | Não foi possível gerar o brainstorm após duas tentativas. Use “Tentar novamente” na visualização da ideia. |
@@ -1266,14 +1260,14 @@ Ao acionar “Vira Projeto”, deve ser exibido diálogo ou etapa de confirmaç�
 
 | Código | Critério |
 |---|---|
-| CA001 | Colaborador consegue acessar o Canvas sem login e submeter ideia somente com campos obrigatórios, domínio de e-mail autorizado e CAPTCHA válido. |
+| CA001 | Colaborador sem login acessa `/canvas`, mas o Canvas somente é exibido após CAPTCHA validado no backend. |
 | CA002 | São aceitos somente `@nutriex.com.br`, `@nutriex.com`, `@innovapharma.com` e `@rennova.com`. |
 | CA003 | Tentativa de sair antes da submissão apresenta aviso e dados não enviados não são persistidos. |
-| CA004 | Sistema gera resumo IA ou permite salvar a ideia mesmo em caso de falha da IA. |
+| CA004 | Sistema gera resumo IA com o Canvas e a complementação existente ou permite salvar a ideia mesmo em caso de falha da IA. |
 | CA005 | Sistema gera Brainstorm Estratégico com exatamente 3 soluções baseadas em SCAMPER. |
 | CA006 | Cada solução apresenta descrição, racional, resolução da demanda, impacto, esforço, viabilidade, riscos e mitigações. |
 | CA007 | Uma solução é recomendada pela IA com justificativa. |
-| CA008 | Cada critério de impacto e esforço utiliza escala ancorada de 1 a 10, com significado documentado e justificativa; os resultados finais são calculados pelas fórmulas ponderadas. |
+| CA008 | Cada critério de impacto e esforço utiliza somente as notas permitidas em sua escala; os resultados finais são calculados pelas fórmulas ponderadas. |
 | CA009 | Em caso de falha, o sistema realiza no máximo duas tentativas automáticas de brainstorm e depois disponibiliza retentativa manual para Inovação. |
 | CA010 | Matriz classifica a ideia no quadrante correto e está disponível como aba de `/ideias`. |
 | CA011 | Inovação pode revisar as notas dos critérios na triagem; o sistema recalcula impacto e esforço finais; Diretoria consulta critérios, pesos e resultados sem editar. |
@@ -1295,7 +1289,14 @@ Ao acionar “Vira Projeto”, deve ser exibido diálogo ou etapa de confirmaç�
 | CA027 | Bloco Asana apresenta dados cacheados, incluindo status, responsável e datas das tarefas quando disponíveis. |
 | CA028 | Sessão autenticada segue o comportamento padrão do Supabase Auth. |
 | CA029 | Ações relevantes geram log funcional sem dados sensíveis. |
-| CA030 | RF001–RF021 mantêm a estrutura padrão de especificação funcional. |
+| CA030 | RF001–RF022 mantêm a estrutura padrão de especificação funcional. |
+| CA031 | A IA decide se o Canvas possui informações suficientes; quando suficiente, nenhum modal de perguntas é aberto. |
+| CA032 | Quando a IA considerar o Canvas insuficiente, o sistema abre uma única rodada com no máximo 10 perguntas estratégicas. |
+| CA033 | As perguntas são contextuais, objetivas, não repetem informações já preenchidas e não exibem notas de impacto ou esforço ao autor. |
+| CA034 | Perguntas e respostas complementares são persistidas, exibidas no detalhe interno e utilizadas no resumo, nas notas e no brainstorm. |
+| CA035 | Respostas parciais ou informações ainda incompletas após a rodada não bloqueiam a submissão nem geram uma segunda rodada. |
+| CA036 | A IA pode inferir notas e soluções com base no contexto disponível após a complementação. |
+| CA037 | Falha técnica na avaliação de suficiência não causa perda nem bloqueio da ideia; o brainstorm permanece pendente até retentativa controlada. |
 
 ---
 
@@ -1309,7 +1310,7 @@ Ao acionar “Vira Projeto”, deve ser exibido diálogo ou etapa de confirmaç�
 | PD003 | Usar notas das 3 soluções ou somente da recomendada? | Salvar as notas dos critérios e os resultados ponderados das 3 soluções; usar os resultados da solução recomendada para a matriz inicial. |
 | PD004 | Onde registrar o brainstorm no Asana? | Na descrição do projeto. |
 | PD005 | Criar task inicial para o brainstorm? | Não. Nenhuma task exclusiva será criada. |
-| PD006 | Como as notas finais de impacto e esforço serão calculadas? | A IA ou a Inovação atribui as notas dos critérios conforme as escalas ancoradas; o sistema aplica automaticamente as fórmulas ponderadas e calcula os resultados finais. |
+| PD006 | Como as notas finais de impacto e esforço serão calculadas? | A IA ou a Inovação atribui somente as notas permitidas nas escalas das seções 5.3 e 5.4; o sistema aplica as fórmulas ponderadas e calcula os resultados finais. |
 | PD007 | Onde ficam matriz e triagem? | Em abas dentro de `/ideias`. |
 | PD008 | Quais domínios podem submeter ideias? | `@nutriex.com.br`, `@nutriex.com`, `@innovapharma.com` e `@rennova.com`. |
 | PD009 | Como funcionará a sessão? | Será mantido o padrão do Supabase Auth, sem timeout customizado. |
@@ -1324,6 +1325,12 @@ Ao acionar “Vira Projeto”, deve ser exibido diálogo ou etapa de confirmaç�
 | PD018 | Diretoria pode acessar a triagem? | Sim, em leitura, sem alterar notas ou decisões. |
 | PD019 | Diretoria pode comentar? | Sim. Diretoria e Inovação podem criar comentários de governança. |
 | PD020 | Como arquivamentos serão registrados? | Justificativa obrigatória, data, responsável e participantes informados. |
+| PD021 | Quando o CAPTCHA será solicitado? | Antes da exibição do Canvas. O usuário só acessará o formulário após validação válida no backend. |
+| PD022 | Quem decide se o Canvas possui informações suficientes? | O modelo de IA, com base no conteúdo preenchido. |
+| PD023 | Como funcionará a complementação estratégica? | Haverá somente uma rodada, com até 10 perguntas geradas pela IA e exibidas em modal apenas quando necessárias. |
+| PD024 | Informações incompletas após a complementação bloqueiam o envio? | Não. A submissão prossegue e a IA pode inferir as notas e o brainstorm com o contexto disponível. |
+| PD025 | Onde as perguntas e respostas serão disponibilizadas? | Serão persistidas com a ideia e exibidas no detalhe interno para Inovação e Diretoria. |
+| PD026 | O que acontece se a avaliação de suficiência falhar tecnicamente? | A ideia pode ser enviada e salva; o brainstorm permanece pendente até retentativa controlada pela Inovação. |
 
 ---
 
