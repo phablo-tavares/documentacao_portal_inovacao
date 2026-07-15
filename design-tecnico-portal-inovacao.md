@@ -1319,9 +1319,26 @@ Ordem de implantação:
 | Brainstorm e retentativas | RF018, RF019, RF022 |
 
 ---
+## 17. Fronteiras entre frontend e backend
 
-<a id="dt-17-aprovacao-tecnica"></a>
-## 17. Aprovação técnica
+| Operação                                     | Responsável                    |
+| -------------------------------------------- | ------------------------------ |
+| Interface, formulários, rotas e estado local | Frontend React                 |
+| Login e gerenciamento de sessão              | Frontend → Supabase Auth       |
+| Consultas internas autorizadas               | Frontend → Postgres com RLS    |
+| Submissão pública de ideia                   | Edge Function                  |
+| IA, CAPTCHA e Asana                          | Edge Functions                 |
+| Pontuação e triagem                          | Edge Functions                 |
+| Constraints e integridade                    | Postgres                       |
+| Autorização sobre dados                      | RLS + Edge Functions           |
+| Arquivos de entrega                          | Supabase Storage com políticas |
+
+
+---
+
+
+<a id="dt-18-aprovacao-tecnica"></a>
+## 18. Aprovação técnica
 
 | Papel | Nome | Status | Data |
 |---|---|---|---|
